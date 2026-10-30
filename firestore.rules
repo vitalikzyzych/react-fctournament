@@ -1,0 +1,160 @@
+rules_version = '2';
+
+// There is no sign-in: anyone with the link may read and enter results.
+// These rules keep writes to the exact shapes the app produces, lock completed
+// tournaments, and refuse everything else. Keep in sync with
+// src/source/TournamentSource.ts and src/domain/schema.ts.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function tournamentPath(tournamentId) {
+      return /databases/$(database)/documents/tournaments/$(tournamentId);
+    }
+
+    function changedOnly(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    function isText(value, maxSize) {
+      return value is string && value.size() > 0 && value.size() <= maxSize;
+    }
+
+    function isGoals(value) {
+      return value is int && value >= 0 && value <= 99;
+    }
+
+    function isResult(result) {
+      return result == null || (
+        result is map
+        && result.keys().hasOnly(['home', 'away'])
+        && result.keys().hasAll(['home', 'away'])
+        && isGoals(result.home)
+        && isGoals(result.away)
+      );
+    }
+
+    function isStatus(status) {
+      return status in ['planned', 'active', 'completed'];
+    }
+
+    function isTournament(data, tournamentId) {
+      let fields = ['id', 'schemaVersion', 'number', 'name', 'game', 'format', 'status',
+                    'players', 'groups', 'clubs', 'createdAt', 'updatedAt'];
+      return data.keys().hasOnly(fields.concat(['champion']))
+        && data.keys().hasAll(fields)
+        && isChampion(data.get('champion', null))
+        && data.id == tournamentId
+        && data.schemaVersion == 1
+        && data.number is int && data.number >= 1 && data.number <= 9999
+        && isText(data.name, 80)
+        && isText(data.game, 80)
+        && data.format in ['sv-groups-4x4']
+        && isStatus(data.status)
+        && data.players is list && data.players.size() == 2
+        && data.groups is list && data.groups.size() >= 1 && data.groups.size() <= 16
+        && data.clubs is list && data.clubs.size() >= 2 && data.clubs.size() <= 64
+        && data.createdAt == request.time
+        && data.updatedAt == request.time;
+    }
+
+    // Champion picked by hand: a club id, or null when none is picked.
+    function isChampion(value) {
+      return value == null || isText(value, 60);
+    }
+
+    function isTeams(data) {
+      return isText(data.home, 60)
+        && isText(data.away, 60)
+        && data.home != data.away;
+    }
+
+    function isGroupMatch(data) {
+      let fields = ['stage', 'group', 'matchday', 'home', 'away', 'result', 'updatedAt'];
+      return data.keys().hasOnly(fields)
+        && data.keys().hasAll(fields)
+        && data.stage == 'group'
+        && isText(data.group, 4)
+        && data.matchday is int && data.matchday >= 1 && data.matchday <= 50
+        && isTeams(data)
+        && isResult(data.result)
+        && data.updatedAt == request.time;
+    }
+
+    // Playoff game: round QF (4 ties), SF (2 ties) or F (1 tie); game 1 and
+    // replays. The document id is fixed: round + tie + "-" + game, "QF1-2".
+    function isPlayoffMatch(data, matchId) {
+      let fields = ['stage', 'round', 'tie', 'game', 'home', 'away', 'result', 'updatedAt'];
+      return data.keys().hasOnly(fields)
+        && data.keys().hasAll(fields)
+        && data.stage == 'playoff'
+        && data.tie is int && data.tie >= 1
+        && ((data.round == 'QF' && data.tie <= 4)
+            || (data.round == 'SF' && data.tie <= 2)
+            || (data.round == 'F' && data.tie == 1))
+        && data.game is int && data.game >= 1 && data.game <= 20
+        && matchId == data.round + string(data.tie) + '-' + string(data.game)
+        && isTeams(data)
+        && isResult(data.result)
+        && data.updatedAt == request.time;
+    }
+
+    // Results, playoff games and the champion change only while the
+    // tournament is in progress: a planned one is read-only until it starts,
+    // a completed one until it is unlocked.
+    function isActive(tournamentId) {
+      return get(tournamentPath(tournamentId)).data.status == 'active';
+    }
+
+    match /tournaments/{tournamentId} {
+      allow read: if true;
+
+      allow create: if isTournament(request.resource.data, tournamentId);
+
+      // Status changes (start, complete, unlock), or picking the champion by
+      // hand while the tournament is in progress.
+      allow update: if request.resource.data.updatedAt == request.time
+        && ((changedOnly(['status', 'updatedAt'])
+             && isStatus(request.resource.data.status))
+            || (changedOnly(['champion', 'updatedAt'])
+                && resource.data.status == 'active'
+                && isChampion(request.resource.data.champion)));
+
+      // A completed tournament must be unlocked first.
+      allow delete: if resource.data.status != 'completed';
+
+      match /matches/{matchId} {
+        allow read: if true;
+
+        // Created together with the tournament (import) or while it is in
+        // progress (playoff games are added as teams are picked).
+        allow create: if matchId.size() <= 40
+          && (isGroupMatch(request.resource.data)
+              || isPlayoffMatch(request.resource.data, matchId))
+          && existsAfter(tournamentPath(tournamentId))
+          && (!exists(tournamentPath(tournamentId)) || isActive(tournamentId));
+
+        // Group match: only the score changes. Playoff game: the score and the
+        // teams (a wrongly picked club can be corrected).
+        allow update: if isActive(tournamentId)
+          && request.resource.data.updatedAt == request.time
+          && ((resource.data.stage == 'group'
+               && changedOnly(['result', 'updatedAt'])
+               && isResult(request.resource.data.result))
+              || (resource.data.stage == 'playoff'
+                  && changedOnly(['home', 'away', 'result', 'updatedAt'])
+                  && isPlayoffMatch(request.resource.data, matchId)));
+
+        // Group matches only together with the whole tournament in one batch.
+        // Playoff games also on their own (removing a tie or a stale replay)
+        // while the tournament is in progress.
+        allow delete: if !existsAfter(tournamentPath(tournamentId))
+          || (resource.data.stage == 'playoff' && isActive(tournamentId));
+      }
+    }
+
+    // Collection group query used to load the matches of all tournaments at once.
+    match /{path=**}/matches/{matchId} {
+      allow read: if true;
+    }
+  }
+}

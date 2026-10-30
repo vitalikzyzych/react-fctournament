@@ -1,0 +1,443 @@
+{
+  "schemaVersion": 1,
+  "tournament": {
+    "id": "example-new",
+    "number": 98,
+    "name": "Приклад: новий турнір",
+    "game": "EA SPORTS FC 26",
+    "format": "sv-groups-4x4",
+    "status": "active"
+  },
+  "players": [
+    {
+      "id": "S",
+      "name": "S"
+    },
+    {
+      "id": "V",
+      "name": "V"
+    }
+  ],
+  "groups": [
+    {
+      "id": "A",
+      "name": "Група A"
+    },
+    {
+      "id": "B",
+      "name": "Група B"
+    },
+    {
+      "id": "C",
+      "name": "Група C"
+    },
+    {
+      "id": "D",
+      "name": "Група D"
+    }
+  ],
+  "clubs": [
+    {
+      "id": "real-madrid",
+      "name": "Real Madrid",
+      "country": "Spain",
+      "owner": "S",
+      "group": "A"
+    },
+    {
+      "id": "bayern-munich",
+      "name": "Bayern Munich",
+      "country": "Germany",
+      "owner": "S",
+      "group": "A"
+    },
+    {
+      "id": "arsenal",
+      "name": "Arsenal",
+      "country": "England",
+      "owner": "V",
+      "group": "A"
+    },
+    {
+      "id": "inter",
+      "name": "Inter",
+      "country": "Italy",
+      "owner": "V",
+      "group": "A"
+    },
+    {
+      "id": "manchester-city",
+      "name": "Manchester City",
+      "country": "England",
+      "owner": "S",
+      "group": "B"
+    },
+    {
+      "id": "juventus",
+      "name": "Juventus",
+      "country": "Italy",
+      "owner": "S",
+      "group": "B"
+    },
+    {
+      "id": "barcelona",
+      "name": "FC Barcelona",
+      "country": "Spain",
+      "owner": "V",
+      "group": "B"
+    },
+    {
+      "id": "borussia-dortmund",
+      "name": "Borussia Dortmund",
+      "country": "Germany",
+      "owner": "V",
+      "group": "B"
+    },
+    {
+      "id": "liverpool",
+      "name": "Liverpool",
+      "country": "England",
+      "owner": "S",
+      "group": "C"
+    },
+    {
+      "id": "ac-milan",
+      "name": "AC Milan",
+      "country": "Italy",
+      "owner": "S",
+      "group": "C"
+    },
+    {
+      "id": "paris-saint-germain",
+      "name": "Paris Saint-Germain",
+      "country": "France",
+      "owner": "V",
+      "group": "C"
+    },
+    {
+      "id": "atletico-madrid",
+      "name": "Atletico Madrid",
+      "country": "Spain",
+      "owner": "V",
+      "group": "C"
+    },
+    {
+      "id": "napoli",
+      "name": "Napoli",
+      "country": "Italy",
+      "owner": "S",
+      "group": "D"
+    },
+    {
+      "id": "bayer-leverkusen",
+      "name": "Bayer Leverkusen",
+      "country": "Germany",
+      "owner": "S",
+      "group": "D"
+    },
+    {
+      "id": "chelsea",
+      "name": "Chelsea",
+      "country": "England",
+      "owner": "V",
+      "group": "D"
+    },
+    {
+      "id": "benfica",
+      "name": "Benfica",
+      "country": "Portugal",
+      "owner": "V",
+      "group": "D"
+    }
+  ],
+  "matches": [
+    {
+      "id": "A1-1",
+      "stage": "group",
+      "group": "A",
+      "matchday": 1,
+      "home": "real-madrid",
+      "away": "arsenal",
+      "result": null
+    },
+    {
+      "id": "A1-2",
+      "stage": "group",
+      "group": "A",
+      "matchday": 1,
+      "home": "bayern-munich",
+      "away": "inter",
+      "result": null
+    },
+    {
+      "id": "B1-1",
+      "stage": "group",
+      "group": "B",
+      "matchday": 1,
+      "home": "manchester-city",
+      "away": "barcelona",
+      "result": null
+    },
+    {
+      "id": "B1-2",
+      "stage": "group",
+      "group": "B",
+      "matchday": 1,
+      "home": "juventus",
+      "away": "borussia-dortmund",
+      "result": null
+    },
+    {
+      "id": "C1-1",
+      "stage": "group",
+      "group": "C",
+      "matchday": 1,
+      "home": "liverpool",
+      "away": "paris-saint-germain",
+      "result": null
+    },
+    {
+      "id": "C1-2",
+      "stage": "group",
+      "group": "C",
+      "matchday": 1,
+      "home": "ac-milan",
+      "away": "atletico-madrid",
+      "result": null
+    },
+    {
+      "id": "D1-1",
+      "stage": "group",
+      "group": "D",
+      "matchday": 1,
+      "home": "napoli",
+      "away": "chelsea",
+      "result": null
+    },
+    {
+      "id": "D1-2",
+      "stage": "group",
+      "group": "D",
+      "matchday": 1,
+      "home": "bayer-leverkusen",
+      "away": "benfica",
+      "result": null
+    },
+    {
+      "id": "A2-1",
+      "stage": "group",
+      "group": "A",
+      "matchday": 2,
+      "home": "inter",
+      "away": "real-madrid",
+      "result": null
+    },
+    {
+      "id": "A2-2",
+      "stage": "group",
+      "group": "A",
+      "matchday": 2,
+      "home": "arsenal",
+      "away": "bayern-munich",
+      "result": null
+    },
+    {
+      "id": "B2-1",
+      "stage": "group",
+      "group": "B",
+      "matchday": 2,
+      "home": "borussia-dortmund",
+      "away": "manchester-city",
+      "result": null
+    },
+    {
+      "id": "B2-2",
+      "stage": "group",
+      "group": "B",
+      "matchday": 2,
+      "home": "barcelona",
+      "away": "juventus",
+      "result": null
+    },
+    {
+      "id": "C2-1",
+      "stage": "group",
+      "group": "C",
+      "matchday": 2,
+      "home": "atletico-madrid",
+      "away": "liverpool",
+      "result": null
+    },
+    {
+      "id": "C2-2",
+      "stage": "group",
+      "group": "C",
+      "matchday": 2,
+      "home": "paris-saint-germain",
+      "away": "ac-milan",
+      "result": null
+    },
+    {
+      "id": "D2-1",
+      "stage": "group",
+      "group": "D",
+      "matchday": 2,
+      "home": "benfica",
+      "away": "napoli",
+      "result": null
+    },
+    {
+      "id": "D2-2",
+      "stage": "group",
+      "group": "D",
+      "matchday": 2,
+      "home": "chelsea",
+      "away": "bayer-leverkusen",
+      "result": null
+    },
+    {
+      "id": "A3-1",
+      "stage": "group",
+      "group": "A",
+      "matchday": 3,
+      "home": "arsenal",
+      "away": "real-madrid",
+      "result": null
+    },
+    {
+      "id": "A3-2",
+      "stage": "group",
+      "group": "A",
+      "matchday": 3,
+      "home": "inter",
+      "away": "bayern-munich",
+      "result": null
+    },
+    {
+      "id": "B3-1",
+      "stage": "group",
+      "group": "B",
+      "matchday": 3,
+      "home": "barcelona",
+      "away": "manchester-city",
+      "result": null
+    },
+    {
+      "id": "B3-2",
+      "stage": "group",
+      "group": "B",
+      "matchday": 3,
+      "home": "borussia-dortmund",
+      "away": "juventus",
+      "result": null
+    },
+    {
+      "id": "C3-1",
+      "stage": "group",
+      "group": "C",
+      "matchday": 3,
+      "home": "paris-saint-germain",
+      "away": "liverpool",
+      "result": null
+    },
+    {
+      "id": "C3-2",
+      "stage": "group",
+      "group": "C",
+      "matchday": 3,
+      "home": "atletico-madrid",
+      "away": "ac-milan",
+      "result": null
+    },
+    {
+      "id": "D3-1",
+      "stage": "group",
+      "group": "D",
+      "matchday": 3,
+      "home": "chelsea",
+      "away": "napoli",
+      "result": null
+    },
+    {
+      "id": "D3-2",
+      "stage": "group",
+      "group": "D",
+      "matchday": 3,
+      "home": "benfica",
+      "away": "bayer-leverkusen",
+      "result": null
+    },
+    {
+      "id": "A4-1",
+      "stage": "group",
+      "group": "A",
+      "matchday": 4,
+      "home": "real-madrid",
+      "away": "inter",
+      "result": null
+    },
+    {
+      "id": "A4-2",
+      "stage": "group",
+      "group": "A",
+      "matchday": 4,
+      "home": "bayern-munich",
+      "away": "arsenal",
+      "result": null
+    },
+    {
+      "id": "B4-1",
+      "stage": "group",
+      "group": "B",
+      "matchday": 4,
+      "home": "manchester-city",
+      "away": "borussia-dortmund",
+      "result": null
+    },
+    {
+      "id": "B4-2",
+      "stage": "group",
+      "group": "B",
+      "matchday": 4,
+      "home": "juventus",
+      "away": "barcelona",
+      "result": null
+    },
+    {
+      "id": "C4-1",
+      "stage": "group",
+      "group": "C",
+      "matchday": 4,
+      "home": "liverpool",
+      "away": "atletico-madrid",
+      "result": null
+    },
+    {
+      "id": "C4-2",
+      "stage": "group",
+      "group": "C",
+      "matchday": 4,
+      "home": "ac-milan",
+      "away": "paris-saint-germain",
+      "result": null
+    },
+    {
+      "id": "D4-1",
+      "stage": "group",
+      "group": "D",
+      "matchday": 4,
+      "home": "napoli",
+      "away": "benfica",
+      "result": null
+    },
+    {
+      "id": "D4-2",
+      "stage": "group",
+      "group": "D",
+      "matchday": 4,
+      "home": "bayer-leverkusen",
+      "away": "chelsea",
+      "result": null
+    }
+  ]
+}

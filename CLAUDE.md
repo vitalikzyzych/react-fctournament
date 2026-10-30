@@ -1,0 +1,163 @@
+# CLAUDE.md
+
+Guidance for agents working in this repository.
+
+## What this is
+
+FC Турніри: a small web app for EA SPORTS FC tournaments between two players, **S** and **V**. About three people use it. It is a proof of concept that grew from a product spec (summarised below). The UI is in **Ukrainian**; code, comments and docs are in English.
+
+Core features:
+
+- Import tournaments from JSON (prepared with ChatGPT), with validation and a preview. Export back to JSON.
+- Enter, edit and clear match results on phone or desktop. Changes sync live to every device.
+- Standings, tournament statistics, S vs V comparison, and history across all tournaments (per club, head-to-head).
+
+The app was scaffolded on 2026-10-30, reusing conventions from the sibling project `../web-app` (SOLV, React + PrimeReact). It is fully independent of it; do not import from or modify `../web-app`.
+
+## Commands
+
+```bash
+npm run dev            # http://localhost:3100 against the Firebase project in .env.local
+npm run dev:emulator   # same, against the local Firestore emulator
+npm run emulator       # Firestore emulator on 127.0.0.1:8080
+npm run build          # tsc -b + vite build
+npm run lint           # ESLint + Prettier (fix: npx eslint --fix .)
+npm test               # domain unit tests (vitest)
+npm run test:rules     # firestore.rules tests, emulator must be running
+npm run deploy         # build + firebase deploy (hosting, firestore rules)
+```
+
+Verify every change with `npx tsc -b`, `npm run lint` and `npm test`. Run `npm run test:rules` after changing `firestore.rules` or anything in `src/source/`.
+
+The emulator needs **Java 21**. On this machine the default `java` is 19; Homebrew's JDK 21 works:
+
+```bash
+JAVA_HOME=/opt/homebrew/opt/openjdk@21 PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH" npm run emulator
+```
+
+## Stack
+
+React 19, TypeScript strict, Vite 7, PrimeReact 10 (Lara dark teal theme, which also ships the Inter font), PrimeFlex 3.3, React Router 7, Firebase JS SDK 13 (Firestore and App Check only), zod 4 for import validation, Fluent UI icons, vitest. No Redux, no axios, no backend.
+
+## Architecture
+
+```
+src/
+  domain/        Pure TypeScript, no React, no Firebase. All business logic lives here.
+    types.ts       Data model (ITournament, IClub, IMatch, ITournamentFile, ...)
+    schema.ts      zod schema of the JSON format + Ukrainian error messages
+    validation.ts  validateTournamentFile: schema, references, status rules, warnings
+    validateFormat.ts  per-format structural rules (sv-groups-4x4), group matches only
+    playoff.ts     bracket (computePlayoff), tie winners, replays, champion, playoff reach
+    standings.ts   records and group tables (tie-breakers)
+    stats.ts       tournament stats, S/V records
+    history.ts     cross-tournament: summaries, club histories, head-to-head
+    exportJson.ts  tournament to JSON file, club catalog
+    domain.test.ts
+  core/firebase.ts      Firebase init: App Check (optional), Firestore with persistent cache, emulator switch
+  constants/env.ts      Every VITE_* variable is read here and only here
+  source/TournamentSource.ts   Every Firestore read and write
+  source/firestore.rules.test.ts  rules tests through TournamentSource against the emulator
+  providers/
+    TournamentDataProvider.tsx  ONE live subscription to all tournaments + one to all matches
+                                (collection group); every screen reads useTournamentData()
+    ToastProvider.tsx           useToast().show(severity, summary, detail)
+  ui/            Shared presentational components (barrel: src/ui/index.tsx)
+  components/    Layout: AppLayout (sidebar from 768px, bottom nav on phones), PageHeader
+  screens/       dashboard, tournaments, tournament-details, history, import-export (lazy routes)
+  routes/AppRouter.tsx
+  styles/main.css
+firestore.rules  firebase.json  firestore.indexes.json
+docs/json-format.md   The JSON exchange format; also the spec given to ChatGPT
+examples/             Example new and completed tournament files (used by tests)
+```
+
+Layering: screen, then `useTournamentData()` for reads or a `TournamentSource` function for writes. Statistics are always computed in `domain/` from match results and never stored.
+
+## Data model (Firestore)
+
+```
+tournaments/{tournamentId}
+  id, schemaVersion (1), number, name, game, format ("sv-groups-4x4"),
+  status ("planned" | "active" | "completed"),
+  players [{id:"S"|"V", name}], groups [{id, name}],
+  clubs [{id, name, country?, owner:"S"|"V", group}],
+  createdAt, updatedAt (server timestamps)
+
+tournaments/{tournamentId}/matches/{matchId}
+  group match:   stage "group", group, matchday, home, away, result, updatedAt
+  playoff game:  stage "playoff", round ("QF" | "SF" | "F"), tie, game,
+                 home, away, result, updatedAt
+  result: {home, away} | null
+```
+
+- `IMatch` is a union (`IGroupMatch | IPlayoffMatch`) on `stage`. Use `groupMatches()` / `playoffMatches()` from `domain/playoff.ts` to narrow.
+- Playoff: 4 QF ties, 2 SF ties, 1 final. Ids are fixed: `{round}{tie}-{game}` (`QF1-1`), checked by the rules and the import. A game document exists only once both clubs of the tie are picked, so `home`/`away` are never null.
+
+- `result: null` means not played. `{home: 0, away: 0}` is a played 0:0.
+- Club **ownership is per tournament** (stored on the tournament's club entry). The same club id can be S in one tournament and V in another.
+- Club ids are global slugs (`real-madrid`) and join a club's history across tournaments. The import warns when a known club name arrives with a new id.
+- Matches are separate documents so the rules can validate each score write and two people can enter different matches at once.
+- `firestore.rules`, `TournamentSource.ts` and `domain/schema.ts` describe the same shapes. **Change them together**, then run `npm run test:rules`.
+
+## Decisions already made (do not re-open without the user)
+
+- **No authentication, by the user's explicit choice.** Anyone with the link can do anything the rules allow. Protection is the rules plus optional App Check (enabled when `VITE_RECAPTCHA_SITE_KEY` is set). Do not add sign-in screens.
+- Rules allow on a tournament: create (exact shape, `champion` optional), update of `status` only or of `champion` only (the latter not when completed), delete unless completed. On a match: create during import or while active; update while active (group: `result` only; playoff: `home`, `away`, `result`); delete together with the tournament, and playoff games also on their own while not completed. Completed tournaments are locked; the UI "Розблокувати" sets them back to active.
+- Standings order: points (3/1/0), goal difference, head-to-head among the tied clubs (points, goal difference, goals), goals scored, name. In this format clubs of the same player never meet, so head-to-head often has no data and goals scored decides.
+- Player badges: S is red (`--red-500`), V is blue (`--blue-500`), see `ui/PlayerBadge.tsx` and `.player-badge` in `styles/main.css`.
+- Look: dark "stadium" theme. Teal is the accent (kept apart from S red and V blue). Cards are `.app-card` (translucent over the red/blue background glow), section titles `.section-title`, the dashboard and tournament page open with `ui/TournamentHero.tsx` (scoreboard on a `.pitch` background). Light-theme utility colours such as `bg-red-50` do not work on dark; use `.notice`, `.notice--error`, `.notice--warning`.
+- Only the final score is stored. No dates, no extra time, no penalties.
+- **Playoff** (decided with the user on 2026-10-30, legs added the same day): every tie is filled in by hand from the tournament's clubs; nothing advances automatically.
+  - **Quarter-finals and semi-finals have two legs**, created together as soon as both clubs are picked: game 1 at the first club, game 2 at the second. **The final is one game.** `PLAYOFF_ROUNDS[].legs` in `domain/playoff.ts` holds this.
+  - **The aggregate decides** (goals over all games of the tie). When every game is played and the aggregate is level (or the final is a draw), an extra game is due (`pendingReplay`), shown in the UI and stored only once its result is saved. Home and away alternate from game to game (`gameTeams`).
+  - **Picker rule** (`canPair`, `strictPairing` per round): once one club of a quarter-final tie is picked, the other must belong to the other player and come from a different group. Semi-finals and the final are free, because the remaining winners may share a player or group. The import does not enforce this rule (older tournaments may differ).
+  - Teams of a tie can be changed later; every game gets the pair in the alternating order. Correcting or clearing a result that makes extra games pointless deletes them, after a confirmation (`staleExtraGames`).
+  - The import also accepts older files with single-game ties and replays with the same home club.
+- **Champion** (decided with the user on 2026-10-30): two sources. The winner of a decided final always wins; otherwise `tournament.champion`, a club picked by hand on the playoff tab (`ChampionPanel.tsx`, `setTournamentChampion`) or set in the imported JSON. `findChampionClub` in `domain/history.ts` applies this rule and everything (hero, dashboard, history, titles, club reach) goes through it. Picking needs an active tournament; a completed one must be unlocked first.
+- **Titles** count only **completed** tournaments (`countsAsTitle` in `domain/history.ts`). A tournament in progress may show a champion but wins no title until it is completed. Shown in `ui/TitlesCard.tsx` on the dashboard and at the top of History.
+- **Planned tournaments** are future tournaments: imported with status `planned`, listed under "Заплановані" (always visible), read-only (schedule visible, no results, playoff or champion; enforced by `isActive` in the rules). "Почати турнір" is disabled while another tournament is active. There is no in-app tournament creator yet; planned tournaments come from JSON import.
+- Playoff games count in S vs V, tournament stats, club history and head-to-head; never in group tables.
+- The tournament **champion** is the winner of the final. History shows titles S : V.
+
+## Conventions (carried over from web-app)
+
+- `@/` alias for `src/`; relative imports only inside the same folder. `import type` for type-only imports.
+- Interfaces are `I`-prefixed. Screen folders are kebab-case. Barrel files: `src/ui/index.tsx`, `src/components/index.ts`, `src/domain/index.ts`, `src/providers/index.ts`, `src/utils/index.ts`.
+- No `any`, `@ts-ignore` or needless `!`/`as`.
+- PrimeReact components directly (`Button`, `Dropdown`, `DataTable`, `Dialog`, `TabView`, ...), never a bare `<button>`. The only raw element is the hidden `<input type="file">` in the import panel.
+- Icons: `<FluentIcon name="..." />` from `@/ui`. It uses a **named-import registry** (`ui/FluentIcon.tsx`) so only the listed icons are bundled. To use a new icon, add it to the `ICONS` map.
+- Styling: PrimeFlex classes and theme CSS variables. No hex or rgb literals in components. App-specific classes are in `styles/main.css`. Inline `style` only for computed widths.
+- Modals: `Dialog` with `showHeader={false}`, title in the body, absolute close button (see `screens/history/components/ClubHistoryDialog.tsx`). Confirmations use `confirmDialog` from `primereact/confirmdialog` (`<ConfirmDialog />` is mounted in `App.tsx`).
+- UI text is written directly in Ukrainian in the components (no i18n library). `utils/format.ts` has `plural()` for Ukrainian plural forms.
+- Prettier: 80 columns, double quotes, trailing commas es5.
+- After making code changes, end with a suggested commit message. Do not commit unless the user asks.
+
+## Behaviour worth knowing
+
+- Completing a tournament goes through `ui/CodeConfirmDialog.tsx`: the confirm button unlocks only after typing a random 4-digit code. Mount it only while open (a new code each time). Reuse it for other risky actions.
+- **Testing in a browser:** the user often has `npm run dev` running on port 3100 against the REAL database. Run emulator test servers on another port (`--port 3101 --strictPort`) and block requests to `firestore.googleapis.com` in the test, so test data never reaches production.
+- `MatchRow` keeps a local draft of the score. The parent gives it `key={matchId:score}`, so a remote change remounts the row with the new stored value. Enter saves, Escape reverts.
+- Saving does not wait for the server: Firestore updates the local snapshot at once and the promise settles later (much later when offline). Errors (for example a rules rejection) show a toast and the snapshot rolls back.
+- With no Firebase config, `App.tsx` renders `FirebaseSetupNotice` instead of the app.
+- `vite:preloadError` in `main.tsx` reloads once after a deploy removes old lazy chunks.
+- Firestore reads: the whole history loads on each app open (tournaments + all matches). With dozens of tournaments that is about a thousand reads per open, well inside the free 50k per day.
+
+## Status
+
+Done (MVP):
+
+- Phase 0 setup, Phase 1 import/validation/export, Phase 2 result entry and standings, Phase 3 statistics and dashboard, Phase 4 history (S vs V all time, per tournament, clubs, head-to-head).
+- Phase 5 playoff: tab "Плей-офф", manual ties, replays, champion, titles in history, JSON import/export (docs/json-format.md).
+- Firestore rules with emulator tests (11 passing). Domain unit tests (19 passing).
+- Checked in headless Chrome against the emulator at 1440px and 390px: import, score entry, all screens, no console errors, no horizontal scroll on phones.
+
+Not done yet:
+
+- The Firebase project `eafc-tournament-75465` is set up and `npm run dev` talks to it. **Deploy `firestore.rules` after every rules change** (`npx firebase-tools deploy --only firestore:rules`), or the live app refuses the new writes with "Missing or insufficient permissions". App Check is still a manual step (see README.md).
+- No git commit has been made yet.
+
+## Next steps the user has mentioned
+
+- Playoff ideas not built: suggesting qualified clubs from the group tables, filling the next round from tie winners, a bracket diagram, a third-place game.
+- Automatic fixture generation, other formats (a 40-club league phase like the UEFA Champions League), historical champions, restore from the full backup file, charts.
