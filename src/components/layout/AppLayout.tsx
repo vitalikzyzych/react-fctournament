@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 import { ProgressSpinner } from "primereact/progressspinner";
 
@@ -10,6 +11,14 @@ import { FluentIcon, PlayerBadge } from "@/ui";
 /** Sidebar from 768px, bottom navigation on phones. */
 const AppLayout = () => {
   const { loading, error } = useTournamentData();
+  const { pathname } = useLocation();
+
+  // A new page starts at the top. The browser keeps the scroll position on
+  // client-side navigation, so without this a page opened from the bottom
+  // of a long list would open scrolled down too.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
 
   return (
     <div className="min-h-screen">
