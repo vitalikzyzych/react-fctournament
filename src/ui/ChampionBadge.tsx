@@ -17,7 +17,7 @@ const ChampionBadge = ({ club, className }: IChampionBadgeProps) => (
     title="Чемпіон турніру"
   >
     <FluentIcon name="Trophy" size={16} />
-    <ClubLabel name={club.name} owner={club.owner} bold />
+    <ClubLabel name={club.name} clubId={club.id} owner={club.owner} bold />
   </span>
 );
 

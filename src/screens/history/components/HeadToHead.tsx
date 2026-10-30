@@ -55,12 +55,14 @@ const HeadToHeadResult = ({
               </span>
               <ClubLabel
                 name={name(match.home)}
+                clubId={match.home}
                 owner={home?.owner}
                 className="flex-1"
               />
               <span className="score-chip">{formatScore(match.result)}</span>
               <ClubLabel
                 name={name(match.away)}
+                clubId={match.away}
                 owner={away?.owner}
                 badgePosition="end"
                 className="flex-1 justify-content-end"
@@ -72,6 +74,10 @@ const HeadToHeadResult = ({
     </div>
   );
 };
+
+const clubOption = (option: { value: string; label: string }) => (
+  <ClubLabel name={option.label} clubId={option.value} />
+);
 
 const HeadToHead = ({ all }: { all: ITournamentWithMatches[] }) => {
   const names = useMemo(
@@ -100,6 +106,7 @@ const HeadToHead = ({ all }: { all: ITournamentWithMatches[] }) => {
               onChange={(e) => setClubA(e.value)}
               options={options}
               filter
+              itemTemplate={clubOption}
               placeholder="Перший клуб"
               className="flex-1"
             />
@@ -108,6 +115,7 @@ const HeadToHead = ({ all }: { all: ITournamentWithMatches[] }) => {
               onChange={(e) => setClubB(e.value)}
               options={options.filter((o) => o.value !== clubA)}
               filter
+              itemTemplate={clubOption}
               placeholder="Другий клуб"
               className="flex-1"
             />

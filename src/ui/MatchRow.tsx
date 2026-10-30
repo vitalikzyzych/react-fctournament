@@ -108,6 +108,7 @@ const MatchRow = ({
       {meta && <div className="match-row__meta">{meta}</div>}
       <ClubLabel
         name={home?.name ?? match.home}
+        clubId={match.home}
         owner={home?.owner}
         className="match-row__home"
         bold={!!match.result && match.result.home > match.result.away}
@@ -117,6 +118,7 @@ const MatchRow = ({
       {editable ? scoreInput("away") : scoreText("away")}
       <ClubLabel
         name={away?.name ?? match.away}
+        clubId={match.away}
         owner={away?.owner}
         className="match-row__away"
         bold={!!match.result && match.result.away > match.result.home}

@@ -28,7 +28,13 @@ const ClubList = ({
       {items.map((stat) => (
         <li key={stat.club.id}>
           <div className="flex justify-content-between gap-2">
-            <ClubLabel name={stat.club.name} owner={stat.club.owner} />
+            <ClubLabel
+              name={stat.club.name}
+              clubId={stat.club.id}
+              owner={stat.club.owner}
+              country={stat.club.country}
+              showFlag
+            />
             <span className="font-semibold white-space-nowrap">
               {value(stat)}
             </span>
@@ -49,10 +55,15 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
     const away = clubsById.get(match.away);
     return (
       <div key={match.id} className="big-win">
-        <ClubLabel name={home?.name ?? match.home} owner={home?.owner} />
+        <ClubLabel
+          name={home?.name ?? match.home}
+          clubId={match.home}
+          owner={home?.owner}
+        />
         <span className="score-chip">{formatScore(match.result)}</span>
         <ClubLabel
           name={away?.name ?? match.away}
+          clubId={match.away}
           owner={away?.owner}
           badgePosition="end"
         />
@@ -127,7 +138,13 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
               field="club.name"
               sortable
               body={(s: IClubStat) => (
-                <ClubLabel name={s.club.name} owner={s.club.owner} />
+                <ClubLabel
+                  name={s.club.name}
+                  clubId={s.club.id}
+                  owner={s.club.owner}
+                  country={s.club.country}
+                  showFlag
+                />
               )}
             />
             <Column

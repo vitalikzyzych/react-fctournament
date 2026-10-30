@@ -1,11 +1,15 @@
 import { groupMatches, type ITournamentFile } from "@/domain";
-import { ClubLabel, StatusTag } from "@/ui";
+import { ClubLabel, FluentIcon, StatusTag } from "@/ui";
+import { findCatalogClub } from "@/utils";
 
 const ImportPreview = ({ file }: { file: ITournamentFile }) => {
   const played = file.matches.filter((m) => m.result !== null).length;
   const groupStage = groupMatches(file.matches);
   const playoffGames = file.matches.length - groupStage.length;
   const matchdays = new Set(groupStage.map((m) => m.matchday)).size;
+  const withoutCrest = file.clubs.filter(
+    (club) => !findCatalogClub(club.id, club.name)
+  );
 
   return (
     <div className="flex flex-column gap-3">
@@ -39,9 +43,20 @@ const ImportPreview = ({ file }: { file: ITournamentFile }) => {
           З результатом: <b>{played}</b>
         </span>
       </div>
+      {withoutCrest.length > 0 && (
+        <div className="notice align-items-center text-sm">
+          <FluentIcon name="Info" size={18} />
+          <span>
+            Немає логотипа для:{" "}
+            {withoutCrest.map((club) => club.name).join(", ")}. Їх буде показано
+            з першою літерою назви, поки каталог клубів не оновлять (npm run
+            club-catalog).
+          </span>
+        </div>
+      )}
       <div className="grid">
         {file.groups.map((group) => (
-          <div key={group.id} className="col-12 sm:col-6 lg:col-3">
+          <div key={group.id} className="col-12 sm:col-6">
             <div className="match-row-lite p-3 h-full">
               <div className="font-semibold mb-2">{group.name}</div>
               <div className="flex flex-column gap-1">
@@ -51,7 +66,10 @@ const ImportPreview = ({ file }: { file: ITournamentFile }) => {
                     <ClubLabel
                       key={club.id}
                       name={club.name}
+                      clubId={club.id}
                       owner={club.owner}
+                      country={club.country}
+                      showFlag
                     />
                   ))}
               </div>

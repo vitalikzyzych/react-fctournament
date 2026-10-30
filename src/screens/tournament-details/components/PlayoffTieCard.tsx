@@ -184,13 +184,23 @@ const PlayoffTieCard = ({
         }
         itemTemplate={(option: IClubOption) => (
           <span className="flex align-items-center justify-content-between gap-2 w-full">
-            <ClubLabel name={option.club.name} owner={option.club.owner} />
+            <ClubLabel
+              name={option.club.name}
+              clubId={option.club.id}
+              owner={option.club.owner}
+              country={option.club.country}
+              showFlag
+            />
             <span className="text-500 text-xs">Гр. {option.club.group}</span>
           </span>
         )}
         valueTemplate={(option: IClubOption | null) =>
           option ? (
-            <ClubLabel name={option.club.name} owner={option.club.owner} />
+            <ClubLabel
+              name={option.club.name}
+              clubId={option.club.id}
+              owner={option.club.owner}
+            />
           ) : (
             <span className="text-500">
               {side === "home" ? "Перший клуб" : "Другий клуб"}
@@ -216,7 +226,12 @@ const PlayoffTieCard = ({
             ) : (
               <span className="flex align-items-center gap-2 text-sm min-w-0">
                 <span className="text-500">Далі:</span>
-                <ClubLabel name={winner.name} owner={winner.owner} bold />
+                <ClubLabel
+                  name={winner.name}
+                  clubId={winner.id}
+                  owner={winner.owner}
+                  bold
+                />
               </span>
             ))}
           {editable && !isEmpty && !editing && (
@@ -323,6 +338,7 @@ const PlayoffTieCard = ({
           <span className="flex align-items-center gap-2 min-w-0">
             <ClubLabel
               name={nameOf(tie.home)}
+              clubId={tie.home}
               owner={clubsById.get(tie.home)?.owner}
             />
             <span className="font-bold white-space-nowrap">
@@ -330,6 +346,7 @@ const PlayoffTieCard = ({
             </span>
             <ClubLabel
               name={nameOf(tie.away)}
+              clubId={tie.away}
               owner={clubsById.get(tie.away)?.owner}
               badgePosition="end"
             />

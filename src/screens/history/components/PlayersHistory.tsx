@@ -108,7 +108,11 @@ const PlayersHistory = ({ all }: { all: ITournamentWithMatches[] }) => {
               header="Чемпіон"
               body={(s: ITournamentSummary) =>
                 s.champion ? (
-                  <ClubLabel name={s.champion.name} owner={s.champion.owner} />
+                  <ClubLabel
+                    name={s.champion.name}
+                    clubId={s.champion.id}
+                    owner={s.champion.owner}
+                  />
                 ) : (
                   <span className="text-500">–</span>
                 )

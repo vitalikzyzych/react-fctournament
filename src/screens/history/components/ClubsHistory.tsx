@@ -11,7 +11,7 @@ import {
   type IClubHistory,
   type ITournamentWithMatches,
 } from "@/domain";
-import { SectionCard } from "@/ui";
+import { ClubLabel, SectionCard } from "@/ui";
 import { formatSigned } from "@/utils";
 
 const ClubsHistory = ({ all }: { all: ITournamentWithMatches[] }) => {
@@ -45,7 +45,19 @@ const ClubsHistory = ({ all }: { all: ITournamentWithMatches[] }) => {
         rowClassName={() => "cursor-pointer"}
         emptyMessage="Клубів не знайдено"
       >
-        <Column field="name" header="Клуб" sortable />
+        <Column
+          field="name"
+          header="Клуб"
+          sortable
+          body={(h: IClubHistory) => (
+            <ClubLabel
+              name={h.name}
+              clubId={h.clubId}
+              country={h.country}
+              showFlag
+            />
+          )}
+        />
         <Column
           header="Турн."
           body={(h: IClubHistory) => h.entries.length}

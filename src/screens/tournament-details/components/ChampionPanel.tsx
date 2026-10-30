@@ -105,13 +105,23 @@ const ChampionPanel = ({
           options={options}
           itemTemplate={(option: IClubOption) => (
             <span className="flex align-items-center justify-content-between gap-2 w-full">
-              <ClubLabel name={option.club.name} owner={option.club.owner} />
+              <ClubLabel
+                name={option.club.name}
+                clubId={option.club.id}
+                owner={option.club.owner}
+                country={option.club.country}
+                showFlag
+              />
               <span className="text-500 text-xs">Гр. {option.club.group}</span>
             </span>
           )}
           valueTemplate={(option: IClubOption | null) =>
             option ? (
-              <ClubLabel name={option.club.name} owner={option.club.owner} />
+              <ClubLabel
+                name={option.club.name}
+                clubId={option.club.id}
+                owner={option.club.owner}
+              />
             ) : (
               <span className="text-500">Обрати чемпіона</span>
             )

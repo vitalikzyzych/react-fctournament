@@ -914,3 +914,45 @@ code {
 .champion-badge > span:last-child {
   color: var(--text-color);
 }
+
+/* Club crest (ESPN catalog) and country flag */
+.club-crest {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.club-crest--lg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.club-crest--empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--surface-100);
+  color: var(--text-color-secondary);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.club-crest--lg.club-crest--empty {
+  font-size: 1.25rem;
+}
+
+.country-flag {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 0.825rem;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px var(--hairline);
+}
+
+/* PrimeFlex widths stop at 30rem; wider dialogs use this. */
+.dialog-wide {
+  max-width: 44rem;
+}

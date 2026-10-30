@@ -45,7 +45,13 @@ const StandingsTable = ({ rows }: IStandingsTableProps) => (
     <Column
       header="Клуб"
       body={(row: IStandingRow) => (
-        <ClubLabel name={row.club.name} owner={row.club.owner} />
+        <ClubLabel
+          name={row.club.name}
+          clubId={row.club.id}
+          owner={row.club.owner}
+          country={row.club.country}
+          showFlag
+        />
       )}
       className="standings-table__club"
     />

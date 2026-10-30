@@ -1,6 +1,12 @@
 export { default as ChampionBadge } from "./ChampionBadge";
+export { default as ClubCrest } from "./ClubCrest";
 export { default as ClubLabel } from "./ClubLabel";
 export { default as CodeConfirmDialog } from "./CodeConfirmDialog";
+export {
+  default as CountryFlag,
+  type FlagCode,
+  resolveFlag,
+} from "./CountryFlag";
 export { default as EmptyState } from "./EmptyState";
 export { default as FluentIcon, type IconName } from "./FluentIcon";
 export { default as MatchRow } from "./MatchRow";

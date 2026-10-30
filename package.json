@@ -12,11 +12,13 @@
     "deploy": "npm run build && npx firebase-tools deploy --only hosting,firestore",
     "emulator": "npx firebase-tools emulators:start --only firestore --project demo-fc-tournament",
     "dev:emulator": "VITE_USE_EMULATOR=true vite",
-    "test:rules": "vitest run --config vitest.rules.config.ts"
+    "test:rules": "vitest run --config vitest.rules.config.ts",
+    "club-catalog": "node scripts/build-club-catalog.ts"
   },
   "dependencies": {
     "@fluentui/react-icons": "^2.0.344",
     "firebase": "^13.1.0",
+    "flag-icons": "^7.6.0",
     "primeflex": "^3.3.0",
     "primereact": "^10.9.9",
     "react": "^19.3.1",
