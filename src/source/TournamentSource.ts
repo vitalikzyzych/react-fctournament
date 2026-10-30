@@ -18,10 +18,12 @@ import {
   gameTeams,
   type IMatch,
   type IPlayoffMatch,
+  type IPlayoffTie,
   type IScore,
   type IStoredMatch,
   type ITournament,
   type ITournamentFile,
+  newTieGames,
   type TournamentStatus,
 } from "@/domain";
 
@@ -216,6 +218,39 @@ export const setPlayoffTeams = async (
       updatedAt: serverTimestamp(),
     })
   );
+  await batch.commit();
+};
+
+/**
+ * Applies an approved draw to a round in one batch: tie N gets pair N. Ties
+ * without games get their legs; ties already set up (none played yet) get
+ * the new clubs in every game.
+ */
+export const applyPlayoffDraw = async (
+  tournamentId: string,
+  ties: IPlayoffTie[],
+  pairs: [string, string][]
+): Promise<void> => {
+  const db = getDb();
+  const batch = writeBatch(db);
+  ties.forEach((tie, index) => {
+    const [first, second] = pairs[index];
+    if (tie.games.length === 0) {
+      newTieGames(tie.round, tie.tie, first, second).forEach((game) =>
+        batch.set(
+          doc(db, TOURNAMENTS, tournamentId, MATCHES, game.id),
+          matchData(game)
+        )
+      );
+      return;
+    }
+    tie.games.forEach((game) =>
+      batch.update(doc(db, TOURNAMENTS, tournamentId, MATCHES, game.id), {
+        ...gameTeams(first, second, game.game),
+        updatedAt: serverTimestamp(),
+      })
+    );
+  });
   await batch.commit();
 };
 

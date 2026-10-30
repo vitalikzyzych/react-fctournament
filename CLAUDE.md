@@ -55,6 +55,7 @@ src/
     validateFormat.ts  per-format structural rules (sv-groups-4x4), group matches only
     schedule.ts    upcomingMatches (play order), latestResult
     playoff.ts     bracket (computePlayoff), tie winners, replays, champion, playoff reach
+    draw.ts        playoff draw: allowed pairings (drawCandidates), random pick (pickDraw)
     standings.ts   records and group tables (tie-breakers)
     stats.ts       tournament stats, S/V records
     history.ts     cross-tournament: summaries, club histories, head-to-head
@@ -127,6 +128,7 @@ tournaments/{tournamentId}/matches/{matchId}
   - **Picker rule** (`canPair`, `strictPairing` per round): once one club of a quarter-final tie is picked, the other must belong to the other player and come from a different group. Semi-finals and the final are free, because the remaining winners may share a player or group. The import does not enforce this rule (older tournaments may differ).
   - Teams of a tie can be changed later; every game gets the pair in the alternating order. Correcting or clearing a result that makes extra games pointless deletes them, after a confirmation (`staleExtraGames`).
   - The import also accepts older files with single-game ties and replays with the same home club.
+  - **Draw** (added 2026-10-30): a "Жеребкування" button per round (`PlayoffDrawDialog.tsx`), offered until the first game of the round is played. Quarter-finals: pick 4 S and 4 V clubs, every pair is S against V from another group (no draw if impossible). Semi-finals: the 4 quarter-final winners, once every quarter-final is decided; the same rule is followed as far as the clubs allow (fewest same-player or same-group pairs). The pairing, tie order and home club are random; the result is shown with "Ще раз" and saved only on "Підтвердити" (`applyPlayoffDraw`), replacing ties already picked. No draw for the final.
 - **Champion** (decided with the user on 2026-10-30): two sources. The winner of a decided final always wins; otherwise `tournament.champion`, a club picked by hand on the playoff tab (`ChampionPanel.tsx`, `setTournamentChampion`) or set in the imported JSON. `findChampionClub` in `domain/history.ts` applies this rule and everything (hero, dashboard, history, titles, club reach) goes through it. Picking needs an active tournament; a completed one must be unlocked first.
 - **Titles** count only **completed** tournaments (`countsAsTitle` in `domain/history.ts`). A tournament in progress may show a champion but wins no title until it is completed. Shown in `ui/TitlesCard.tsx` on the dashboard and at the top of History.
 - **Planned tournaments** are future tournaments: imported with status `planned`, listed under "Заплановані" (always visible), read-only (schedule visible, no results, playoff or champion; enforced by `isActive` in the rules). "Почати турнір" is disabled while another tournament is active. There is no in-app tournament creator yet; planned tournaments come from JSON import.

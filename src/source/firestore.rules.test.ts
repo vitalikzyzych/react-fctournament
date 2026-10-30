@@ -18,6 +18,7 @@ import completedExample from "../../examples/tournament-completed.example.json";
 import newExample from "../../examples/tournament-new.example.json";
 
 import {
+  computePlayoff,
   type IPlayoffMatch,
   type ITournamentFile,
   newTieGames,
@@ -32,6 +33,7 @@ connectFirestoreEmulator(db, "127.0.0.1", 8080);
 vi.mock("@/core/firebase", () => ({ getDb: () => db }));
 
 const {
+  applyPlayoffDraw,
   createPlayoffGames,
   deletePlayoffMatches,
   deleteTournament,
@@ -136,6 +138,23 @@ describe("firestore.rules", () => {
       "QF1-3",
     ]);
     await deletePlayoffMatches("rules-new", ["QF1-1", "QF1-2"]);
+  });
+
+  it("applies a draw: new ties get legs, set-up ties get new clubs", async () => {
+    // Tie 1 is already set up, ties 2 to 4 are empty.
+    const tieOne = newTieGames("QF", 1, "inter", "arsenal");
+    await createPlayoffGames("rules-new", tieOne);
+    const ties = computePlayoff(tieOne).filter((tie) => tie.round === "QF");
+    await applyPlayoffDraw("rules-new", ties, [
+      ["real-madrid", "inter"],
+      ["arsenal", "bayern-munich"],
+      ["manchester-city", "juventus"],
+      ["barcelona", "borussia-dortmund"],
+    ]);
+    await deletePlayoffMatches(
+      "rules-new",
+      ties.flatMap((tie) => [`QF${tie.tie}-1`, `QF${tie.tie}-2`])
+    );
   });
 
   it("rejects malformed playoff games", async () => {
