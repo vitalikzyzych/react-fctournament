@@ -97,13 +97,25 @@ const PlayersHistory = ({ all }: { all: ITournamentWithMatches[] }) => {
               }
               className="text-center white-space-nowrap"
             />
-            <Column
-              header="% S"
-              body={(s: ITournamentSummary) =>
-                formatPercent(s.players.S.winRate)
-              }
-              className="text-center"
-            />
+            {(["S", "V"] as const).map((player) => (
+              <Column
+                key={player}
+                // Share of the tournament's played matches this player won.
+                // Draws count for neither, so S and V need not add up to 100%.
+                header={
+                  <span
+                    className="inline-flex align-items-center gap-1 white-space-nowrap"
+                    title={`Частка зіграних матчів, які виграв гравець ${player}. Нічиї не входять, тому сума S і V може бути меншою за 100%.`}
+                  >
+                    % <PlayerBadge player={player} />
+                  </span>
+                }
+                body={(s: ITournamentSummary) =>
+                  formatPercent(s.players[player].winRate)
+                }
+                className="text-center"
+              />
+            ))}
             <Column
               header="Чемпіон"
               body={(s: ITournamentSummary) =>
