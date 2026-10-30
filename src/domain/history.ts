@@ -1,3 +1,4 @@
+import { sortMatches } from "./exportJson";
 import { findLeagueWinner } from "./league";
 import {
   computePlayoffReach,
@@ -49,6 +50,8 @@ export interface IClubHistoryEntry {
   /** Place in the group table. */
   position: number;
   playoff: PlayoffReach | null;
+  /** The club's matches in this tournament, played or not, in play order. */
+  matches: IMatch[];
 }
 
 export interface IClubHistory {
@@ -157,6 +160,7 @@ export const computeClubHistories = (
   const histories = new Map<string, IClubHistory>();
 
   [...list].sort(byNumber).forEach(({ tournament, matches }) => {
+    const ordered = sortMatches(matches);
     const records = buildRecords(
       tournament.clubs.map((club) => club.id),
       matches
@@ -184,7 +188,16 @@ export const computeClubHistories = (
         // Latest tournament wins for the display name.
         history.name = club.name;
         history.country = club.country ?? history.country;
-        history.entries.push({ tournament, club, record, position, playoff });
+        history.entries.push({
+          tournament,
+          club,
+          record,
+          position,
+          playoff,
+          matches: ordered.filter(
+            (match) => match.home === club.id || match.away === club.id
+          ),
+        });
         history.timesByPlayer[club.owner] += 1;
         if (playoff === "champion" && countsAsTitle(tournament)) {
           history.titles += 1;

@@ -204,6 +204,13 @@ describe("statistics", () => {
     )!;
     expect(madrid.entries).toHaveLength(2);
     expect(madrid.timesByPlayer).toEqual({ S: 1, V: 1 });
+    // Every match of the club in each tournament, and only those.
+    madrid.entries.forEach((entry) => {
+      expect(entry.matches.length).toBeGreaterThanOrEqual(4);
+      entry.matches.forEach((m) =>
+        expect([m.home, m.away]).toContain("real-madrid")
+      );
+    });
 
     const h2h = computeHeadToHead(list, "real-madrid", "arsenal");
     expect(h2h.matches).toHaveLength(4);

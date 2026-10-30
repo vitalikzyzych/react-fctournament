@@ -4,8 +4,11 @@ import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 
 import {
+  describeMatch,
+  type IClub,
   type IClubHistory,
   type IClubHistoryEntry,
+  type IMatch,
   isLeagueFormat,
   roundName,
 } from "@/domain";
@@ -13,17 +16,72 @@ import {
   ClubCrest,
   CountryFlag,
   FluentIcon,
+  MatchRow,
   PlayerBadge,
   resolveFlag,
 } from "@/ui";
-import { findCatalogClub, formatSigned } from "@/utils";
+import { findCatalogClub, formatSigned, plural } from "@/utils";
 
 interface IClubHistoryDialogProps {
   history: IClubHistory | null;
   onHide: () => void;
 }
 
-/** Modal pattern from web-app: no header, title in the body, absolute close button. */
+/** Win, draw or loss from the club's side; nothing while not played. */
+const outcome = (match: IMatch, clubId: string): string | null => {
+  if (!match.result) return null;
+  const own = match.home === clubId ? match.result.home : match.result.away;
+  const other = match.home === clubId ? match.result.away : match.result.home;
+  if (own > other) return "перемога";
+  return own === other ? "нічия" : "поразка";
+};
+
+/** Every match of the club in one tournament, read-only. */
+const TournamentMatches = ({
+  entry,
+  clubId,
+}: {
+  entry: IClubHistoryEntry;
+  clubId: string;
+}) => {
+  const { tournament, matches } = entry;
+  const clubsById = new Map<string, IClub>(
+    tournament.clubs.map((club) => [club.id, club])
+  );
+  const league = isLeagueFormat(tournament.format);
+  return (
+    <div>
+      <div className="flex align-items-baseline gap-2 mb-2">
+        <span className="font-semibold">
+          №{tournament.number} {tournament.name}
+        </span>
+        <span className="text-500 text-xs">
+          {matches.length} {plural(matches.length, ["матч", "матчі", "матчів"])}
+        </span>
+      </div>
+      <div className="flex flex-column gap-2">
+        {matches.map((match) => {
+          const result = outcome(match, clubId);
+          return (
+            <MatchRow
+              key={match.id}
+              match={match}
+              clubsById={clubsById}
+              editable={false}
+              meta={`${describeMatch(match, league)} · ${result ?? "не зіграно"}`}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * Modal pattern from web-app: no header, title in the body, absolute close
+ * button. The club's record per tournament, then all its matches, newest
+ * tournament first.
+ */
 const ClubHistoryDialog = ({ history, onHide }: IClubHistoryDialogProps) => {
   const catalogClub = history
     ? findCatalogClub(history.clubId, history.name)
@@ -132,6 +190,17 @@ const ClubHistoryDialog = ({ history, onHide }: IClubHistoryDialogProps) => {
               className="font-bold"
             />
           </DataTable>
+
+          <h3 className="section-title mt-4 mb-3">Усі матчі</h3>
+          <div className="flex flex-column gap-4">
+            {[...history.entries].reverse().map((entry) => (
+              <TournamentMatches
+                key={entry.tournament.id}
+                entry={entry}
+                clubId={history.clubId}
+              />
+            ))}
+          </div>
         </>
       )}
     </Dialog>
