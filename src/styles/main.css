@@ -554,12 +554,94 @@ code {
    From 768px the actions move up next to the title. */
 .hero {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     "info"
     "board"
     "progress"
     "actions";
   row-gap: 1.5rem;
+}
+
+/* Penalty areas and goal dots behind the scoreboard (see TournamentHero).
+   Sizes are shared through --box-w/--box-h so the dots and the lines line
+   up on every screen width. */
+.pitch > .hero__goals {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  --box-w: min(9rem, 26%);
+  --box-h: min(15rem, 62%);
+}
+
+.pitch-goal {
+  position: absolute;
+  top: 50%;
+  width: var(--box-w);
+  height: var(--box-h);
+  transform: translateY(-50%);
+}
+
+.pitch-goal--s {
+  left: 0;
+}
+
+.pitch-goal--v {
+  right: 0;
+  transform: translateY(-50%) scaleX(-1);
+}
+
+.pitch-goal > span {
+  position: absolute;
+  border: 1px solid var(--hairline);
+}
+
+.pitch-goal__box {
+  inset: 0;
+  border-left: 0;
+}
+
+.pitch-goal__six {
+  top: 30%;
+  left: 0;
+  width: 38%;
+  height: 40%;
+  border-left: 0;
+}
+
+/* The arc ("D") outside the box, around the penalty spot. */
+.pitch-goal__arc {
+  top: 37%;
+  left: 100%;
+  width: 18%;
+  height: 26%;
+  border-left: 0;
+  border-radius: 0 999px 999px 0;
+}
+
+.goal-dot {
+  position: absolute;
+  top: calc(50% + var(--dy) * var(--box-h));
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  opacity: 0.6;
+  transform: translate(-50%, -50%);
+}
+
+/* V's goals go in S's net on the left, S's goals in V's net on the right. */
+.goal-dot--v {
+  left: calc(var(--dx) * var(--box-w));
+  background: var(--player-v);
+  box-shadow: 0 0 0.4rem var(--player-v);
+}
+
+.goal-dot--s {
+  right: calc(var(--dx) * var(--box-w));
+  background: var(--player-s);
+  box-shadow: 0 0 0.4rem var(--player-s);
+  transform: translate(50%, -50%);
 }
 
 .hero__info {
@@ -589,7 +671,7 @@ code {
 }
 
 .hero__score {
-  font-size: 3.5rem;
+  font-size: 2.75rem;
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -625,6 +707,10 @@ code {
 
   .hero__title {
     font-size: 2rem;
+  }
+
+  .hero__score {
+    font-size: 3.5rem;
   }
 
   .hero__score {
