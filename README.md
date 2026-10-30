@@ -4,6 +4,8 @@ Web app for the EA SPORTS FC tournaments between S and V: tournaments imported f
 
 React 19, TypeScript, Vite, PrimeReact and PrimeFlex, Cloud Firestore. No backend server and no sign-in.
 
+Common tasks and fixes (deploy, import problems, replacing a tournament, missing crests or flags, backups) are in `docs/how-to.md`.
+
 ## Commands
 
 ```bash

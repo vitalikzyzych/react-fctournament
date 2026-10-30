@@ -14,6 +14,10 @@ Core features:
 
 The app was scaffolded on 2026-10-30, reusing conventions from the sibling project `../web-app` (SOLV, React + PrimeReact). It is fully independent of it; do not import from or modify `../web-app`.
 
+## Runbook
+
+`docs/how-to.md` holds the step lists for common tasks and fixes (deploy, GitHub, import errors, replacing or unlocking a tournament, missing crests or flags, club id drift, backups, Firebase CLI account, emulator). When a new procedure comes up with the user, add it there and keep the existing steps in sync with the code.
+
 ## Commands
 
 ```bash
