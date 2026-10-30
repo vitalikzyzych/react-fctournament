@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 import { Button } from "primereact/button";
 
+import QuickEntry from "./components/QuickEntry";
+
 import { PageHeader } from "@/components";
 import {
   computeAllTimePlayers,
@@ -100,6 +102,12 @@ const Dashboard = () => {
       />
 
       <div className="grid">
+        {tournament.status === "active" && (
+          <div className="col-12">
+            <QuickEntry tournament={tournament} matches={stored} />
+          </div>
+        )}
+
         <div className="col-6 md:col-3">
           <StatCard
             icon="SportSoccer"

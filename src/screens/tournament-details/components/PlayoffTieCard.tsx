@@ -8,25 +8,22 @@ import {
   canPair,
   gameLabel,
   type IClub,
-  type IPlayoffMatch,
   type IPlayoffTie,
-  type IScore,
   type ITournament,
   newTieGames,
   pendingReplay,
   PLAYOFF_ROUNDS,
   roundLegs,
-  staleExtraGames,
 } from "@/domain";
+import { useSaveResult } from "@/hooks";
 import { useToast } from "@/providers";
 import {
   createPlayoffGames,
   deletePlayoffMatches,
-  savePlayoffResult,
   setPlayoffTeams,
 } from "@/source/TournamentSource";
 import { ChampionBadge, ClubLabel, FluentIcon, MatchRow } from "@/ui";
-import { formatScore, plural } from "@/utils";
+import { formatScore } from "@/utils";
 
 interface IPlayoffTieCardProps {
   tournament: ITournament;
@@ -59,6 +56,7 @@ const PlayoffTieCard = ({
   taken,
 }: IPlayoffTieCardProps) => {
   const { show } = useToast();
+  const saveResult = useSaveResult(tournament, tie.games);
   const [editing, setEditing] = useState(false);
   const [home, setHome] = useState<string | null>(tie.home);
   const [away, setAway] = useState<string | null>(tie.away);
@@ -121,54 +119,6 @@ const PlayoffTieCard = ({
           tie.games.map((game) => game.id)
         ).catch(fail("Не вдалося видалити пару")),
     });
-
-  const persist = (
-    game: IPlayoffMatch,
-    result: IScore | null,
-    removeIds: string[]
-  ) => {
-    show(
-      "success",
-      result ? "Результат збережено" : "Результат очищено",
-      `${nameOf(game.home)} ${formatScore(result)} ${nameOf(game.away)}`
-    );
-    savePlayoffResult(tournament.id, game.id, result, removeIds).catch(
-      fail("Не вдалося зберегти")
-    );
-  };
-
-  const saveGame = (game: IPlayoffMatch, result: IScore | null) => {
-    const stale = staleExtraGames(tie, game.id, result);
-    if (!stale.length) {
-      persist(game, result, []);
-      return;
-    }
-    // A corrected or cleared result makes the extra games after it meaningless.
-    confirmDialog({
-      header: "Видалити перегравання?",
-      message: `Після цієї зміни перегравання не потрібне. ${stale.length} ${plural(stale.length, ["наступний матч буде видалено", "наступні матчі буде видалено", "наступних матчів буде видалено"])}.`,
-      acceptLabel: "Зберегти й видалити",
-      rejectLabel: "Скасувати",
-      accept: () =>
-        persist(
-          game,
-          result,
-          stale.map((other) => other.id)
-        ),
-    });
-  };
-
-  const saveReplay = (game: IPlayoffMatch, result: IScore | null) => {
-    if (!result) return;
-    show(
-      "success",
-      "Результат збережено",
-      `${nameOf(game.home)} ${formatScore(result)} ${nameOf(game.away)}`
-    );
-    createPlayoffGames(tournament.id, [{ ...game, result }]).catch(
-      fail("Не вдалося зберегти")
-    );
-  };
 
   const picker = (side: "home" | "away") => {
     const value = side === "home" ? home : away;
@@ -328,7 +278,7 @@ const PlayoffTieCard = ({
           clubsById={clubsById}
           editable={editable && !editing}
           meta={gameLabel(game) ?? undefined}
-          onSave={(result) => saveGame(game, result)}
+          onSave={(result) => saveResult(game, result)}
         />
       ))}
 
@@ -368,7 +318,7 @@ const PlayoffTieCard = ({
             clubsById={clubsById}
             editable
             meta={gameLabel(replay) ?? undefined}
-            onSave={(result) => saveReplay(replay, result)}
+            onSave={(result) => saveResult(replay, result)}
           />
         </>
       )}

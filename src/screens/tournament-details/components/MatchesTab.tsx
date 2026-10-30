@@ -6,12 +6,10 @@ import {
   groupMatches,
   type IClub,
   type IMatch,
-  type IScore,
   type ITournament,
   sortMatches,
 } from "@/domain";
-import { useToast } from "@/providers";
-import { saveMatchResult } from "@/source/TournamentSource";
+import { useSaveResult } from "@/hooks";
 import { FluentIcon, MatchRow } from "@/ui";
 import { formatScore } from "@/utils";
 
@@ -21,7 +19,7 @@ interface IMatchesTabProps {
 }
 
 const MatchesTab = ({ tournament, matches }: IMatchesTabProps) => {
-  const { show } = useToast();
+  const saveResult = useSaveResult(tournament, matches);
   const sorted = groupMatches(sortMatches(matches));
   const matchdays = [...new Set(sorted.map((m) => m.matchday))];
   const firstOpen =
@@ -33,20 +31,6 @@ const MatchesTab = ({ tournament, matches }: IMatchesTabProps) => {
   const clubsById = new Map<string, IClub>(
     tournament.clubs.map((club) => [club.id, club])
   );
-  const nameOf = (id: string) => clubsById.get(id)?.name ?? id;
-
-  const onSave = (match: IMatch, result: IScore | null) => {
-    const label = `${nameOf(match.home)} ${formatScore(result)} ${nameOf(match.away)}`;
-    show(
-      "success",
-      result ? "Результат збережено" : "Результат очищено",
-      label
-    );
-    saveMatchResult(tournament.id, match.id, result).catch((error: Error) =>
-      show("error", "Не вдалося зберегти", error.message)
-    );
-  };
-
   const dayMatches = sorted.filter((m) => m.matchday === matchday);
   const played = dayMatches.filter((m) => m.result !== null).length;
 
@@ -100,7 +84,7 @@ const MatchesTab = ({ tournament, matches }: IMatchesTabProps) => {
                   match={match}
                   clubsById={clubsById}
                   editable={editable}
-                  onSave={(result) => onSave(match, result)}
+                  onSave={(result) => saveResult(match, result)}
                 />
               ))}
             </div>

@@ -1,6 +1,7 @@
 export * from "./exportJson";
 export * from "./history";
 export * from "./playoff";
+export * from "./schedule";
 export * from "./schema";
 export * from "./standings";
 export * from "./stats";

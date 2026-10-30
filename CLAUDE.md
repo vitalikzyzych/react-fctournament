@@ -49,6 +49,7 @@ src/
     schema.ts      zod schema of the JSON format + Ukrainian error messages
     validation.ts  validateTournamentFile: schema, references, status rules, warnings
     validateFormat.ts  per-format structural rules (sv-groups-4x4), group matches only
+    schedule.ts    upcomingMatches (play order), latestResult
     playoff.ts     bracket (computePlayoff), tie winners, replays, champion, playoff reach
     standings.ts   records and group tables (tie-breakers)
     stats.ts       tournament stats, S/V records
@@ -62,6 +63,7 @@ src/
   constants/env.ts      Every VITE_* variable is read here and only here
   source/TournamentSource.ts   Every Firestore read and write
   source/firestore.rules.test.ts  rules tests through TournamentSource against the emulator
+  hooks/useSaveResult.ts   Saving a score from any screen (group, playoff game, pending extra game)
   providers/
     TournamentDataProvider.tsx  ONE live subscription to all tournaments + one to all matches
                                 (collection group); every screen reads useTournamentData()
@@ -76,7 +78,7 @@ docs/json-format.md   The JSON exchange format; also the spec given to ChatGPT
 examples/             Example new and completed tournament files (used by tests)
 ```
 
-Layering: screen, then `useTournamentData()` for reads or a `TournamentSource` function for writes. Statistics are always computed in `domain/` from match results and never stored.
+Layering: screen, then `useTournamentData()` for reads or a `TournamentSource` function for writes. Score entry always goes through `useSaveResult`, so the playoff rules (stale extra games, creating a pending extra game) apply everywhere. Statistics are always computed in `domain/` from match results and never stored.
 
 ## Data model (Firestore)
 
@@ -110,6 +112,8 @@ tournaments/{tournamentId}/matches/{matchId}
 - Rules allow on a tournament: create (exact shape, `champion` optional), update of `status` only or of `champion` only (the latter not when completed), delete unless completed. On a match: create during import or while active; update while active (group: `result` only; playoff: `home`, `away`, `result`); delete together with the tournament, and playoff games also on their own while not completed. Completed tournaments are locked; the UI "Розблокувати" sets them back to active.
 - Standings order: points (3/1/0), goal difference, head-to-head among the tied clubs (points, goal difference, goals), goals scored, name. In this format clubs of the same player never meet, so head-to-head often has no data and goals scored decides.
 - **Crests and flags** (2026-10-30): crests come from ESPN's public team lists (top European leagues and their second divisions, smaller EA FC leagues, UEFA competitions; about 500 clubs). ESPN sends no CORS headers, so `scripts/build-club-catalog.ts` builds a static catalog that ships with the app; nothing is stored in Firestore. Clubs match by id, then by name (`normalizeClubName`); mismatches get an entry in the script's `ALIASES`. Images are hotlinked from `a.espncdn.com` (dark variant, resized by its CDN). An unknown club shows a letter circle, and the import preview lists clubs without a crest. Flags: `ui/CountryFlag.tsx` (flag-icons, named-import registry like FluentIcon); the country from the tournament file wins over the catalog's league country. `ClubLabel` shows the crest always and the flag with `showFlag` (tables and lists, not match rows).
+- **Play order** (confirmed by the user on 2026-10-30): group matches by matchday, then each playoff round with every first leg before the second legs (QF1, QF2, QF3, QF4 first legs, then QF1 second leg, ...), extra games after the legs. `upcomingMatches` implements it.
+- **Dashboard quick entry** ("Матчі зараз", active tournament only): the result changed last and the next match, both editable; the next two before the first result.
 - Player badges: S is red (`--red-500`), V is blue (`--blue-500`), see `ui/PlayerBadge.tsx` and `.player-badge` in `styles/main.css`.
 - Look: dark "stadium" theme. Teal is the accent (kept apart from S red and V blue). Cards are `.app-card` (translucent over the red/blue background glow), section titles `.section-title`, the dashboard and tournament page open with `ui/TournamentHero.tsx` (scoreboard on a `.pitch` background). Light-theme utility colours such as `bg-red-50` do not work on dark; use `.notice`, `.notice--error`, `.notice--warning`.
 - Only the final score is stored. No dates, no extra time, no penalties.
