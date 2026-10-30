@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { confirmDialog } from "primereact/confirmdialog";
 
+import RenameTournamentDialog from "./RenameTournamentDialog";
+
 import { type IMatch, type ITournament, toTournamentFile } from "@/domain";
 import { useToast, useTournamentData } from "@/providers";
 import {
@@ -26,6 +28,7 @@ const TournamentActions = ({
   const navigate = useNavigate();
   const unplayed = matches.filter((m) => m.result === null).length;
   const [isCompleteOpen, setCompleteOpen] = useState(false);
+  const [isRenameOpen, setRenameOpen] = useState(false);
   // One tournament is played at a time: a planned one starts only when no
   // other tournament is in progress.
   const { tournaments } = useTournamentData();
@@ -123,6 +126,15 @@ const TournamentActions = ({
           )
         }
       />
+      <Button
+        icon={<FluentIcon name="Edit" />}
+        severity="secondary"
+        text
+        aria-label="Змінити назву"
+        tooltip="Змінити назву"
+        tooltipOptions={{ position: "bottom" }}
+        onClick={() => setRenameOpen(true)}
+      />
       {tournament.status !== "completed" && (
         <Button
           icon={<FluentIcon name="Delete" />}
@@ -132,6 +144,12 @@ const TournamentActions = ({
           tooltip="Видалити турнір"
           tooltipOptions={{ position: "bottom" }}
           onClick={remove}
+        />
+      )}
+      {isRenameOpen && (
+        <RenameTournamentDialog
+          tournament={tournament}
+          onHide={() => setRenameOpen(false)}
         />
       )}
       {isCompleteOpen && (

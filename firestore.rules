@@ -110,11 +110,14 @@ service cloud.firestore {
 
       allow create: if isTournament(request.resource.data, tournamentId);
 
-      // Status changes (start, complete, unlock), or picking the champion by
-      // hand while the tournament is in progress.
+      // Status changes (start, complete, unlock), a new name (in any
+      // status), or picking the champion by hand while the tournament is in
+      // progress.
       allow update: if request.resource.data.updatedAt == request.time
         && ((changedOnly(['status', 'updatedAt'])
              && isStatus(request.resource.data.status))
+            || (changedOnly(['name', 'updatedAt'])
+                && isText(request.resource.data.name, 80))
             || (changedOnly(['champion', 'updatedAt'])
                 && resource.data.status == 'active'
                 && isChampion(request.resource.data.champion)));

@@ -43,6 +43,7 @@ const {
   saveMatchResult,
   setPlayoffTeams,
   setTournamentChampion,
+  setTournamentName,
   setTournamentStatus,
 } = await import("./TournamentSource");
 
@@ -114,10 +115,27 @@ describe("firestore.rules", () => {
     await setTournamentStatus("rules-completed", "completed");
   });
 
+  it("renames a tournament in any status, nothing else with it", async () => {
+    await setTournamentName("rules-new", "Інша назва");
+    await setTournamentName("rules-completed", "Завершений, нова назва");
+    const ref = doc(db, "tournaments", "rules-new");
+    await expect(setTournamentName("rules-new", "")).rejects.toThrow();
+    await expect(
+      setTournamentName("rules-new", "x".repeat(81))
+    ).rejects.toThrow();
+    await expect(
+      updateDoc(ref, {
+        name: "Назва",
+        number: 5,
+        updatedAt: serverTimestamp(),
+      })
+    ).rejects.toThrow();
+  });
+
   it("allows only status changes on a tournament", async () => {
     const ref = doc(db, "tournaments", "rules-new");
     await expect(
-      updateDoc(ref, { name: "Інша назва", updatedAt: serverTimestamp() })
+      updateDoc(ref, { game: "Інша гра", updatedAt: serverTimestamp() })
     ).rejects.toThrow();
     await expect(
       updateDoc(ref, { status: "archived", updatedAt: serverTimestamp() })

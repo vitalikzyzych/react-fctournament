@@ -303,6 +303,16 @@ export const setTournamentChampion = (
     updatedAt: serverTimestamp(),
   });
 
+/** Renames a tournament. Allowed in every status, completed included. */
+export const setTournamentName = (
+  tournamentId: string,
+  name: string
+): Promise<void> =>
+  updateDoc(doc(getDb(), TOURNAMENTS, tournamentId), {
+    name,
+    updatedAt: serverTimestamp(),
+  });
+
 export const setTournamentStatus = (
   tournamentId: string,
   status: TournamentStatus
