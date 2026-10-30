@@ -6,6 +6,7 @@ import {
   type IClubStat,
   type IMatch,
   type IPlayedMatch,
+  isLeagueFormat,
   type ITournament,
 } from "@/domain";
 import { ClubLabel, PlayerVersusCard, SectionCard, StatCard } from "@/ui";
@@ -49,6 +50,7 @@ const ClubList = ({
 const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
   const stats = computeTournamentStats(tournament.clubs, matches);
   const clubsById = new Map(tournament.clubs.map((club) => [club.id, club]));
+  const league = isLeagueFormat(tournament.format);
 
   const bigWin = (match: IPlayedMatch) => {
     const home = clubsById.get(match.home);
@@ -148,8 +150,8 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
               )}
             />
             <Column
-              field="club.group"
-              header="Гр."
+              field={league ? "club.pot" : "club.group"}
+              header={league ? "Кош." : "Гр."}
               sortable
               className="text-center"
             />

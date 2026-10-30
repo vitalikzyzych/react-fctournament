@@ -5,17 +5,19 @@ import { Checkbox } from "primereact/checkbox";
 import { Dialog } from "primereact/dialog";
 
 import {
-  computeStandings,
+  clubOrigin,
   drawCandidates,
-  groupMatches,
+  groupTable,
   type IClub,
   type IMatch,
   type IPlayoffRoundInfo,
   type IPlayoffTie,
+  isLeagueFormat,
   type ITournament,
   pickDraw,
   type PlayerId,
   type PlayoffDraw,
+  playoffQualifiers,
 } from "@/domain";
 import { useToast } from "@/providers";
 import { applyPlayoffDraw } from "@/source/TournamentSource";
@@ -53,30 +55,30 @@ const PlayoffDrawDialog = ({
   onHide,
 }: IPlayoffDrawDialogProps) => {
   const { show } = useToast();
-  // Group position of every club, to help pick the qualified ones.
-  const positions = useMemo(() => {
-    const group = groupMatches(matches);
-    return new Map(
-      tournament.groups.flatMap((g) =>
-        computeStandings(
-          tournament.clubs.filter((club) => club.group === g.id),
-          group.filter((match) => match.group === g.id)
-        ).map((row): [string, number] => [row.club.id, row.position])
-      )
-    );
-  }, [tournament, matches]);
+  const league = isLeagueFormat(tournament.format);
+  // Table position of every club, to help pick the qualified ones.
+  const positions = useMemo(
+    () =>
+      new Map(
+        tournament.groups.flatMap((g) =>
+          groupTable(tournament, matches, g.id).map((row): [string, number] => [
+            row.club.id,
+            row.position,
+          ])
+        )
+      ),
+    [tournament, matches]
+  );
 
   // Starts from the clubs already in the round's ties, otherwise from the
-  // first two of every group.
+  // suggested qualifiers (first two of every group, or the 4 best S and V
+  // clubs of a league).
   const [selected, setSelected] = useState<string[]>(() => {
     if (fixedClubs) return fixedClubs.map((club) => club.id);
     const picked = ties
       .flatMap((tie) => [tie.home, tie.away])
       .filter((id) => id !== null);
-    if (picked.length) return picked;
-    return tournament.clubs
-      .filter((club) => (positions.get(club.id) ?? 0) <= 2)
-      .map((club) => club.id);
+    return picked.length ? picked : playoffQualifiers(tournament, matches);
   });
   const [draw, setDraw] = useState<PlayoffDraw | null>(null);
 
@@ -90,7 +92,11 @@ const PlayoffDrawDialog = ({
     : PLAYERS.every((player) => countOf(player) === perPlayer);
 
   // At most 105 pairings of 8 clubs, cheap enough for every render.
-  const { draws, conflicts } = drawCandidates(round.id, selectedClubs);
+  const { draws, conflicts } = drawCandidates(round.id, selectedClubs, league);
+
+  const pairRule = league
+    ? "У кожній парі клуб S грає з клубом V."
+    : "У кожній парі клуб S грає з клубом V з іншої групи.";
 
   const replaces = ties.some((tie) => tie.games.length > 0);
 
@@ -129,7 +135,7 @@ const PlayoffDrawDialog = ({
         showFlag
       />
       <span className="text-500 text-xs white-space-nowrap">
-        Гр. {club.group}
+        {league ? clubOrigin(club) : `Гр. ${club.group}`}
         {withPosition &&
           positions.has(club.id) &&
           `, ${positions.get(club.id)} місце`}
@@ -142,7 +148,7 @@ const PlayoffDrawDialog = ({
       .filter((club) => club.owner === player)
       .sort(
         (a, b) =>
-          a.group.localeCompare(b.group) ||
+          (league ? 0 : a.group.localeCompare(b.group)) ||
           (positions.get(a.id) ?? 0) - (positions.get(b.id) ?? 0)
       );
     const full = countOf(player) >= perPlayer;
@@ -208,8 +214,10 @@ const PlayoffDrawDialog = ({
       </h2>
       <p className="m-0 mb-3 text-600 text-sm">
         {round.strictPairing
-          ? `Оберіть по ${perPlayer} клуби кожного гравця. У кожній парі клуб S грає з клубом V з іншої групи.`
-          : "Переможці 1/4 фіналу. Пари розводяться так, щоб клуби одного гравця чи однієї групи не грали між собою, якщо це можливо."}
+          ? `Оберіть по ${perPlayer} клуби кожного гравця. ${pairRule}`
+          : league
+            ? "Переможці 1/4 фіналу. Пари розводяться так, щоб клуби одного гравця не грали між собою, якщо це можливо."
+            : "Переможці 1/4 фіналу. Пари розводяться так, щоб клуби одного гравця чи однієї групи не грали між собою, якщо це можливо."}
       </p>
 
       {fixedClubs ? (
@@ -236,8 +244,8 @@ const PlayoffDrawDialog = ({
         <div className="notice notice--error align-items-center mb-3">
           <FluentIcon name="ErrorCircle" size={18} />
           <span>
-            З цими клубами не скласти пари за правилом: клуб S проти клубу V з
-            іншої групи. Змініть вибір.
+            З цими клубами не скласти пари за правилом. {pairRule} Змініть
+            вибір.
           </span>
         </div>
       )}
@@ -267,8 +275,8 @@ const PlayoffDrawDialog = ({
               <FluentIcon name="Warning" size={18} />
               <span>
                 Розвести всіх не вийде: у жеребкуванні {conflicts}{" "}
-                {plural(conflicts, ["збіг", "збіги", "збігів"])} гравця чи
-                групи, менше неможливо.
+                {plural(conflicts, ["збіг", "збіги", "збігів"])}{" "}
+                {league ? "гравця" : "гравця чи групи"}, менше неможливо.
               </span>
             </div>
           )}

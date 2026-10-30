@@ -214,17 +214,21 @@ export const staleExtraGames = (
 /**
  * Whether `candidate` may face `picked` in a tie of `round`. In the
  * quarter-finals the clubs must belong to different players and come from
- * different groups.
+ * different groups. A league has one group, so there only the player counts.
  */
 export const canPair = (
   round: PlayoffRound,
   picked: IClub | undefined,
-  candidate: IClub
+  candidate: IClub,
+  league = false
 ): boolean => {
   if (!picked) return true;
   if (picked.id === candidate.id) return false;
   if (!roundInfo(round).strictPairing) return true;
-  return picked.owner !== candidate.owner && picked.group !== candidate.group;
+  return (
+    picked.owner !== candidate.owner &&
+    (league || picked.group !== candidate.group)
+  );
 };
 
 /** "1-й матч", "2-й матч" for legs; "Перегравання", "Перегравання 2" after. */
@@ -235,10 +239,15 @@ export const gameLabel = (match: IPlayoffMatch): string | null => {
   return extra === 1 ? "Перегравання" : `Перегравання ${extra}`;
 };
 
-/** "Група A · тур 2", "1/4 фіналу · 2-й матч", "Фінал · перегравання". */
-export const describeMatch = (match: IMatch): string => {
+/**
+ * "Група A · тур 2" ("Ліга · тур 2" in a league), "1/4 фіналу · 2-й матч",
+ * "Фінал · перегравання".
+ */
+export const describeMatch = (match: IMatch, league = false): string => {
   if (match.stage === "group") {
-    return `Група ${match.group} · тур ${match.matchday}`;
+    return league
+      ? `Ліга · тур ${match.matchday}`
+      : `Група ${match.group} · тур ${match.matchday}`;
   }
   const label = gameLabel(match);
   return label

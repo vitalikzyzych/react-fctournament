@@ -3,7 +3,12 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 
-import { type IClubHistory, type IClubHistoryEntry, roundName } from "@/domain";
+import {
+  type IClubHistory,
+  type IClubHistoryEntry,
+  isLeagueFormat,
+  roundName,
+} from "@/domain";
 import {
   ClubCrest,
   CountryFlag,
@@ -81,7 +86,9 @@ const ClubHistoryDialog = ({ history, onHide }: IClubHistoryDialogProps) => {
             <Column
               header="Група"
               body={(e: IClubHistoryEntry) =>
-                `${e.club.group}, ${e.position} місце`
+                isLeagueFormat(e.tournament.format)
+                  ? `Ліга, ${e.position} місце`
+                  : `${e.club.group}, ${e.position} місце`
               }
             />
             <Column

@@ -6,9 +6,11 @@ import { Dropdown } from "primereact/dropdown";
 
 import {
   canPair,
+  clubOrigin,
   gameLabel,
   type IClub,
   type IPlayoffTie,
+  isLeagueFormat,
   type ITournament,
   newTieGames,
   pendingReplay,
@@ -64,6 +66,7 @@ const PlayoffTieCard = ({
   const isEmpty = tie.games.length === 0;
   const legs = roundLegs(tie.round);
   const strict = PLAYOFF_ROUNDS.find((r) => r.id === tie.round)?.strictPairing;
+  const league = isLeagueFormat(tournament.format);
   const anyPlayed = tie.games.some((game) => game.result !== null);
   const showPickers = editable && (isEmpty || editing);
   const replay = editable ? pendingReplay(tie) : null;
@@ -130,7 +133,8 @@ const PlayoffTieCard = ({
         onChange={(e) => pick(side, e.value)}
         options={options}
         optionDisabled={(option: IClubOption) =>
-          taken.has(option.value) || !canPair(tie.round, otherClub, option.club)
+          taken.has(option.value) ||
+          !canPair(tie.round, otherClub, option.club, league)
         }
         itemTemplate={(option: IClubOption) => (
           <span className="flex align-items-center justify-content-between gap-2 w-full">
@@ -141,7 +145,7 @@ const PlayoffTieCard = ({
               country={option.club.country}
               showFlag
             />
-            <span className="text-500 text-xs">Гр. {option.club.group}</span>
+            <span className="text-500 text-xs">{clubOrigin(option.club)}</span>
           </span>
         )}
         valueTemplate={(option: IClubOption | null) =>
@@ -222,7 +226,9 @@ const PlayoffTieCard = ({
           </div>
           {strict && (
             <div className="text-500 text-xs">
-              Суперник: клуб іншого гравця з іншої групи.
+              {league
+                ? "Суперник: клуб іншого гравця."
+                : "Суперник: клуб іншого гравця з іншої групи."}
             </div>
           )}
           {isEmpty ? (

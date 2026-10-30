@@ -2,6 +2,7 @@ import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 
 import {
+  clubOrigin,
   findChampion,
   type IClub,
   type IMatch,
@@ -112,7 +113,9 @@ const ChampionPanel = ({
                 country={option.club.country}
                 showFlag
               />
-              <span className="text-500 text-xs">Гр. {option.club.group}</span>
+              <span className="text-500 text-xs">
+                {clubOrigin(option.club)}
+              </span>
             </span>
           )}
           valueTemplate={(option: IClubOption | null) =>

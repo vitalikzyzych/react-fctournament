@@ -9,8 +9,11 @@ export type TournamentStatus = "planned" | "active" | "completed";
  * Tournament formats the app knows how to validate. Each format adds its own
  * structural rules on top of the generic checks (see validateFormat.ts).
  */
-export type TournamentFormat = "sv-groups-4x4";
-export const TOURNAMENT_FORMATS: TournamentFormat[] = ["sv-groups-4x4"];
+export type TournamentFormat = "sv-groups-4x4" | "sv-league-40";
+export const TOURNAMENT_FORMATS: TournamentFormat[] = [
+  "sv-groups-4x4",
+  "sv-league-40",
+];
 
 /** Group stage, then a playoff (quarter-finals, semi-finals, final). */
 export type MatchStage = "group" | "playoff";
@@ -35,6 +38,10 @@ export interface IClub {
   country?: string;
   owner: PlayerId;
   group: string;
+  /** League formats: the pot (1 to 4) the club was drawn from. */
+  pot?: number;
+  /** League formats: pot, owner and number in the pot, "1S-1", "3V-2". */
+  code?: string;
 }
 
 /** Final score. `null` on a match means it is not played yet; 0:0 is a result. */

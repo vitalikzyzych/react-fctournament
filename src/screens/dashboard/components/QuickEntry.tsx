@@ -2,6 +2,7 @@ import {
   describeMatch,
   type IClub,
   type IMatch,
+  isLeagueFormat,
   type IStoredMatch,
   type ITournament,
   latestResult,
@@ -59,7 +60,7 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
               match={match}
               clubsById={clubsById}
               editable
-              meta={describeMatch(match)}
+              meta={describeMatch(match, isLeagueFormat(tournament.format))}
               onSave={(result) => saveResult(match, result)}
             />
           </div>

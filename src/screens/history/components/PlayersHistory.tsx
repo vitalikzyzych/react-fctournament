@@ -119,12 +119,26 @@ const PlayersHistory = ({ all }: { all: ITournamentWithMatches[] }) => {
             <Column
               header="Чемпіон"
               body={(s: ITournamentSummary) =>
-                s.champion ? (
-                  <ClubLabel
-                    name={s.champion.name}
-                    clubId={s.champion.id}
-                    owner={s.champion.owner}
-                  />
+                s.champion || s.leagueWinner ? (
+                  <div className="flex flex-column gap-1">
+                    {s.champion && (
+                      <ClubLabel
+                        name={s.champion.name}
+                        clubId={s.champion.id}
+                        owner={s.champion.owner}
+                      />
+                    )}
+                    {s.leagueWinner && (
+                      <span className="flex align-items-center gap-1">
+                        <span className="text-500 text-xs">Ліга:</span>
+                        <ClubLabel
+                          name={s.leagueWinner.name}
+                          clubId={s.leagueWinner.id}
+                          owner={s.leagueWinner.owner}
+                        />
+                      </span>
+                    )}
+                  </div>
                 ) : (
                   <span className="text-500">–</span>
                 )

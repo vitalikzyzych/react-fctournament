@@ -30,7 +30,7 @@ All six fields are required. Unknown extra fields are ignored and are not stored
 | `number` | integer | Tournament number, 1 or higher, for example `4`. |
 | `name` | string | Display name in Ukrainian, for example `Турнір 4`. Up to 80 characters. |
 | `game` | string | For example `EA SPORTS FC 26`. |
-| `format` | string | Currently only `sv-groups-4x4`. |
+| `format` | string | `sv-groups-4x4` (4 groups of 4 clubs) or `sv-league-40` (a 40-club league, see below). |
 | `status` | string | `planned`, `active` or `completed`. |
 | `champion` | string or null | Optional. Club `id` of the champion, for a tournament whose final was not played (for example an older tournament without a full playoff). Must be a club from `clubs`. When the final has a winner, the final winner is the champion and this field is ignored. |
 
@@ -56,7 +56,7 @@ Always exactly these two entries:
 [{ "id": "A", "name": "Група A" }, { "id": "B", "name": "Група B" }]
 ```
 
-`id` is 1 to 4 uppercase letters or digits. For `sv-groups-4x4` there are exactly four groups: `A`, `B`, `C`, `D`.
+`id` is 1 to 4 uppercase letters or digits. For `sv-groups-4x4` there are exactly four groups: `A`, `B`, `C`, `D`. For `sv-league-40` there is one group, `{ "id": "L", "name": "Ліга" }`.
 
 ## clubs
 
@@ -71,6 +71,8 @@ Always exactly these two entries:
 | `country` | string | Optional. |
 | `owner` | string | `S` or `V`: who plays this club in this tournament. |
 | `group` | string | A group `id` from `groups`. |
+| `pot` | integer | Only for `sv-league-40`, required there: the pot, 1 to 4. |
+| `code` | string | Only for `sv-league-40`, required there: pot, owner and number in the pot, for example `1S-1`, `3V-2`. |
 
 **Club ids must stay the same across all tournaments.** The history of a club is joined by its id. If Real Madrid is `real-madrid` in tournament 1, it must be `real-madrid` in every later file, not `real_madrid` or `realmadrid`. Use the club list exported from the app and reuse its ids. A club that has never played before gets a new id in the same style.
 
@@ -173,6 +175,22 @@ A schedule that satisfies these rules, with the group's clubs called S1, S2 (own
 | 4 | S1 vs V2 | S2 vs V1 |
 
 The home team is listed first.
+
+## Format rules for sv-league-40
+
+A league phase in the style of the UEFA Champions League. These rules apply to the league matches. The import refuses a file that breaks any of these:
+
+1. 40 clubs in one group `L`, 20 with owner `S` and 20 with owner `V`.
+2. 4 pots of 10 clubs. Every pot has 5 `S` clubs and 5 `V` clubs. Every club has `pot` and a unique `code` that starts with its pot and owner (`2V-4` is a V club of pot 2).
+3. Clubs of the same player never play each other. Every match is an `S` club against a `V` club.
+4. Every club plays 8 matches against 8 different clubs: 2 from every pot, its own included, one of them at home and one away. That is 4 home and 4 away matches per club.
+5. No pair of clubs meets twice.
+6. 8 matchdays (1 to 8). Every club plays exactly once on every matchday, so each matchday has 20 matches and there are 160 in total.
+7. Match ids are `L{matchday}-{number}`, from `L1-1` to `L8-20`. `stage` is `group`, `group` is `L`.
+
+`docs/chatgpt-league-prompt.md` has a ready prompt that asks ChatGPT for such a draw. `examples/tournament-league.example.json` is a valid file.
+
+After the league the app has two champions. The winner of the league table, once every league match is played, is the league winner. The playoff works as in the other format, with the 4 best `S` clubs and the 4 best `V` clubs of the table suggested for the quarter-final draw. In the quarter-finals every pair is an `S` club against a `V` club; groups play no part. The winner of the final is the champion of the tournament.
 
 ## Standings
 

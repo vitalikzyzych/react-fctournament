@@ -1,4 +1,5 @@
 import ChampionBadge from "./ChampionBadge";
+import FluentIcon from "./FluentIcon";
 import PlayerBadge from "./PlayerBadge";
 import { STATUS_LABELS } from "./StatusTag";
 
@@ -15,7 +16,8 @@ interface ITitlesCardProps {
 /**
  * Tournaments won by S and by V, from each completed tournament's champion
  * (final winner, or the club picked by hand), with the list of champions.
- * Tournaments in progress are listed but never counted.
+ * League winners are counted on a line of their own. Tournaments in progress
+ * are listed but never counted.
  */
 const TitlesCard = ({ summaries, showList = true }: ITitlesCardProps) => {
   const completed = summaries.filter((s) => countsAsTitle(s.tournament));
@@ -29,6 +31,12 @@ const TitlesCard = ({ summaries, showList = true }: ITitlesCardProps) => {
     (s) => s.tournament.status === "active"
   ).length;
   const share = (n: number) => `${decided ? (n / decided) * 100 : 0}%`;
+  // League formats have a second champion: the winner of the league table.
+  const leagueTitles = { S: 0, V: 0 };
+  completed.forEach(({ leagueWinner }) => {
+    if (leagueWinner) leagueTitles[leagueWinner.owner] += 1;
+  });
+  const leagueDecided = leagueTitles.S + leagueTitles.V;
 
   return (
     <div>
@@ -56,9 +64,21 @@ const TitlesCard = ({ summaries, showList = true }: ITitlesCardProps) => {
         <span className="versus-bar__v" style={{ width: share(titles.V) }} />
       </div>
 
+      {leagueDecided > 0 && (
+        <div className="flex align-items-center justify-content-center gap-2 mb-3 text-sm">
+          <FluentIcon name="Ribbon" size={16} className="text-500" />
+          <span className="text-500">Перемоги в лізі</span>
+          <PlayerBadge player="S" />
+          <span className="font-bold">
+            {leagueTitles.S} : {leagueTitles.V}
+          </span>
+          <PlayerBadge player="V" />
+        </div>
+      )}
+
       {showList && summaries.length > 0 && (
         <div className="flex flex-column gap-2">
-          {summaries.map(({ tournament, champion }) => (
+          {summaries.map(({ tournament, champion, leagueWinner }) => (
             <div
               key={tournament.id}
               className="flex align-items-center justify-content-between gap-2 min-w-0"
@@ -71,8 +91,11 @@ const TitlesCard = ({ summaries, showList = true }: ITitlesCardProps) => {
                 <span className="text-500 text-sm white-space-nowrap">
                   {STATUS_LABELS[tournament.status]}
                 </span>
-              ) : champion ? (
-                <ChampionBadge club={champion} />
+              ) : champion || leagueWinner ? (
+                <span className="flex flex-wrap justify-content-end gap-2">
+                  {leagueWinner && <ChampionBadge club={leagueWinner} league />}
+                  {champion && <ChampionBadge club={champion} />}
+                </span>
               ) : (
                 <span className="text-500 text-sm white-space-nowrap">
                   Не визначено

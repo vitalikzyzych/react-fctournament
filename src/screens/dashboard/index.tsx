@@ -8,15 +8,18 @@ import QuickEntry from "./components/QuickEntry";
 import { PageHeader } from "@/components";
 import {
   computeAllTimePlayers,
-  computeStandings,
   computeTournamentStats,
   describeMatch,
   findChampionClub,
+  findLeagueWinner,
   groupMatches,
+  groupTable,
   type IClub,
   type IMatch,
+  isLeagueFormat,
   isPlayed,
   playoffMatches,
+  playoffQualifiers,
   sortMatches,
   summarizeTournaments,
 } from "@/domain";
@@ -66,6 +69,10 @@ const Dashboard = () => {
   );
   const stats = computeTournamentStats(tournament.clubs, matches);
   const stored = matchesByTournament.get(tournament.id) ?? [];
+  const league = isLeagueFormat(tournament.format);
+  const qualified = league
+    ? new Set(playoffQualifiers(tournament, matches))
+    : undefined;
 
   const recent = stored
     .filter(isPlayed)
@@ -86,6 +93,7 @@ const Dashboard = () => {
         playedMatches={stats.playedMatches}
         totalMatches={stats.totalMatches}
         champion={findChampionClub(tournament, matches)}
+        leagueWinner={findLeagueWinner(tournament, matches)}
         actions={
           <Link to={`/tournaments/${tournament.id}`}>
             <Button
@@ -178,9 +186,9 @@ const Dashboard = () => {
                     clubsById={clubsById}
                     editable={false}
                     meta={
-                      match.stage === "group"
+                      match.stage === "group" && !league
                         ? `Група ${match.group}`
-                        : describeMatch(match)
+                        : describeMatch(match, league)
                     }
                   />
                 ))}
@@ -200,7 +208,7 @@ const Dashboard = () => {
                     match={match}
                     clubsById={clubsById}
                     editable={false}
-                    meta={describeMatch(match)}
+                    meta={describeMatch(match, league)}
                   />
                 ))}
               </div>
@@ -211,13 +219,11 @@ const Dashboard = () => {
         </div>
 
         {tournament.groups.map((group) => (
-          <div key={group.id} className="col-12 md:col-6">
+          <div key={group.id} className={league ? "col-12" : "col-12 md:col-6"}>
             <SectionCard title={group.name}>
               <StandingsTable
-                rows={computeStandings(
-                  tournament.clubs.filter((club) => club.group === group.id),
-                  groupStage.filter((match) => match.group === group.id)
-                )}
+                rows={groupTable(tournament, matches, group.id)}
+                qualified={qualified}
               />
             </SectionCard>
           </div>

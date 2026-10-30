@@ -1,6 +1,6 @@
 # ChatGPT prompt: 40-club league tournament (format sv-league-40)
 
-Status: draft. The app cannot import this format yet. The JSON shape below is the one proposed in the implementation plan; it becomes final once the format is built. Until then, use this file only to review the prompt.
+The app imports this format (`sv-league-40`). The full rules are in `docs/json-format.md`, and `examples/tournament-league.example.json` is a valid file.
 
 This prompt asks ChatGPT for the full draw (160 matches) in the JSON format the app imports. Two things to know:
 

@@ -14,6 +14,8 @@ interface ITournamentHeroProps {
   totalMatches: number;
   /** Winner of the playoff final, once it is decided. */
   champion?: IClub | null;
+  /** League formats: winner of the league table. */
+  leagueWinner?: IClub | null;
   actions?: ReactNode;
 }
 
@@ -28,6 +30,7 @@ const TournamentHero = ({
   playedMatches,
   totalMatches,
   champion,
+  leagueWinner,
   actions,
 }: ITournamentHeroProps) => {
   const progress = totalMatches ? (playedMatches / totalMatches) * 100 : 0;
@@ -69,9 +72,10 @@ const TournamentHero = ({
             <div>перемог у матчах</div>
             <div>нічиїх {players.S.drawn}</div>
           </div>
-          {champion && (
-            <div className="mt-3">
-              <ChampionBadge club={champion} />
+          {(champion || leagueWinner) && (
+            <div className="mt-3 flex flex-column align-items-center gap-2">
+              {leagueWinner && <ChampionBadge club={leagueWinner} league />}
+              {champion && <ChampionBadge club={champion} />}
             </div>
           )}
         </div>

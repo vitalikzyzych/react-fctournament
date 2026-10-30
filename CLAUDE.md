@@ -52,7 +52,9 @@ src/
     types.ts       Data model (ITournament, IClub, IMatch, ITournamentFile, ...)
     schema.ts      zod schema of the JSON format + Ukrainian error messages
     validation.ts  validateTournamentFile: schema, references, status rules, warnings
-    validateFormat.ts  per-format structural rules (sv-groups-4x4), group matches only
+    formats.ts     FORMAT_INFO per format (league or groups), isLeagueFormat
+    validateFormat.ts  per-format structural rules (sv-groups-4x4, sv-league-40), group matches only
+    league.ts      groupTable, playoffQualifiers (draw defaults), findLeagueWinner, clubOrigin
     schedule.ts    upcomingMatches (play order), latestResult
     playoff.ts     bracket (computePlayoff), tie winners, replays, champion, playoff reach
     draw.ts        playoff draw: allowed pairings (drawCandidates), random pick (pickDraw)
@@ -80,7 +82,7 @@ src/
   styles/main.css
 firestore.rules  firebase.json  firestore.indexes.json
 docs/json-format.md   The JSON exchange format; also the spec given to ChatGPT
-examples/             Example new and completed tournament files (used by tests)
+examples/             Example new, completed and league tournament files (used by tests)
 ```
 
 Layering: screen, then `useTournamentData()` for reads or a `TournamentSource` function for writes. Score entry always goes through `useSaveResult`, so the playoff rules (stale extra games, creating a pending extra game) apply everywhere. Statistics are always computed in `domain/` from match results and never stored.
@@ -89,10 +91,10 @@ Layering: screen, then `useTournamentData()` for reads or a `TournamentSource` f
 
 ```
 tournaments/{tournamentId}
-  id, schemaVersion (1), number, name, game, format ("sv-groups-4x4"),
+  id, schemaVersion (1), number, name, game, format ("sv-groups-4x4" | "sv-league-40"),
   status ("planned" | "active" | "completed"),
   players [{id:"S"|"V", name}], groups [{id, name}],
-  clubs [{id, name, country?, owner:"S"|"V", group}],
+  clubs [{id, name, country?, owner:"S"|"V", group, pot?, code?}]  (pot and code: league only),
   createdAt, updatedAt (server timestamps)
 
 tournaments/{tournamentId}/matches/{matchId}
@@ -133,6 +135,7 @@ tournaments/{tournamentId}/matches/{matchId}
 - **Titles** count only **completed** tournaments (`countsAsTitle` in `domain/history.ts`). A tournament in progress may show a champion but wins no title until it is completed. Shown in `ui/TitlesCard.tsx` on the dashboard and at the top of History.
 - **Planned tournaments** are future tournaments: imported with status `planned`, listed under "Заплановані" (always visible), read-only (schedule visible, no results, playoff or champion; enforced by `isActive` in the rules). "Почати турнір" is disabled while another tournament is active. There is no in-app tournament creator yet; planned tournaments come from JSON import.
 - Playoff games count in S vs V, tournament stats, club history and head-to-head; never in group tables.
+- **League format `sv-league-40`** (decided with the user on 2026-10-30): 40 clubs in one group `L`, 4 pots of 5 S + 5 V, 8 matchdays, 160 matches; the draw comes from ChatGPT (`docs/chatgpt-league-prompt.md`) and `validateSvLeague40` checks every rule. **Two champions**: the league table winner once every league match is played (`findLeagueWinner`, silver `ChampionBadge league`), and the playoff champion as before. Titles count the playoff champion; league wins are counted on their own line in `TitlesCard`. The playoff draw suggests the 4 best S and 4 best V clubs of the table; quarter-final pairs are S vs V, the group rule is skipped (`canPair`/`drawCandidates` with `league`). The table marks those 8 places. The "Групи" tab is called "Таблиця".
 - The tournament **champion** is the winner of the final. History shows titles S : V.
 
 ## Conventions (carried over from web-app)
@@ -175,5 +178,5 @@ Not done yet:
 
 ## Next steps the user has mentioned
 
-- Playoff ideas not built: suggesting qualified clubs from the group tables, filling the next round from tie winners, a bracket diagram, a third-place game.
-- Automatic fixture generation, other formats (a 40-club league phase like the UEFA Champions League), historical champions, restore from the full backup file, charts.
+- Playoff ideas not built: filling the next round from tie winners, a bracket diagram, a third-place game.
+- Automatic fixture generation (the league draw still comes from ChatGPT), more formats, historical champions, restore from the full backup file, charts.

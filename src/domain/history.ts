@@ -1,3 +1,4 @@
+import { findLeagueWinner } from "./league";
 import {
   computePlayoffReach,
   findChampion,
@@ -36,6 +37,8 @@ export interface ITournamentSummary {
   groupLeaders: IClub[];
   /** Winner of the playoff final, null until it is decided. */
   champion: IClub | null;
+  /** League formats: winner of the league table once every match is played. */
+  leagueWinner: IClub | null;
 }
 
 export interface IClubHistoryEntry {
@@ -131,6 +134,7 @@ export const summarizeTournament = ({
       return rows[0] && rows[0].played > 0 ? [rows[0].club] : [];
     }),
     champion: findChampionClub(tournament, matches),
+    leagueWinner: findLeagueWinner(tournament, matches),
   };
 };
 

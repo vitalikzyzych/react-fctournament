@@ -15,6 +15,7 @@ import {
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import completedExample from "../../examples/tournament-completed.example.json";
+import leagueExample from "../../examples/tournament-league.example.json";
 import newExample from "../../examples/tournament-new.example.json";
 
 import {
@@ -53,6 +54,7 @@ const parse = (raw: unknown, id: string): ITournamentFile => {
 
 const newFile = parse(newExample, "rules-new");
 const completedFile = parse(completedExample, "rules-completed");
+const leagueFile = parse(leagueExample, "rules-league");
 const firstMatch = newFile.matches[0].id;
 
 const matchRef = (tournamentId: string, matchId: string) =>
@@ -69,6 +71,10 @@ describe("firestore.rules", () => {
   it("imports a new and a completed tournament in one batch each", async () => {
     await importTournament(newFile);
     await importTournament(completedFile);
+  });
+
+  it("imports a 40-club league with its 160 matches", async () => {
+    await importTournament(leagueFile);
   });
 
   it("refuses to import over an existing tournament", async () => {

@@ -1,0 +1,1831 @@
+{
+  "schemaVersion": 1,
+  "tournament": {
+    "id": "example-league",
+    "number": 97,
+    "name": "Приклад: ліга на 40 клубів",
+    "game": "EA SPORTS FC 26",
+    "format": "sv-league-40",
+    "status": "planned"
+  },
+  "players": [
+    {
+      "id": "S",
+      "name": "S"
+    },
+    {
+      "id": "V",
+      "name": "V"
+    }
+  ],
+  "groups": [
+    {
+      "id": "L",
+      "name": "Ліга"
+    }
+  ],
+  "clubs": [
+    {
+      "id": "real-madrid",
+      "name": "Real Madrid",
+      "country": "Spain",
+      "owner": "S",
+      "group": "L",
+      "pot": 1,
+      "code": "1S-1"
+    },
+    {
+      "id": "bayern-munich",
+      "name": "Bayern Munich",
+      "country": "Germany",
+      "owner": "S",
+      "group": "L",
+      "pot": 1,
+      "code": "1S-2"
+    },
+    {
+      "id": "liverpool",
+      "name": "Liverpool",
+      "country": "England",
+      "owner": "S",
+      "group": "L",
+      "pot": 1,
+      "code": "1S-3"
+    },
+    {
+      "id": "paris-saint-germain",
+      "name": "Paris Saint-Germain",
+      "country": "France",
+      "owner": "S",
+      "group": "L",
+      "pot": 1,
+      "code": "1S-4"
+    },
+    {
+      "id": "inter",
+      "name": "Inter",
+      "country": "Italy",
+      "owner": "S",
+      "group": "L",
+      "pot": 1,
+      "code": "1S-5"
+    },
+    {
+      "id": "manchester-city",
+      "name": "Manchester City",
+      "country": "England",
+      "owner": "V",
+      "group": "L",
+      "pot": 1,
+      "code": "1V-1"
+    },
+    {
+      "id": "fc-barcelona",
+      "name": "FC Barcelona",
+      "country": "Spain",
+      "owner": "V",
+      "group": "L",
+      "pot": 1,
+      "code": "1V-2"
+    },
+    {
+      "id": "arsenal",
+      "name": "Arsenal",
+      "country": "England",
+      "owner": "V",
+      "group": "L",
+      "pot": 1,
+      "code": "1V-3"
+    },
+    {
+      "id": "bayer-leverkusen",
+      "name": "Bayer Leverkusen",
+      "country": "Germany",
+      "owner": "V",
+      "group": "L",
+      "pot": 1,
+      "code": "1V-4"
+    },
+    {
+      "id": "atletico-madrid",
+      "name": "Atletico Madrid",
+      "country": "Spain",
+      "owner": "V",
+      "group": "L",
+      "pot": 1,
+      "code": "1V-5"
+    },
+    {
+      "id": "borussia-dortmund",
+      "name": "Borussia Dortmund",
+      "country": "Germany",
+      "owner": "S",
+      "group": "L",
+      "pot": 2,
+      "code": "2S-1"
+    },
+    {
+      "id": "juventus",
+      "name": "Juventus",
+      "country": "Italy",
+      "owner": "S",
+      "group": "L",
+      "pot": 2,
+      "code": "2S-2"
+    },
+    {
+      "id": "chelsea",
+      "name": "Chelsea",
+      "country": "England",
+      "owner": "S",
+      "group": "L",
+      "pot": 2,
+      "code": "2S-3"
+    },
+    {
+      "id": "benfica",
+      "name": "Benfica",
+      "country": "Portugal",
+      "owner": "S",
+      "group": "L",
+      "pot": 2,
+      "code": "2S-4"
+    },
+    {
+      "id": "napoli",
+      "name": "Napoli",
+      "country": "Italy",
+      "owner": "S",
+      "group": "L",
+      "pot": 2,
+      "code": "2S-5"
+    },
+    {
+      "id": "ac-milan",
+      "name": "AC Milan",
+      "country": "Italy",
+      "owner": "V",
+      "group": "L",
+      "pot": 2,
+      "code": "2V-1"
+    },
+    {
+      "id": "tottenham-hotspur",
+      "name": "Tottenham Hotspur",
+      "country": "England",
+      "owner": "V",
+      "group": "L",
+      "pot": 2,
+      "code": "2V-2"
+    },
+    {
+      "id": "sporting-cp",
+      "name": "Sporting CP",
+      "country": "Portugal",
+      "owner": "V",
+      "group": "L",
+      "pot": 2,
+      "code": "2V-3"
+    },
+    {
+      "id": "rb-leipzig",
+      "name": "RB Leipzig",
+      "country": "Germany",
+      "owner": "V",
+      "group": "L",
+      "pot": 2,
+      "code": "2V-4"
+    },
+    {
+      "id": "aston-villa",
+      "name": "Aston Villa",
+      "country": "England",
+      "owner": "V",
+      "group": "L",
+      "pot": 2,
+      "code": "2V-5"
+    },
+    {
+      "id": "newcastle-united",
+      "name": "Newcastle United",
+      "country": "England",
+      "owner": "S",
+      "group": "L",
+      "pot": 3,
+      "code": "3S-1"
+    },
+    {
+      "id": "atalanta",
+      "name": "Atalanta",
+      "country": "Italy",
+      "owner": "S",
+      "group": "L",
+      "pot": 3,
+      "code": "3S-2"
+    },
+    {
+      "id": "psv-eindhoven",
+      "name": "PSV Eindhoven",
+      "country": "Netherlands",
+      "owner": "S",
+      "group": "L",
+      "pot": 3,
+      "code": "3S-3"
+    },
+    {
+      "id": "feyenoord",
+      "name": "Feyenoord",
+      "country": "Netherlands",
+      "owner": "S",
+      "group": "L",
+      "pot": 3,
+      "code": "3S-4"
+    },
+    {
+      "id": "club-brugge",
+      "name": "Club Brugge",
+      "country": "Belgium",
+      "owner": "S",
+      "group": "L",
+      "pot": 3,
+      "code": "3S-5"
+    },
+    {
+      "id": "porto",
+      "name": "Porto",
+      "country": "Portugal",
+      "owner": "V",
+      "group": "L",
+      "pot": 3,
+      "code": "3V-1"
+    },
+    {
+      "id": "ajax",
+      "name": "Ajax",
+      "country": "Netherlands",
+      "owner": "V",
+      "group": "L",
+      "pot": 3,
+      "code": "3V-2"
+    },
+    {
+      "id": "marseille",
+      "name": "Marseille",
+      "country": "France",
+      "owner": "V",
+      "group": "L",
+      "pot": 3,
+      "code": "3V-3"
+    },
+    {
+      "id": "monaco",
+      "name": "Monaco",
+      "country": "France",
+      "owner": "V",
+      "group": "L",
+      "pot": 3,
+      "code": "3V-4"
+    },
+    {
+      "id": "villarreal",
+      "name": "Villarreal",
+      "country": "Spain",
+      "owner": "V",
+      "group": "L",
+      "pot": 3,
+      "code": "3V-5"
+    },
+    {
+      "id": "celtic",
+      "name": "Celtic",
+      "country": "Scotland",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
+      "code": "4S-1"
+    },
+    {
+      "id": "galatasaray",
+      "name": "Galatasaray",
+      "country": "Turkey",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
+      "code": "4S-2"
+    },
+    {
+      "id": "real-sociedad",
+      "name": "Real Sociedad",
+      "country": "Spain",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
+      "code": "4S-3"
+    },
+    {
+      "id": "eintracht-frankfurt",
+      "name": "Eintracht Frankfurt",
+      "country": "Germany",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
+      "code": "4S-4"
+    },
+    {
+      "id": "lyon",
+      "name": "Lyon",
+      "country": "France",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
+      "code": "4S-5"
+    },
+    {
+      "id": "fenerbahce",
+      "name": "Fenerbahce",
+      "country": "Turkey",
+      "owner": "V",
+      "group": "L",
+      "pot": 4,
+      "code": "4V-1"
+    },
+    {
+      "id": "rangers",
+      "name": "Rangers",
+      "country": "Scotland",
+      "owner": "V",
+      "group": "L",
+      "pot": 4,
+      "code": "4V-2"
+    },
+    {
+      "id": "athletic-club",
+      "name": "Athletic Club",
+      "country": "Spain",
+      "owner": "V",
+      "group": "L",
+      "pot": 4,
+      "code": "4V-3"
+    },
+    {
+      "id": "as-roma",
+      "name": "AS Roma",
+      "country": "Italy",
+      "owner": "V",
+      "group": "L",
+      "pot": 4,
+      "code": "4V-4"
+    },
+    {
+      "id": "olympiacos",
+      "name": "Olympiacos",
+      "country": "Greece",
+      "owner": "V",
+      "group": "L",
+      "pot": 4,
+      "code": "4V-5"
+    }
+  ],
+  "matches": [
+    {
+      "id": "L1-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "borussia-dortmund",
+      "away": "sporting-cp",
+      "result": null
+    },
+    {
+      "id": "L1-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "chelsea",
+      "away": "ac-milan",
+      "result": null
+    },
+    {
+      "id": "L1-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "bayern-munich",
+      "away": "bayer-leverkusen",
+      "result": null
+    },
+    {
+      "id": "L1-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "juventus",
+      "away": "aston-villa",
+      "result": null
+    },
+    {
+      "id": "L1-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "real-madrid",
+      "away": "fc-barcelona",
+      "result": null
+    },
+    {
+      "id": "L1-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "real-sociedad",
+      "away": "as-roma",
+      "result": null
+    },
+    {
+      "id": "L1-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "benfica",
+      "away": "tottenham-hotspur",
+      "result": null
+    },
+    {
+      "id": "L1-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "inter",
+      "away": "arsenal",
+      "result": null
+    },
+    {
+      "id": "L1-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "napoli",
+      "away": "rb-leipzig",
+      "result": null
+    },
+    {
+      "id": "L1-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "club-brugge",
+      "away": "marseille",
+      "result": null
+    },
+    {
+      "id": "L1-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "newcastle-united",
+      "away": "monaco",
+      "result": null
+    },
+    {
+      "id": "L1-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "liverpool",
+      "away": "manchester-city",
+      "result": null
+    },
+    {
+      "id": "L1-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "atalanta",
+      "away": "ajax",
+      "result": null
+    },
+    {
+      "id": "L1-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "galatasaray",
+      "away": "olympiacos",
+      "result": null
+    },
+    {
+      "id": "L1-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "feyenoord",
+      "away": "villarreal",
+      "result": null
+    },
+    {
+      "id": "L1-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "eintracht-frankfurt",
+      "away": "rangers",
+      "result": null
+    },
+    {
+      "id": "L1-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "lyon",
+      "away": "fenerbahce",
+      "result": null
+    },
+    {
+      "id": "L1-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "paris-saint-germain",
+      "away": "atletico-madrid",
+      "result": null
+    },
+    {
+      "id": "L1-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "psv-eindhoven",
+      "away": "porto",
+      "result": null
+    },
+    {
+      "id": "L1-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 1,
+      "home": "celtic",
+      "away": "athletic-club",
+      "result": null
+    },
+    {
+      "id": "L2-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "borussia-dortmund",
+      "away": "manchester-city",
+      "result": null
+    },
+    {
+      "id": "L2-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "atalanta",
+      "away": "tottenham-hotspur",
+      "result": null
+    },
+    {
+      "id": "L2-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "paris-saint-germain",
+      "away": "olympiacos",
+      "result": null
+    },
+    {
+      "id": "L2-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "psv-eindhoven",
+      "away": "rb-leipzig",
+      "result": null
+    },
+    {
+      "id": "L2-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "real-sociedad",
+      "away": "monaco",
+      "result": null
+    },
+    {
+      "id": "L2-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "bayern-munich",
+      "away": "fenerbahce",
+      "result": null
+    },
+    {
+      "id": "L2-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "lyon",
+      "away": "villarreal",
+      "result": null
+    },
+    {
+      "id": "L2-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "club-brugge",
+      "away": "ac-milan",
+      "result": null
+    },
+    {
+      "id": "L2-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "benfica",
+      "away": "atletico-madrid",
+      "result": null
+    },
+    {
+      "id": "L2-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "inter",
+      "away": "as-roma",
+      "result": null
+    },
+    {
+      "id": "L2-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "eintracht-frankfurt",
+      "away": "marseille",
+      "result": null
+    },
+    {
+      "id": "L2-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "newcastle-united",
+      "away": "aston-villa",
+      "result": null
+    },
+    {
+      "id": "L2-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "real-madrid",
+      "away": "rangers",
+      "result": null
+    },
+    {
+      "id": "L2-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "feyenoord",
+      "away": "sporting-cp",
+      "result": null
+    },
+    {
+      "id": "L2-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "juventus",
+      "away": "bayer-leverkusen",
+      "result": null
+    },
+    {
+      "id": "L2-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "liverpool",
+      "away": "athletic-club",
+      "result": null
+    },
+    {
+      "id": "L2-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "chelsea",
+      "away": "fc-barcelona",
+      "result": null
+    },
+    {
+      "id": "L2-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "celtic",
+      "away": "ajax",
+      "result": null
+    },
+    {
+      "id": "L2-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "napoli",
+      "away": "arsenal",
+      "result": null
+    },
+    {
+      "id": "L2-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 2,
+      "home": "galatasaray",
+      "away": "porto",
+      "result": null
+    },
+    {
+      "id": "L3-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "benfica",
+      "away": "villarreal",
+      "result": null
+    },
+    {
+      "id": "L3-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "atalanta",
+      "away": "as-roma",
+      "result": null
+    },
+    {
+      "id": "L3-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "galatasaray",
+      "away": "manchester-city",
+      "result": null
+    },
+    {
+      "id": "L3-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "club-brugge",
+      "away": "rangers",
+      "result": null
+    },
+    {
+      "id": "L3-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "feyenoord",
+      "away": "fenerbahce",
+      "result": null
+    },
+    {
+      "id": "L3-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "bayern-munich",
+      "away": "tottenham-hotspur",
+      "result": null
+    },
+    {
+      "id": "L3-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "liverpool",
+      "away": "sporting-cp",
+      "result": null
+    },
+    {
+      "id": "L3-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "psv-eindhoven",
+      "away": "athletic-club",
+      "result": null
+    },
+    {
+      "id": "L3-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "paris-saint-germain",
+      "away": "rb-leipzig",
+      "result": null
+    },
+    {
+      "id": "L3-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "celtic",
+      "away": "atletico-madrid",
+      "result": null
+    },
+    {
+      "id": "L3-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "inter",
+      "away": "ac-milan",
+      "result": null
+    },
+    {
+      "id": "L3-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "napoli",
+      "away": "monaco",
+      "result": null
+    },
+    {
+      "id": "L3-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "real-sociedad",
+      "away": "fc-barcelona",
+      "result": null
+    },
+    {
+      "id": "L3-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "juventus",
+      "away": "ajax",
+      "result": null
+    },
+    {
+      "id": "L3-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "chelsea",
+      "away": "marseille",
+      "result": null
+    },
+    {
+      "id": "L3-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "newcastle-united",
+      "away": "olympiacos",
+      "result": null
+    },
+    {
+      "id": "L3-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "eintracht-frankfurt",
+      "away": "bayer-leverkusen",
+      "result": null
+    },
+    {
+      "id": "L3-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "real-madrid",
+      "away": "aston-villa",
+      "result": null
+    },
+    {
+      "id": "L3-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "lyon",
+      "away": "arsenal",
+      "result": null
+    },
+    {
+      "id": "L3-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 3,
+      "home": "borussia-dortmund",
+      "away": "porto",
+      "result": null
+    },
+    {
+      "id": "L4-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "borussia-dortmund",
+      "away": "rangers",
+      "result": null
+    },
+    {
+      "id": "L4-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "real-madrid",
+      "away": "porto",
+      "result": null
+    },
+    {
+      "id": "L4-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "benfica",
+      "away": "olympiacos",
+      "result": null
+    },
+    {
+      "id": "L4-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "juventus",
+      "away": "fenerbahce",
+      "result": null
+    },
+    {
+      "id": "L4-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "inter",
+      "away": "monaco",
+      "result": null
+    },
+    {
+      "id": "L4-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "paris-saint-germain",
+      "away": "marseille",
+      "result": null
+    },
+    {
+      "id": "L4-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "celtic",
+      "away": "sporting-cp",
+      "result": null
+    },
+    {
+      "id": "L4-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "liverpool",
+      "away": "villarreal",
+      "result": null
+    },
+    {
+      "id": "L4-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "chelsea",
+      "away": "as-roma",
+      "result": null
+    },
+    {
+      "id": "L4-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "feyenoord",
+      "away": "manchester-city",
+      "result": null
+    },
+    {
+      "id": "L4-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "real-sociedad",
+      "away": "ac-milan",
+      "result": null
+    },
+    {
+      "id": "L4-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "eintracht-frankfurt",
+      "away": "rb-leipzig",
+      "result": null
+    },
+    {
+      "id": "L4-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "club-brugge",
+      "away": "fc-barcelona",
+      "result": null
+    },
+    {
+      "id": "L4-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "newcastle-united",
+      "away": "bayer-leverkusen",
+      "result": null
+    },
+    {
+      "id": "L4-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "bayern-munich",
+      "away": "ajax",
+      "result": null
+    },
+    {
+      "id": "L4-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "psv-eindhoven",
+      "away": "arsenal",
+      "result": null
+    },
+    {
+      "id": "L4-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "galatasaray",
+      "away": "aston-villa",
+      "result": null
+    },
+    {
+      "id": "L4-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "atalanta",
+      "away": "atletico-madrid",
+      "result": null
+    },
+    {
+      "id": "L4-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "lyon",
+      "away": "tottenham-hotspur",
+      "result": null
+    },
+    {
+      "id": "L4-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 4,
+      "home": "napoli",
+      "away": "athletic-club",
+      "result": null
+    },
+    {
+      "id": "L5-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "marseille",
+      "away": "real-madrid",
+      "result": null
+    },
+    {
+      "id": "L5-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "fc-barcelona",
+      "away": "newcastle-united",
+      "result": null
+    },
+    {
+      "id": "L5-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "arsenal",
+      "away": "atalanta",
+      "result": null
+    },
+    {
+      "id": "L5-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "villarreal",
+      "away": "bayern-munich",
+      "result": null
+    },
+    {
+      "id": "L5-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "manchester-city",
+      "away": "psv-eindhoven",
+      "result": null
+    },
+    {
+      "id": "L5-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "monaco",
+      "away": "paris-saint-germain",
+      "result": null
+    },
+    {
+      "id": "L5-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "rb-leipzig",
+      "away": "lyon",
+      "result": null
+    },
+    {
+      "id": "L5-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "ajax",
+      "away": "inter",
+      "result": null
+    },
+    {
+      "id": "L5-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "aston-villa",
+      "away": "celtic",
+      "result": null
+    },
+    {
+      "id": "L5-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "porto",
+      "away": "liverpool",
+      "result": null
+    },
+    {
+      "id": "L5-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "sporting-cp",
+      "away": "real-sociedad",
+      "result": null
+    },
+    {
+      "id": "L5-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "atletico-madrid",
+      "away": "club-brugge",
+      "result": null
+    },
+    {
+      "id": "L5-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "rangers",
+      "away": "napoli",
+      "result": null
+    },
+    {
+      "id": "L5-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "bayer-leverkusen",
+      "away": "feyenoord",
+      "result": null
+    },
+    {
+      "id": "L5-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "tottenham-hotspur",
+      "away": "galatasaray",
+      "result": null
+    },
+    {
+      "id": "L5-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "as-roma",
+      "away": "juventus",
+      "result": null
+    },
+    {
+      "id": "L5-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "ac-milan",
+      "away": "eintracht-frankfurt",
+      "result": null
+    },
+    {
+      "id": "L5-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "athletic-club",
+      "away": "chelsea",
+      "result": null
+    },
+    {
+      "id": "L5-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "fenerbahce",
+      "away": "benfica",
+      "result": null
+    },
+    {
+      "id": "L5-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 5,
+      "home": "olympiacos",
+      "away": "borussia-dortmund",
+      "result": null
+    },
+    {
+      "id": "L6-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "manchester-city",
+      "away": "celtic",
+      "result": null
+    },
+    {
+      "id": "L6-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "fc-barcelona",
+      "away": "eintracht-frankfurt",
+      "result": null
+    },
+    {
+      "id": "L6-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "bayer-leverkusen",
+      "away": "lyon",
+      "result": null
+    },
+    {
+      "id": "L6-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "monaco",
+      "away": "juventus",
+      "result": null
+    },
+    {
+      "id": "L6-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "marseille",
+      "away": "benfica",
+      "result": null
+    },
+    {
+      "id": "L6-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "as-roma",
+      "away": "club-brugge",
+      "result": null
+    },
+    {
+      "id": "L6-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "tottenham-hotspur",
+      "away": "inter",
+      "result": null
+    },
+    {
+      "id": "L6-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "villarreal",
+      "away": "napoli",
+      "result": null
+    },
+    {
+      "id": "L6-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "porto",
+      "away": "chelsea",
+      "result": null
+    },
+    {
+      "id": "L6-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "arsenal",
+      "away": "galatasaray",
+      "result": null
+    },
+    {
+      "id": "L6-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "ajax",
+      "away": "borussia-dortmund",
+      "result": null
+    },
+    {
+      "id": "L6-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "atletico-madrid",
+      "away": "real-sociedad",
+      "result": null
+    },
+    {
+      "id": "L6-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "olympiacos",
+      "away": "feyenoord",
+      "result": null
+    },
+    {
+      "id": "L6-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "athletic-club",
+      "away": "atalanta",
+      "result": null
+    },
+    {
+      "id": "L6-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "fenerbahce",
+      "away": "psv-eindhoven",
+      "result": null
+    },
+    {
+      "id": "L6-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "rangers",
+      "away": "newcastle-united",
+      "result": null
+    },
+    {
+      "id": "L6-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "sporting-cp",
+      "away": "bayern-munich",
+      "result": null
+    },
+    {
+      "id": "L6-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "ac-milan",
+      "away": "paris-saint-germain",
+      "result": null
+    },
+    {
+      "id": "L6-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "rb-leipzig",
+      "away": "real-madrid",
+      "result": null
+    },
+    {
+      "id": "L6-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 6,
+      "home": "aston-villa",
+      "away": "liverpool",
+      "result": null
+    },
+    {
+      "id": "L7-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "aston-villa",
+      "away": "chelsea",
+      "result": null
+    },
+    {
+      "id": "L7-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "ajax",
+      "away": "psv-eindhoven",
+      "result": null
+    },
+    {
+      "id": "L7-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "atletico-madrid",
+      "away": "liverpool",
+      "result": null
+    },
+    {
+      "id": "L7-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "villarreal",
+      "away": "newcastle-united",
+      "result": null
+    },
+    {
+      "id": "L7-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "sporting-cp",
+      "away": "benfica",
+      "result": null
+    },
+    {
+      "id": "L7-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "ac-milan",
+      "away": "napoli",
+      "result": null
+    },
+    {
+      "id": "L7-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "rb-leipzig",
+      "away": "borussia-dortmund",
+      "result": null
+    },
+    {
+      "id": "L7-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "rangers",
+      "away": "real-sociedad",
+      "result": null
+    },
+    {
+      "id": "L7-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "tottenham-hotspur",
+      "away": "juventus",
+      "result": null
+    },
+    {
+      "id": "L7-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "monaco",
+      "away": "club-brugge",
+      "result": null
+    },
+    {
+      "id": "L7-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "arsenal",
+      "away": "real-madrid",
+      "result": null
+    },
+    {
+      "id": "L7-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "olympiacos",
+      "away": "lyon",
+      "result": null
+    },
+    {
+      "id": "L7-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "fenerbahce",
+      "away": "eintracht-frankfurt",
+      "result": null
+    },
+    {
+      "id": "L7-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "fc-barcelona",
+      "away": "bayern-munich",
+      "result": null
+    },
+    {
+      "id": "L7-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "as-roma",
+      "away": "celtic",
+      "result": null
+    },
+    {
+      "id": "L7-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "marseille",
+      "away": "atalanta",
+      "result": null
+    },
+    {
+      "id": "L7-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "porto",
+      "away": "feyenoord",
+      "result": null
+    },
+    {
+      "id": "L7-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "bayer-leverkusen",
+      "away": "paris-saint-germain",
+      "result": null
+    },
+    {
+      "id": "L7-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "athletic-club",
+      "away": "galatasaray",
+      "result": null
+    },
+    {
+      "id": "L7-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 7,
+      "home": "manchester-city",
+      "away": "inter",
+      "result": null
+    },
+    {
+      "id": "L8-1",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "manchester-city",
+      "away": "napoli",
+      "result": null
+    },
+    {
+      "id": "L8-2",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "fc-barcelona",
+      "away": "juventus",
+      "result": null
+    },
+    {
+      "id": "L8-3",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "tottenham-hotspur",
+      "away": "club-brugge",
+      "result": null
+    },
+    {
+      "id": "L8-4",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "atletico-madrid",
+      "away": "borussia-dortmund",
+      "result": null
+    },
+    {
+      "id": "L8-5",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "athletic-club",
+      "away": "paris-saint-germain",
+      "result": null
+    },
+    {
+      "id": "L8-6",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "as-roma",
+      "away": "liverpool",
+      "result": null
+    },
+    {
+      "id": "L8-7",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "villarreal",
+      "away": "celtic",
+      "result": null
+    },
+    {
+      "id": "L8-8",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "ac-milan",
+      "away": "newcastle-united",
+      "result": null
+    },
+    {
+      "id": "L8-9",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "bayer-leverkusen",
+      "away": "benfica",
+      "result": null
+    },
+    {
+      "id": "L8-10",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "sporting-cp",
+      "away": "psv-eindhoven",
+      "result": null
+    },
+    {
+      "id": "L8-11",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "marseille",
+      "away": "galatasaray",
+      "result": null
+    },
+    {
+      "id": "L8-12",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "aston-villa",
+      "away": "feyenoord",
+      "result": null
+    },
+    {
+      "id": "L8-13",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "monaco",
+      "away": "lyon",
+      "result": null
+    },
+    {
+      "id": "L8-14",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "olympiacos",
+      "away": "bayern-munich",
+      "result": null
+    },
+    {
+      "id": "L8-15",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "arsenal",
+      "away": "chelsea",
+      "result": null
+    },
+    {
+      "id": "L8-16",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "ajax",
+      "away": "eintracht-frankfurt",
+      "result": null
+    },
+    {
+      "id": "L8-17",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "rangers",
+      "away": "inter",
+      "result": null
+    },
+    {
+      "id": "L8-18",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "rb-leipzig",
+      "away": "atalanta",
+      "result": null
+    },
+    {
+      "id": "L8-19",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "porto",
+      "away": "real-sociedad",
+      "result": null
+    },
+    {
+      "id": "L8-20",
+      "stage": "group",
+      "group": "L",
+      "matchday": 8,
+      "home": "fenerbahce",
+      "away": "real-madrid",
+      "result": null
+    }
+  ]
+}

@@ -9,7 +9,12 @@ import StandingsTab from "./components/StandingsTab";
 import StatsTab from "./components/StatsTab";
 import TournamentActions from "./components/TournamentActions";
 
-import { computeTournamentStats, findChampionClub } from "@/domain";
+import {
+  computeTournamentStats,
+  findChampionClub,
+  findLeagueWinner,
+  isLeagueFormat,
+} from "@/domain";
 import { useTournamentData } from "@/providers";
 import { EmptyState, FluentIcon, SectionCard, TournamentHero } from "@/ui";
 
@@ -51,6 +56,7 @@ const TournamentDetails = () => {
         playedMatches={stats.playedMatches}
         totalMatches={stats.totalMatches}
         champion={findChampionClub(tournament, matches)}
+        leagueWinner={findLeagueWinner(tournament, matches)}
         actions={
           <TournamentActions tournament={tournament} matches={matches} />
         }
@@ -60,7 +66,9 @@ const TournamentDetails = () => {
         <TabPanel header="Матчі">
           <MatchesTab tournament={tournament} matches={matches} />
         </TabPanel>
-        <TabPanel header="Групи">
+        <TabPanel
+          header={isLeagueFormat(tournament.format) ? "Таблиця" : "Групи"}
+        >
           <StandingsTab tournament={tournament} matches={matches} />
         </TabPanel>
         <TabPanel header="Плей-офф">

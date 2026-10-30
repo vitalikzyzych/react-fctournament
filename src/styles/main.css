@@ -831,6 +831,12 @@ code {
   box-shadow: 0 0 0.75rem var(--primary-glow);
 }
 
+/* Playoff place in a league table. */
+.position-chip--qualified {
+  box-shadow: inset 0 0 0 1px var(--primary-color);
+  color: var(--primary-color);
+}
+
 .points {
   font-weight: 800;
   color: var(--primary-color);
@@ -908,6 +914,14 @@ code {
   color: var(--yellow-300);
   box-shadow: 0 0 1.25rem -0.25rem
     color-mix(in srgb, var(--yellow-400) 45%, transparent);
+}
+
+/* League table winner: the same pill in silver. */
+.champion-badge--league {
+  border-color: color-mix(in srgb, var(--bluegray-200) 40%, transparent);
+  background: color-mix(in srgb, var(--bluegray-200) 12%, transparent);
+  color: var(--bluegray-100);
+  box-shadow: none;
 }
 
 /* The club name stays in the normal text colour, the trophy is gold. */

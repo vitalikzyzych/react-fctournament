@@ -150,10 +150,14 @@ export const importTournament = async (
     champion: tournament.champion ?? null,
     players: file.players,
     groups: file.groups,
-    // Firestore rejects `undefined`, so drop an absent country.
-    clubs: file.clubs.map(({ country, ...club }) =>
-      country ? { ...club, country } : club
-    ),
+    // Firestore rejects `undefined`, so drop absent optional fields
+    // (country; pot and code outside league formats).
+    clubs: file.clubs.map(({ country, pot, code, ...club }) => ({
+      ...club,
+      ...(country ? { country } : {}),
+      ...(pot ? { pot } : {}),
+      ...(code ? { code } : {}),
+    })),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });

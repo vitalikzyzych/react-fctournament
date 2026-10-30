@@ -7,15 +7,18 @@ export type PlayoffDraw = [IClub, IClub][];
 export interface IDrawCandidates {
   /** Every pairing with the fewest conflicts. Empty when none is allowed. */
   draws: PlayoffDraw[];
-  /** Conflicts per draw: pairs of the same player plus pairs of one group. */
+  /**
+   * Conflicts per draw: pairs of the same player plus pairs of one group (not
+   * counted in a league).
+   */
   conflicts: number;
 }
 
-const pairConflicts = (a: IClub, b: IClub): number =>
-  (a.owner === b.owner ? 1 : 0) + (a.group === b.group ? 1 : 0);
+const pairConflicts = (a: IClub, b: IClub, league: boolean): number =>
+  (a.owner === b.owner ? 1 : 0) + (!league && a.group === b.group ? 1 : 0);
 
-const drawConflicts = (draw: PlayoffDraw): number =>
-  draw.reduce((sum, [a, b]) => sum + pairConflicts(a, b), 0);
+const drawConflicts = (draw: PlayoffDraw, league: boolean): number =>
+  draw.reduce((sum, [a, b]) => sum + pairConflicts(a, b, league), 0);
 
 /** Every way to split `clubs` into pairs (105 for 8 clubs, 3 for 4). */
 const allPairings = (clubs: IClub[]): PlayoffDraw[] => {
@@ -32,11 +35,12 @@ const allPairings = (clubs: IClub[]): PlayoffDraw[] => {
  * The draws allowed for `round` with the selected clubs. In the quarter-finals
  * every pair is an S club against a V club from another group, otherwise
  * there is no draw. In later rounds the same rule is followed as far as the
- * clubs left allow.
+ * clubs left allow. A league has one group, so only the player counts there.
  */
 export const drawCandidates = (
   round: PlayoffRound,
-  clubs: IClub[]
+  clubs: IClub[],
+  league = false
 ): IDrawCandidates => {
   const info = PLAYOFF_ROUNDS.find((r) => r.id === round);
   if (!info || clubs.length !== info.ties * 2) {
@@ -44,7 +48,7 @@ export const drawCandidates = (
   }
   const scored = allPairings(clubs).map((draw) => ({
     draw,
-    conflicts: drawConflicts(draw),
+    conflicts: drawConflicts(draw, league),
   }));
   const allowed = info.strictPairing
     ? scored.filter((s) => s.conflicts === 0)

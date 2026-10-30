@@ -48,7 +48,7 @@ service cloud.firestore {
         && data.number is int && data.number >= 1 && data.number <= 9999
         && isText(data.name, 80)
         && isText(data.game, 80)
-        && data.format in ['sv-groups-4x4']
+        && data.format in ['sv-groups-4x4', 'sv-league-40']
         && isStatus(data.status)
         && data.players is list && data.players.size() == 2
         && data.groups is list && data.groups.size() >= 1 && data.groups.size() <= 16

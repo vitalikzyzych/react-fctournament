@@ -1,5 +1,6 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { classNames } from "primereact/utils";
 
 import ClubLabel from "./ClubLabel";
 
@@ -8,6 +9,8 @@ import { formatSigned } from "@/utils";
 
 interface IStandingsTableProps {
   rows: IStandingRow[];
+  /** Club ids in a playoff place, marked next to the position. */
+  qualified?: Set<string>;
 }
 
 const num = (field: keyof IStandingRow, header: string, title: string) => (
@@ -20,7 +23,7 @@ const num = (field: keyof IStandingRow, header: string, title: string) => (
 );
 
 /** Group table: points, goal difference, head-to-head (see domain/standings.ts). */
-const StandingsTable = ({ rows }: IStandingsTableProps) => (
+const StandingsTable = ({ rows, qualified }: IStandingsTableProps) => (
   <DataTable
     value={rows}
     dataKey="club.id"
@@ -31,11 +34,11 @@ const StandingsTable = ({ rows }: IStandingsTableProps) => (
       header="#"
       body={(row: IStandingRow) => (
         <span
-          className={
-            row.position === 1 && row.played > 0
-              ? "position-chip position-chip--leader"
-              : "position-chip"
-          }
+          className={classNames("position-chip", {
+            "position-chip--leader": row.position === 1 && row.played > 0,
+            "position-chip--qualified":
+              row.position !== 1 && qualified?.has(row.club.id),
+          })}
         >
           {row.position}
         </span>

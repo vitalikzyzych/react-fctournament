@@ -8,6 +8,8 @@ export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** Match ids are Firestore document ids, so keep them to safe characters. */
 export const MATCH_ID_PATTERN = /^[A-Za-z0-9_-]{1,40}$/;
 export const GROUP_ID_PATTERN = /^[A-Z0-9]{1,4}$/;
+/** League club code: pot, owner, number in the pot ("1S-1", "4V-5"). */
+export const CLUB_CODE_PATTERN = /^[1-9][SV]-[0-9]{1,2}$/;
 export const MAX_GOALS = 99;
 
 const slug = z.string().regex(SLUG_PATTERN).max(60);
@@ -71,6 +73,8 @@ export const tournamentFileSchema = z.object({
         country: z.string().trim().min(1).max(40).optional(),
         owner: z.enum(PLAYER_IDS),
         group: z.string().regex(GROUP_ID_PATTERN),
+        pot: z.int().min(1).max(9).optional(),
+        code: z.string().regex(CLUB_CODE_PATTERN).optional(),
       })
     )
     .min(2)
