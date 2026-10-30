@@ -54,6 +54,7 @@ const StandingsTable = ({ rows, qualified }: IStandingsTableProps) => (
           owner={row.club.owner}
           country={row.club.country}
           showFlag
+          pot={row.club.pot}
         />
       )}
       className="standings-table__club"

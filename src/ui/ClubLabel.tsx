@@ -16,6 +16,8 @@ interface IClubLabelProps {
   country?: string;
   /** Flag after the name, for tables and lists (not for match rows). */
   showFlag?: boolean;
+  /** League formats: the club's pot, shown as a small "К1" label. */
+  pot?: number;
   /** "end" puts the badge after the name, for the away side of a match. */
   badgePosition?: "start" | "end";
   bold?: boolean;
@@ -29,6 +31,7 @@ const ClubLabel = ({
   owner,
   country,
   showFlag,
+  pot,
   badgePosition = "start",
   bold,
   className,
@@ -50,6 +53,11 @@ const ClubLabel = ({
         {name}
       </span>
       {flag && <CountryFlag code={flag} title={country} />}
+      {pot && (
+        <span className="pot-tag" title={`Кошик ${pot}`}>
+          К{pot}
+        </span>
+      )}
     </span>
   );
 };

@@ -831,6 +831,18 @@ code {
   box-shadow: 0 0 0.75rem var(--primary-glow);
 }
 
+/* Pot of a league club, next to its name. */
+.pot-tag {
+  flex-shrink: 0;
+  padding: 0 0.35rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.35rem;
+  color: var(--text-color-secondary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.1rem;
+}
+
 /* Playoff place in a league table. */
 .position-chip--qualified {
   box-shadow: inset 0 0 0 1px var(--primary-color);

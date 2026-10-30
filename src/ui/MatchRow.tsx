@@ -110,6 +110,7 @@ const MatchRow = ({
         name={home?.name ?? match.home}
         clubId={match.home}
         owner={home?.owner}
+        pot={home?.pot}
         className="match-row__home"
         bold={!!match.result && match.result.home > match.result.away}
       />
@@ -120,6 +121,7 @@ const MatchRow = ({
         name={away?.name ?? match.away}
         clubId={match.away}
         owner={away?.owner}
+        pot={away?.pot}
         className="match-row__away"
         bold={!!match.result && match.result.away > match.result.home}
       />

@@ -35,8 +35,8 @@
       "code": "1S-1"
     },
     {
-      "id": "bayern-munich",
-      "name": "Bayern Munich",
+      "id": "bayern",
+      "name": "Bayern",
       "country": "Germany",
       "owner": "S",
       "group": "L",
@@ -53,8 +53,8 @@
       "code": "1S-3"
     },
     {
-      "id": "paris-saint-germain",
-      "name": "Paris Saint-Germain",
+      "id": "psg",
+      "name": "PSG",
       "country": "France",
       "owner": "S",
       "group": "L",
@@ -80,8 +80,8 @@
       "code": "1V-1"
     },
     {
-      "id": "fc-barcelona",
-      "name": "FC Barcelona",
+      "id": "barcelona",
+      "name": "Barcelona",
       "country": "Spain",
       "owner": "V",
       "group": "L",
@@ -98,8 +98,8 @@
       "code": "1V-3"
     },
     {
-      "id": "bayer-leverkusen",
-      "name": "Bayer Leverkusen",
+      "id": "leverkusen",
+      "name": "Leverkusen",
       "country": "Germany",
       "owner": "V",
       "group": "L",
@@ -108,7 +108,7 @@
     },
     {
       "id": "atletico-madrid",
-      "name": "Atletico Madrid",
+      "name": "Atlético Madrid",
       "country": "Spain",
       "owner": "V",
       "group": "L",
@@ -116,8 +116,8 @@
       "code": "1V-5"
     },
     {
-      "id": "borussia-dortmund",
-      "name": "Borussia Dortmund",
+      "id": "dortmund",
+      "name": "Dortmund",
       "country": "Germany",
       "owner": "S",
       "group": "L",
@@ -162,7 +162,7 @@
     },
     {
       "id": "ac-milan",
-      "name": "AC Milan",
+      "name": "Milan",
       "country": "Italy",
       "owner": "V",
       "group": "L",
@@ -170,8 +170,8 @@
       "code": "2V-1"
     },
     {
-      "id": "tottenham-hotspur",
-      "name": "Tottenham Hotspur",
+      "id": "tottenham",
+      "name": "Tottenham",
       "country": "England",
       "owner": "V",
       "group": "L",
@@ -179,8 +179,8 @@
       "code": "2V-2"
     },
     {
-      "id": "sporting-cp",
-      "name": "Sporting CP",
+      "id": "sporting",
+      "name": "Sporting",
       "country": "Portugal",
       "owner": "V",
       "group": "L",
@@ -206,8 +206,8 @@
       "code": "2V-5"
     },
     {
-      "id": "newcastle-united",
-      "name": "Newcastle United",
+      "id": "newcastle",
+      "name": "Newcastle",
       "country": "England",
       "owner": "S",
       "group": "L",
@@ -224,8 +224,8 @@
       "code": "3S-2"
     },
     {
-      "id": "psv-eindhoven",
-      "name": "PSV Eindhoven",
+      "id": "psv",
+      "name": "PSV",
       "country": "Netherlands",
       "owner": "S",
       "group": "L",
@@ -242,9 +242,9 @@
       "code": "3S-4"
     },
     {
-      "id": "club-brugge",
-      "name": "Club Brugge",
-      "country": "Belgium",
+      "id": "galatasaray",
+      "name": "Galatasaray",
+      "country": "Turkey",
       "owner": "S",
       "group": "L",
       "pot": 3,
@@ -296,40 +296,13 @@
       "code": "3V-5"
     },
     {
-      "id": "celtic",
-      "name": "Celtic",
-      "country": "Scotland",
-      "owner": "S",
-      "group": "L",
-      "pot": 4,
-      "code": "4S-1"
-    },
-    {
-      "id": "galatasaray",
-      "name": "Galatasaray",
-      "country": "Turkey",
-      "owner": "S",
-      "group": "L",
-      "pot": 4,
-      "code": "4S-2"
-    },
-    {
       "id": "real-sociedad",
       "name": "Real Sociedad",
       "country": "Spain",
       "owner": "S",
       "group": "L",
       "pot": 4,
-      "code": "4S-3"
-    },
-    {
-      "id": "eintracht-frankfurt",
-      "name": "Eintracht Frankfurt",
-      "country": "Germany",
-      "owner": "S",
-      "group": "L",
-      "pot": 4,
-      "code": "4S-4"
+      "code": "4S-1"
     },
     {
       "id": "lyon",
@@ -338,11 +311,38 @@
       "owner": "S",
       "group": "L",
       "pot": 4,
+      "code": "4S-2"
+    },
+    {
+      "id": "roma",
+      "name": "Roma",
+      "country": "Italy",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
+      "code": "4S-3"
+    },
+    {
+      "id": "lazio",
+      "name": "Lazio",
+      "country": "Italy",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
+      "code": "4S-4"
+    },
+    {
+      "id": "fiorentina",
+      "name": "Fiorentina",
+      "country": "Italy",
+      "owner": "S",
+      "group": "L",
+      "pot": 4,
       "code": "4S-5"
     },
     {
       "id": "fenerbahce",
-      "name": "Fenerbahce",
+      "name": "Fenerbahçe",
       "country": "Turkey",
       "owner": "V",
       "group": "L",
@@ -350,9 +350,9 @@
       "code": "4V-1"
     },
     {
-      "id": "rangers",
-      "name": "Rangers",
-      "country": "Scotland",
+      "id": "olympiacos",
+      "name": "Olympiacos",
+      "country": "Greece",
       "owner": "V",
       "group": "L",
       "pot": 4,
@@ -368,18 +368,18 @@
       "code": "4V-3"
     },
     {
-      "id": "as-roma",
-      "name": "AS Roma",
-      "country": "Italy",
+      "id": "besiktas",
+      "name": "Beşiktaş",
+      "country": "Turkey",
       "owner": "V",
       "group": "L",
       "pot": 4,
       "code": "4V-4"
     },
     {
-      "id": "olympiacos",
-      "name": "Olympiacos",
-      "country": "Greece",
+      "id": "manchester-united",
+      "name": "Manchester United",
+      "country": "England",
       "owner": "V",
       "group": "L",
       "pot": 4,
@@ -392,8 +392,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "borussia-dortmund",
-      "away": "sporting-cp",
+      "home": "dortmund",
+      "away": "sporting",
       "result": null
     },
     {
@@ -410,8 +410,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "bayern-munich",
-      "away": "bayer-leverkusen",
+      "home": "bayern",
+      "away": "leverkusen",
       "result": null
     },
     {
@@ -429,7 +429,7 @@
       "group": "L",
       "matchday": 1,
       "home": "real-madrid",
-      "away": "fc-barcelona",
+      "away": "barcelona",
       "result": null
     },
     {
@@ -437,8 +437,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "real-sociedad",
-      "away": "as-roma",
+      "home": "roma",
+      "away": "besiktas",
       "result": null
     },
     {
@@ -447,7 +447,7 @@
       "group": "L",
       "matchday": 1,
       "home": "benfica",
-      "away": "tottenham-hotspur",
+      "away": "tottenham",
       "result": null
     },
     {
@@ -473,7 +473,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "club-brugge",
+      "home": "galatasaray",
       "away": "marseille",
       "result": null
     },
@@ -482,7 +482,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "newcastle-united",
+      "home": "newcastle",
       "away": "monaco",
       "result": null
     },
@@ -509,8 +509,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "galatasaray",
-      "away": "olympiacos",
+      "home": "lyon",
+      "away": "manchester-united",
       "result": null
     },
     {
@@ -527,8 +527,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "eintracht-frankfurt",
-      "away": "rangers",
+      "home": "lazio",
+      "away": "olympiacos",
       "result": null
     },
     {
@@ -536,7 +536,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "lyon",
+      "home": "fiorentina",
       "away": "fenerbahce",
       "result": null
     },
@@ -545,7 +545,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "paris-saint-germain",
+      "home": "psg",
       "away": "atletico-madrid",
       "result": null
     },
@@ -554,7 +554,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "psv-eindhoven",
+      "home": "psv",
       "away": "porto",
       "result": null
     },
@@ -563,7 +563,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 1,
-      "home": "celtic",
+      "home": "real-sociedad",
       "away": "athletic-club",
       "result": null
     },
@@ -572,7 +572,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "borussia-dortmund",
+      "home": "dortmund",
       "away": "manchester-city",
       "result": null
     },
@@ -582,7 +582,7 @@
       "group": "L",
       "matchday": 2,
       "home": "atalanta",
-      "away": "tottenham-hotspur",
+      "away": "tottenham",
       "result": null
     },
     {
@@ -590,8 +590,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "paris-saint-germain",
-      "away": "olympiacos",
+      "home": "psg",
+      "away": "manchester-united",
       "result": null
     },
     {
@@ -599,7 +599,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "psv-eindhoven",
+      "home": "psv",
       "away": "rb-leipzig",
       "result": null
     },
@@ -608,7 +608,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "real-sociedad",
+      "home": "roma",
       "away": "monaco",
       "result": null
     },
@@ -617,7 +617,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "bayern-munich",
+      "home": "bayern",
       "away": "fenerbahce",
       "result": null
     },
@@ -626,7 +626,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "lyon",
+      "home": "fiorentina",
       "away": "villarreal",
       "result": null
     },
@@ -635,7 +635,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "club-brugge",
+      "home": "galatasaray",
       "away": "ac-milan",
       "result": null
     },
@@ -654,7 +654,7 @@
       "group": "L",
       "matchday": 2,
       "home": "inter",
-      "away": "as-roma",
+      "away": "besiktas",
       "result": null
     },
     {
@@ -662,7 +662,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "eintracht-frankfurt",
+      "home": "lazio",
       "away": "marseille",
       "result": null
     },
@@ -671,7 +671,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "newcastle-united",
+      "home": "newcastle",
       "away": "aston-villa",
       "result": null
     },
@@ -681,7 +681,7 @@
       "group": "L",
       "matchday": 2,
       "home": "real-madrid",
-      "away": "rangers",
+      "away": "olympiacos",
       "result": null
     },
     {
@@ -690,7 +690,7 @@
       "group": "L",
       "matchday": 2,
       "home": "feyenoord",
-      "away": "sporting-cp",
+      "away": "sporting",
       "result": null
     },
     {
@@ -699,7 +699,7 @@
       "group": "L",
       "matchday": 2,
       "home": "juventus",
-      "away": "bayer-leverkusen",
+      "away": "leverkusen",
       "result": null
     },
     {
@@ -717,7 +717,7 @@
       "group": "L",
       "matchday": 2,
       "home": "chelsea",
-      "away": "fc-barcelona",
+      "away": "barcelona",
       "result": null
     },
     {
@@ -725,7 +725,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "celtic",
+      "home": "real-sociedad",
       "away": "ajax",
       "result": null
     },
@@ -743,7 +743,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 2,
-      "home": "galatasaray",
+      "home": "lyon",
       "away": "porto",
       "result": null
     },
@@ -762,7 +762,7 @@
       "group": "L",
       "matchday": 3,
       "home": "atalanta",
-      "away": "as-roma",
+      "away": "besiktas",
       "result": null
     },
     {
@@ -770,7 +770,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "galatasaray",
+      "home": "lyon",
       "away": "manchester-city",
       "result": null
     },
@@ -779,8 +779,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "club-brugge",
-      "away": "rangers",
+      "home": "galatasaray",
+      "away": "olympiacos",
       "result": null
     },
     {
@@ -797,8 +797,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "bayern-munich",
-      "away": "tottenham-hotspur",
+      "home": "bayern",
+      "away": "tottenham",
       "result": null
     },
     {
@@ -807,7 +807,7 @@
       "group": "L",
       "matchday": 3,
       "home": "liverpool",
-      "away": "sporting-cp",
+      "away": "sporting",
       "result": null
     },
     {
@@ -815,7 +815,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "psv-eindhoven",
+      "home": "psv",
       "away": "athletic-club",
       "result": null
     },
@@ -824,7 +824,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "paris-saint-germain",
+      "home": "psg",
       "away": "rb-leipzig",
       "result": null
     },
@@ -833,7 +833,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "celtic",
+      "home": "real-sociedad",
       "away": "atletico-madrid",
       "result": null
     },
@@ -860,8 +860,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "real-sociedad",
-      "away": "fc-barcelona",
+      "home": "roma",
+      "away": "barcelona",
       "result": null
     },
     {
@@ -887,8 +887,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "newcastle-united",
-      "away": "olympiacos",
+      "home": "newcastle",
+      "away": "manchester-united",
       "result": null
     },
     {
@@ -896,8 +896,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "eintracht-frankfurt",
-      "away": "bayer-leverkusen",
+      "home": "lazio",
+      "away": "leverkusen",
       "result": null
     },
     {
@@ -914,7 +914,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "lyon",
+      "home": "fiorentina",
       "away": "arsenal",
       "result": null
     },
@@ -923,7 +923,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 3,
-      "home": "borussia-dortmund",
+      "home": "dortmund",
       "away": "porto",
       "result": null
     },
@@ -932,8 +932,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "borussia-dortmund",
-      "away": "rangers",
+      "home": "dortmund",
+      "away": "olympiacos",
       "result": null
     },
     {
@@ -951,7 +951,7 @@
       "group": "L",
       "matchday": 4,
       "home": "benfica",
-      "away": "olympiacos",
+      "away": "manchester-united",
       "result": null
     },
     {
@@ -977,7 +977,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "paris-saint-germain",
+      "home": "psg",
       "away": "marseille",
       "result": null
     },
@@ -986,8 +986,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "celtic",
-      "away": "sporting-cp",
+      "home": "real-sociedad",
+      "away": "sporting",
       "result": null
     },
     {
@@ -1005,7 +1005,7 @@
       "group": "L",
       "matchday": 4,
       "home": "chelsea",
-      "away": "as-roma",
+      "away": "besiktas",
       "result": null
     },
     {
@@ -1022,7 +1022,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "real-sociedad",
+      "home": "roma",
       "away": "ac-milan",
       "result": null
     },
@@ -1031,7 +1031,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "eintracht-frankfurt",
+      "home": "lazio",
       "away": "rb-leipzig",
       "result": null
     },
@@ -1040,8 +1040,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "club-brugge",
-      "away": "fc-barcelona",
+      "home": "galatasaray",
+      "away": "barcelona",
       "result": null
     },
     {
@@ -1049,8 +1049,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "newcastle-united",
-      "away": "bayer-leverkusen",
+      "home": "newcastle",
+      "away": "leverkusen",
       "result": null
     },
     {
@@ -1058,7 +1058,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "bayern-munich",
+      "home": "bayern",
       "away": "ajax",
       "result": null
     },
@@ -1067,7 +1067,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "psv-eindhoven",
+      "home": "psv",
       "away": "arsenal",
       "result": null
     },
@@ -1076,7 +1076,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "galatasaray",
+      "home": "lyon",
       "away": "aston-villa",
       "result": null
     },
@@ -1094,8 +1094,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 4,
-      "home": "lyon",
-      "away": "tottenham-hotspur",
+      "home": "fiorentina",
+      "away": "tottenham",
       "result": null
     },
     {
@@ -1121,8 +1121,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 5,
-      "home": "fc-barcelona",
-      "away": "newcastle-united",
+      "home": "barcelona",
+      "away": "newcastle",
       "result": null
     },
     {
@@ -1140,7 +1140,7 @@
       "group": "L",
       "matchday": 5,
       "home": "villarreal",
-      "away": "bayern-munich",
+      "away": "bayern",
       "result": null
     },
     {
@@ -1149,7 +1149,7 @@
       "group": "L",
       "matchday": 5,
       "home": "manchester-city",
-      "away": "psv-eindhoven",
+      "away": "psv",
       "result": null
     },
     {
@@ -1158,7 +1158,7 @@
       "group": "L",
       "matchday": 5,
       "home": "monaco",
-      "away": "paris-saint-germain",
+      "away": "psg",
       "result": null
     },
     {
@@ -1167,7 +1167,7 @@
       "group": "L",
       "matchday": 5,
       "home": "rb-leipzig",
-      "away": "lyon",
+      "away": "fiorentina",
       "result": null
     },
     {
@@ -1185,7 +1185,7 @@
       "group": "L",
       "matchday": 5,
       "home": "aston-villa",
-      "away": "celtic",
+      "away": "real-sociedad",
       "result": null
     },
     {
@@ -1202,8 +1202,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 5,
-      "home": "sporting-cp",
-      "away": "real-sociedad",
+      "home": "sporting",
+      "away": "roma",
       "result": null
     },
     {
@@ -1212,7 +1212,7 @@
       "group": "L",
       "matchday": 5,
       "home": "atletico-madrid",
-      "away": "club-brugge",
+      "away": "galatasaray",
       "result": null
     },
     {
@@ -1220,7 +1220,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 5,
-      "home": "rangers",
+      "home": "olympiacos",
       "away": "napoli",
       "result": null
     },
@@ -1229,7 +1229,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 5,
-      "home": "bayer-leverkusen",
+      "home": "leverkusen",
       "away": "feyenoord",
       "result": null
     },
@@ -1238,8 +1238,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 5,
-      "home": "tottenham-hotspur",
-      "away": "galatasaray",
+      "home": "tottenham",
+      "away": "lyon",
       "result": null
     },
     {
@@ -1247,7 +1247,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 5,
-      "home": "as-roma",
+      "home": "besiktas",
       "away": "juventus",
       "result": null
     },
@@ -1257,7 +1257,7 @@
       "group": "L",
       "matchday": 5,
       "home": "ac-milan",
-      "away": "eintracht-frankfurt",
+      "away": "lazio",
       "result": null
     },
     {
@@ -1283,8 +1283,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 5,
-      "home": "olympiacos",
-      "away": "borussia-dortmund",
+      "home": "manchester-united",
+      "away": "dortmund",
       "result": null
     },
     {
@@ -1293,7 +1293,7 @@
       "group": "L",
       "matchday": 6,
       "home": "manchester-city",
-      "away": "celtic",
+      "away": "real-sociedad",
       "result": null
     },
     {
@@ -1301,8 +1301,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 6,
-      "home": "fc-barcelona",
-      "away": "eintracht-frankfurt",
+      "home": "barcelona",
+      "away": "lazio",
       "result": null
     },
     {
@@ -1310,8 +1310,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 6,
-      "home": "bayer-leverkusen",
-      "away": "lyon",
+      "home": "leverkusen",
+      "away": "fiorentina",
       "result": null
     },
     {
@@ -1337,8 +1337,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 6,
-      "home": "as-roma",
-      "away": "club-brugge",
+      "home": "besiktas",
+      "away": "galatasaray",
       "result": null
     },
     {
@@ -1346,7 +1346,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 6,
-      "home": "tottenham-hotspur",
+      "home": "tottenham",
       "away": "inter",
       "result": null
     },
@@ -1374,7 +1374,7 @@
       "group": "L",
       "matchday": 6,
       "home": "arsenal",
-      "away": "galatasaray",
+      "away": "lyon",
       "result": null
     },
     {
@@ -1383,7 +1383,7 @@
       "group": "L",
       "matchday": 6,
       "home": "ajax",
-      "away": "borussia-dortmund",
+      "away": "dortmund",
       "result": null
     },
     {
@@ -1392,7 +1392,7 @@
       "group": "L",
       "matchday": 6,
       "home": "atletico-madrid",
-      "away": "real-sociedad",
+      "away": "roma",
       "result": null
     },
     {
@@ -1400,7 +1400,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 6,
-      "home": "olympiacos",
+      "home": "manchester-united",
       "away": "feyenoord",
       "result": null
     },
@@ -1419,7 +1419,7 @@
       "group": "L",
       "matchday": 6,
       "home": "fenerbahce",
-      "away": "psv-eindhoven",
+      "away": "psv",
       "result": null
     },
     {
@@ -1427,8 +1427,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 6,
-      "home": "rangers",
-      "away": "newcastle-united",
+      "home": "olympiacos",
+      "away": "newcastle",
       "result": null
     },
     {
@@ -1436,8 +1436,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 6,
-      "home": "sporting-cp",
-      "away": "bayern-munich",
+      "home": "sporting",
+      "away": "bayern",
       "result": null
     },
     {
@@ -1446,7 +1446,7 @@
       "group": "L",
       "matchday": 6,
       "home": "ac-milan",
-      "away": "paris-saint-germain",
+      "away": "psg",
       "result": null
     },
     {
@@ -1482,7 +1482,7 @@
       "group": "L",
       "matchday": 7,
       "home": "ajax",
-      "away": "psv-eindhoven",
+      "away": "psv",
       "result": null
     },
     {
@@ -1500,7 +1500,7 @@
       "group": "L",
       "matchday": 7,
       "home": "villarreal",
-      "away": "newcastle-united",
+      "away": "newcastle",
       "result": null
     },
     {
@@ -1508,7 +1508,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 7,
-      "home": "sporting-cp",
+      "home": "sporting",
       "away": "benfica",
       "result": null
     },
@@ -1527,7 +1527,7 @@
       "group": "L",
       "matchday": 7,
       "home": "rb-leipzig",
-      "away": "borussia-dortmund",
+      "away": "dortmund",
       "result": null
     },
     {
@@ -1535,8 +1535,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 7,
-      "home": "rangers",
-      "away": "real-sociedad",
+      "home": "olympiacos",
+      "away": "roma",
       "result": null
     },
     {
@@ -1544,7 +1544,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 7,
-      "home": "tottenham-hotspur",
+      "home": "tottenham",
       "away": "juventus",
       "result": null
     },
@@ -1554,7 +1554,7 @@
       "group": "L",
       "matchday": 7,
       "home": "monaco",
-      "away": "club-brugge",
+      "away": "galatasaray",
       "result": null
     },
     {
@@ -1571,8 +1571,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 7,
-      "home": "olympiacos",
-      "away": "lyon",
+      "home": "manchester-united",
+      "away": "fiorentina",
       "result": null
     },
     {
@@ -1581,7 +1581,7 @@
       "group": "L",
       "matchday": 7,
       "home": "fenerbahce",
-      "away": "eintracht-frankfurt",
+      "away": "lazio",
       "result": null
     },
     {
@@ -1589,8 +1589,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 7,
-      "home": "fc-barcelona",
-      "away": "bayern-munich",
+      "home": "barcelona",
+      "away": "bayern",
       "result": null
     },
     {
@@ -1598,8 +1598,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 7,
-      "home": "as-roma",
-      "away": "celtic",
+      "home": "besiktas",
+      "away": "real-sociedad",
       "result": null
     },
     {
@@ -1625,8 +1625,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 7,
-      "home": "bayer-leverkusen",
-      "away": "paris-saint-germain",
+      "home": "leverkusen",
+      "away": "psg",
       "result": null
     },
     {
@@ -1635,7 +1635,7 @@
       "group": "L",
       "matchday": 7,
       "home": "athletic-club",
-      "away": "galatasaray",
+      "away": "lyon",
       "result": null
     },
     {
@@ -1661,7 +1661,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 8,
-      "home": "fc-barcelona",
+      "home": "barcelona",
       "away": "juventus",
       "result": null
     },
@@ -1670,8 +1670,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 8,
-      "home": "tottenham-hotspur",
-      "away": "club-brugge",
+      "home": "tottenham",
+      "away": "galatasaray",
       "result": null
     },
     {
@@ -1680,7 +1680,7 @@
       "group": "L",
       "matchday": 8,
       "home": "atletico-madrid",
-      "away": "borussia-dortmund",
+      "away": "dortmund",
       "result": null
     },
     {
@@ -1689,7 +1689,7 @@
       "group": "L",
       "matchday": 8,
       "home": "athletic-club",
-      "away": "paris-saint-germain",
+      "away": "psg",
       "result": null
     },
     {
@@ -1697,7 +1697,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 8,
-      "home": "as-roma",
+      "home": "besiktas",
       "away": "liverpool",
       "result": null
     },
@@ -1707,7 +1707,7 @@
       "group": "L",
       "matchday": 8,
       "home": "villarreal",
-      "away": "celtic",
+      "away": "real-sociedad",
       "result": null
     },
     {
@@ -1716,7 +1716,7 @@
       "group": "L",
       "matchday": 8,
       "home": "ac-milan",
-      "away": "newcastle-united",
+      "away": "newcastle",
       "result": null
     },
     {
@@ -1724,7 +1724,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 8,
-      "home": "bayer-leverkusen",
+      "home": "leverkusen",
       "away": "benfica",
       "result": null
     },
@@ -1733,8 +1733,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 8,
-      "home": "sporting-cp",
-      "away": "psv-eindhoven",
+      "home": "sporting",
+      "away": "psv",
       "result": null
     },
     {
@@ -1743,7 +1743,7 @@
       "group": "L",
       "matchday": 8,
       "home": "marseille",
-      "away": "galatasaray",
+      "away": "lyon",
       "result": null
     },
     {
@@ -1761,7 +1761,7 @@
       "group": "L",
       "matchday": 8,
       "home": "monaco",
-      "away": "lyon",
+      "away": "fiorentina",
       "result": null
     },
     {
@@ -1769,8 +1769,8 @@
       "stage": "group",
       "group": "L",
       "matchday": 8,
-      "home": "olympiacos",
-      "away": "bayern-munich",
+      "home": "manchester-united",
+      "away": "bayern",
       "result": null
     },
     {
@@ -1788,7 +1788,7 @@
       "group": "L",
       "matchday": 8,
       "home": "ajax",
-      "away": "eintracht-frankfurt",
+      "away": "lazio",
       "result": null
     },
     {
@@ -1796,7 +1796,7 @@
       "stage": "group",
       "group": "L",
       "matchday": 8,
-      "home": "rangers",
+      "home": "olympiacos",
       "away": "inter",
       "result": null
     },
@@ -1815,7 +1815,7 @@
       "group": "L",
       "matchday": 8,
       "home": "porto",
-      "away": "real-sociedad",
+      "away": "roma",
       "result": null
     },
     {
