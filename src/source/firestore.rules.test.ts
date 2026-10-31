@@ -41,6 +41,8 @@ const {
   importTournament,
   savePlayoffResult,
   saveMatchResult,
+  addMatchCards,
+  removeMatchCard,
   setPlayoffTeams,
   setTournamentChampion,
   setTournamentName,
@@ -86,6 +88,31 @@ describe("firestore.rules", () => {
     await saveMatchResult("rules-new", firstMatch, { home: 0, away: 0 });
     await saveMatchResult("rules-new", firstMatch, { home: 3, away: 1 });
     await saveMatchResult("rules-new", firstMatch, null);
+  });
+
+  it("adds and removes cards while active, without touching the score", async () => {
+    const card = {
+      id: "abc123",
+      club: newFile.matches[0].home,
+      player: "Vinicius",
+      type: "yellow" as const,
+    };
+    const second = { ...card, id: "abc124", player: "Rodrygo" };
+    await addMatchCards("rules-new", firstMatch, [card, second]);
+    await removeMatchCard("rules-new", firstMatch, second);
+    await removeMatchCard("rules-new", firstMatch, card);
+    await expect(
+      updateDoc(matchRef("rules-new", firstMatch), {
+        cards: [card],
+        result: { home: 1, away: 0 },
+      })
+    ).rejects.toThrow();
+    await expect(
+      updateDoc(matchRef("rules-new", firstMatch), { cards: "red" })
+    ).rejects.toThrow();
+    await expect(
+      addMatchCards("rules-completed", completedFile.matches[0].id, [card])
+    ).rejects.toThrow();
   });
 
   it("rejects malformed scores and changes to other match fields", async () => {

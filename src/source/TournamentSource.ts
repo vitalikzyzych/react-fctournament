@@ -1,4 +1,6 @@
 import {
+  arrayRemove,
+  arrayUnion,
   collection,
   collectionGroup,
   doc,
@@ -16,6 +18,7 @@ import {
 import { getDb } from "@/core/firebase";
 import {
   gameTeams,
+  type ICard,
   type IMatch,
   type IPlayoffMatch,
   type IPlayoffTie,
@@ -58,6 +61,7 @@ const toMatch = (id: string, data: DocumentData): IStoredMatch => {
     home: data.home,
     away: data.away,
     result: data.result ?? null,
+    cards: data.cards ?? [],
     // Pending local writes have no server time yet: treat them as "just now".
     updatedAtMs:
       data.updatedAt instanceof Timestamp
@@ -75,6 +79,10 @@ const toMatch = (id: string, data: DocumentData): IStoredMatch => {
     : { ...common, stage: "group", group: data.group, matchday: data.matchday };
 };
 
+/** Cards are stored only when there are some (imported files). */
+const cardsData = (match: IMatch) =>
+  match.cards?.length ? { cards: match.cards } : {};
+
 /** Document fields of a match (the id is the document id). */
 const matchData = (match: IMatch) =>
   match.stage === "group"
@@ -85,6 +93,7 @@ const matchData = (match: IMatch) =>
         home: match.home,
         away: match.away,
         result: match.result,
+        ...cardsData(match),
         updatedAt: serverTimestamp(),
       }
     : {
@@ -95,6 +104,7 @@ const matchData = (match: IMatch) =>
         home: match.home,
         away: match.away,
         result: match.result,
+        ...cardsData(match),
         updatedAt: serverTimestamp(),
       };
 
@@ -257,6 +267,29 @@ export const applyPlayoffDraw = async (
   });
   await batch.commit();
 };
+
+/**
+ * Adds cards (several at once) or removes one. Leaves `updatedAt` alone, so a card does not make
+ * an older match the latest result on the dashboard. `arrayUnion` and
+ * `arrayRemove` let two devices change cards of one match at once.
+ */
+export const addMatchCards = (
+  tournamentId: string,
+  matchId: string,
+  cards: ICard[]
+): Promise<void> =>
+  updateDoc(doc(getDb(), TOURNAMENTS, tournamentId, MATCHES, matchId), {
+    cards: arrayUnion(...cards),
+  });
+
+export const removeMatchCard = (
+  tournamentId: string,
+  matchId: string,
+  card: ICard
+): Promise<void> =>
+  updateDoc(doc(getDb(), TOURNAMENTS, tournamentId, MATCHES, matchId), {
+    cards: arrayRemove(card),
+  });
 
 /**
  * Saves a playoff result and removes replays that no longer apply (an earlier

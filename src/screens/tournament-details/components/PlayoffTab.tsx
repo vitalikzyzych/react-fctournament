@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Button } from "primereact/button";
 
@@ -7,6 +7,7 @@ import PlayoffDrawDialog from "./PlayoffDrawDialog";
 import PlayoffTieCard from "./PlayoffTieCard";
 
 import {
+  computeDiscipline,
   computePlayoff,
   type IClub,
   type IMatch,
@@ -35,6 +36,7 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
   );
   const started = ties.some((tie) => tie.games.length > 0);
   const [drawRound, setDrawRound] = useState<PlayoffRound | null>(null);
+  const discipline = useMemo(() => computeDiscipline(matches), [matches]);
 
   // The semi-final draw needs every quarter-final decided.
   const quarterWinners = ties
@@ -146,6 +148,7 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
                       clubsById={clubsById}
                       editable={editable}
                       taken={taken}
+                      discipline={discipline}
                     />
                   </div>
                 );

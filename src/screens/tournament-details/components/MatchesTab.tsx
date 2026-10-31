@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { SelectButton } from "primereact/selectbutton";
 
 import {
+  computeDiscipline,
   groupMatches,
   type IClub,
   type IMatch,
   type ITournament,
   sortMatches,
 } from "@/domain";
-import { useSaveResult } from "@/hooks";
-import { FluentIcon, MatchRow } from "@/ui";
+import { useMatchCards, useSaveResult } from "@/hooks";
+import { FluentIcon, MatchCards, MatchRow } from "@/ui";
 import { formatScore } from "@/utils";
 
 interface IMatchesTabProps {
@@ -20,6 +21,8 @@ interface IMatchesTabProps {
 
 const MatchesTab = ({ tournament, matches }: IMatchesTabProps) => {
   const saveResult = useSaveResult(tournament, matches);
+  const { addCards, removeCard } = useMatchCards(tournament);
+  const discipline = useMemo(() => computeDiscipline(matches), [matches]);
   const sorted = groupMatches(sortMatches(matches));
   const matchdays = [...new Set(sorted.map((m) => m.matchday))];
   const firstOpen =
@@ -85,6 +88,16 @@ const MatchesTab = ({ tournament, matches }: IMatchesTabProps) => {
                   clubsById={clubsById}
                   editable={editable}
                   onSave={(result) => saveResult(match, result)}
+                  footer={
+                    <MatchCards
+                      match={match}
+                      clubsById={clubsById}
+                      discipline={discipline}
+                      editable={editable}
+                      onAdd={(cards) => addCards(match, cards)}
+                      onRemove={(card) => removeCard(match, card)}
+                    />
+                  }
                 />
               ))}
             </div>

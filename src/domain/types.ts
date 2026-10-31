@@ -50,6 +50,20 @@ export interface IScore {
   away: number;
 }
 
+export type CardType = "yellow" | "red";
+
+/**
+ * A card shown to a footballer in one match. Footballers are not stored
+ * anywhere else: `player` is the name as typed, matched without case and
+ * spaces at the ends. `id` keeps two equal cards apart in Firestore.
+ */
+export interface ICard {
+  id: string;
+  club: string;
+  player: string;
+  type: CardType;
+}
+
 export interface IGroupMatch {
   id: string;
   stage: "group";
@@ -58,6 +72,8 @@ export interface IGroupMatch {
   home: string;
   away: string;
   result: IScore | null;
+  /** Cards of this match; missing or empty when there are none. */
+  cards?: ICard[];
 }
 
 /**
@@ -75,6 +91,7 @@ export interface IPlayoffMatch {
   home: string;
   away: string;
   result: IScore | null;
+  cards?: ICard[];
 }
 
 export type IMatch = IGroupMatch | IPlayoffMatch;

@@ -839,6 +839,103 @@ code {
   }
 }
 
+/* Cards and missing players under a match (ui/MatchCards.tsx) */
+.match-row__footer {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.match-row__footer:empty {
+  display: none;
+}
+
+.card-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.6rem;
+  height: 0.85rem;
+  border-radius: 0.15rem;
+}
+
+.card-icon--yellow {
+  background: var(--yellow-400);
+}
+
+.card-icon--red {
+  background: var(--red-500);
+}
+
+.card-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 100%;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.card-chip .p-button.card-chip__remove {
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-right: -0.35rem;
+  padding: 0;
+}
+
+.p-button.card-add {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.match-missing {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--red-500) 12%, transparent);
+  color: var(--red-200);
+  font-size: 0.8rem;
+}
+
+.match-missing > svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* Card dialog: pending cards fill the column, known names are small. */
+.card-chip--pending {
+  display: flex;
+  padding: 0.15rem 0.5rem 0.15rem 0.15rem;
+  border-radius: 0.6rem;
+}
+
+.card-chip .p-button.card-chip__toggle {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+}
+
+.card-chip__toggle .card-icon {
+  width: 0.8rem;
+  height: 1.1rem;
+}
+
+/* Square, same height as the name field next to it. */
+.p-button.card-add-button {
+  flex-shrink: 0;
+  width: 3rem;
+  padding: 0;
+  border-radius: var(--border-radius);
+}
+
+.p-button.card-quick {
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+}
+
 /* Score boxes: an input while editable, a scoreboard digit otherwise */
 .score-input.p-inputtext,
 .score-text {

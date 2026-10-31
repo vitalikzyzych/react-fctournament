@@ -108,6 +108,26 @@ Ownership belongs to the tournament, so the same club may be `S` in one tourname
 
 A missing `result` field is read as `null`.
 
+### Cards
+
+Any match, group or playoff, may have an optional `cards` list. Leave it out for new tournaments: cards are entered in the app while the tournament is played. Exported files contain them.
+
+```json
+"cards": [
+  { "id": "k3f9a2", "club": "real-madrid", "player": "Vinicius", "type": "yellow" },
+  { "club": "arsenal", "player": "Saka", "type": "red" }
+]
+```
+
+| Field | Type | Rules |
+|---|---|---|
+| `id` | string | Optional. Lowercase letters and digits, up to 20 characters. A card without one gets an id on import. |
+| `club` | string | Club `id` of the home or the away team of this match. |
+| `player` | string | The footballer's name, up to 40 characters. The same name (case and spaces at the ends ignored) of the same club is the same footballer. |
+| `type` | string | `yellow` or `red`. |
+
+At most 30 cards per match. The app works out bans from the cards: a footballer misses his club's next match after a red card or two yellows in one match, after his second yellow of the tournament, and after every yellow once he has served a ban. Cards count for the whole tournament, playoff included.
+
 ### Playoff games
 
 After the group stage there is a playoff: 4 quarter-final ties, 2 semi-final ties and a final. Which clubs play in each tie is decided by the players, not by the group tables. In the app, a quarter-final pairs a club of one player with a club of the other player from a different group. Semi-finals and the final may pair any two clubs, because the winners left can belong to one player.

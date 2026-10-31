@@ -8,6 +8,7 @@ import QuickEntry from "./components/QuickEntry";
 import { PageHeader } from "@/components";
 import {
   computeAllTimePlayers,
+  computeDiscipline,
   computeTournamentStats,
   describeMatch,
   findChampionClub,
@@ -27,6 +28,7 @@ import { pickCurrentTournament, useTournamentData } from "@/providers";
 import {
   EmptyState,
   FluentIcon,
+  MatchCards,
   MatchRow,
   PlayerVersusCard,
   SectionCard,
@@ -70,6 +72,7 @@ const Dashboard = () => {
   const stats = computeTournamentStats(tournament.clubs, matches);
   const stored = matchesByTournament.get(tournament.id) ?? [];
   const league = isLeagueFormat(tournament.format);
+  const discipline = computeDiscipline(matches);
   const qualified = league
     ? new Set(playoffQualifiers(tournament, matches))
     : undefined;
@@ -189,6 +192,14 @@ const Dashboard = () => {
                       match.stage === "group" && !league
                         ? `Група ${match.group}`
                         : describeMatch(match, league)
+                    }
+                    footer={
+                      <MatchCards
+                        match={match}
+                        clubsById={clubsById}
+                        discipline={discipline}
+                        editable={false}
+                      />
                     }
                   />
                 ))}

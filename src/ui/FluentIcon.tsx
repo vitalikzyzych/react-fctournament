@@ -1,4 +1,5 @@
 import {
+  AddRegular,
   ArrowDownloadRegular,
   ArrowImportRegular,
   ArrowLeftRegular,
@@ -21,6 +22,7 @@ import {
   InfoRegular,
   LockClosedRegular,
   LockOpenRegular,
+  PersonProhibitedRegular,
   PlayRegular,
   RibbonRegular,
   SportSoccerRegular,
@@ -33,6 +35,7 @@ import {
  * listed here end up in the bundle. Add an entry to use a new icon.
  */
 const ICONS = {
+  Add: AddRegular,
   ArrowDownload: ArrowDownloadRegular,
   ArrowImport: ArrowImportRegular,
   ArrowLeft: ArrowLeftRegular,
@@ -54,6 +57,7 @@ const ICONS = {
   Info: InfoRegular,
   LockClosed: LockClosedRegular,
   LockOpen: LockOpenRegular,
+  PersonProhibited: PersonProhibitedRegular,
   Play: PlayRegular,
   Ribbon: RibbonRegular,
   SportSoccer: SportSoccerRegular,

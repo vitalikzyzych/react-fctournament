@@ -56,6 +56,7 @@ src/
     validateFormat.ts  per-format structural rules (sv-groups-4x4, sv-league-40), group matches only
     league.ts      groupTable, playoffQualifiers (draw defaults), findLeagueWinner, clubOrigin
     schedule.ts    upcomingMatches (play order), latestResult
+    cards.ts       computeDiscipline: bans from yellow and red cards, player name suggestions
     playoff.ts     bracket (computePlayoff), tie winners, replays, champion, playoff reach
     draw.ts        playoff draw: allowed pairings (drawCandidates), random pick (pickDraw)
     standings.ts   records and group tables (tie-breakers)
@@ -71,6 +72,7 @@ src/
   source/TournamentSource.ts   Every Firestore read and write
   source/firestore.rules.test.ts  rules tests through TournamentSource against the emulator
   hooks/useSaveResult.ts   Saving a score from any screen (group, playoff game, pending extra game)
+  hooks/useMatchCards.ts   Adding and removing cards of a stored match
   providers/
     TournamentDataProvider.tsx  ONE live subscription to all tournaments + one to all matches
                                 (collection group); every screen reads useTournamentData()
@@ -102,6 +104,7 @@ tournaments/{tournamentId}/matches/{matchId}
   playoff game:  stage "playoff", round ("QF" | "SF" | "F"), tie, game,
                  home, away, result, updatedAt
   result: {home, away} | null
+  cards?: [{id, club, player, type: "yellow" | "red"}]   (both stages)
 ```
 
 - `IMatch` is a union (`IGroupMatch | IPlayoffMatch`) on `stage`. Use `groupMatches()` / `playoffMatches()` from `domain/playoff.ts` to narrow.
@@ -135,6 +138,7 @@ tournaments/{tournamentId}/matches/{matchId}
 - **Titles** count only **completed** tournaments (`countsAsTitle` in `domain/history.ts`). A tournament in progress may show a champion but wins no title until it is completed. Shown in `ui/TitlesCard.tsx` on the dashboard and at the top of History.
 - **Planned tournaments** are future tournaments: imported with status `planned`, listed under "Заплановані" (always visible), read-only (schedule visible, no results, playoff or champion; enforced by `isActive` in the rules). "Почати турнір" is disabled while another tournament is active. There is no in-app tournament creator yet; planned tournaments come from JSON import.
 - Playoff games count in S vs V, tournament stats, club history and head-to-head; never in group tables.
+- **Cards and bans** (decided with the user on 2026-10-31): yellow and red cards per match, for a footballer typed by name (`playerKey` matches names without case; names used before are suggested per club). Rules in `computeDiscipline` (`domain/cards.ts`): a red card or two yellows in one match ban the next match of the club; the second yellow of the tournament bans the next match; once a footballer has served any ban, every further yellow bans the next match. Bans are 1 match. Yellows carry over from groups or league into the playoff. Cards count as soon as they are entered, with or without a result. `ui/MatchCards.tsx` shows the cards, the "+ Картки" dialog (both clubs side by side; a typed name or a tap on a footballer booked before adds a yellow, the card icon switches it to red, one save for all via `addMatchCards`) and the "Пропускає матч" line, in `MatchRow`'s `footer` on the matches tab, the dashboard (quick entry and next matches) and the playoff ties. Card writes use `arrayUnion`/`arrayRemove` and leave `updatedAt` alone, so a card does not change the dashboard's latest match; the rules allow a `cards`-only update (list of at most 30) while active.
 - **League format `sv-league-40`** (decided with the user on 2026-10-30): 40 clubs in one group `L`, 4 pots of 5 S + 5 V, 8 matchdays, 160 matches; the draw comes from ChatGPT (`docs/chatgpt-league-prompt.md`) and `validateSvLeague40` checks every rule. **Two champions**: the league table winner once every league match is played (`findLeagueWinner`, silver `ChampionBadge league`), and the playoff champion as before. Titles count the playoff champion; league wins are counted on their own line in `TitlesCard`. The playoff draw suggests the 4 best S and 4 best V clubs of the table; quarter-final pairs are S vs V, the group rule is skipped (`canPair`/`drawCandidates` with `league`). The table marks those 8 places. The "Групи" tab is called "Таблиця".
 - The tournament **champion** is the winner of the final. History shows titles S : V.
 

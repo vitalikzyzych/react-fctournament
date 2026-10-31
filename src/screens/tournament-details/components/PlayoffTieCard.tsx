@@ -9,6 +9,7 @@ import {
   clubOrigin,
   gameLabel,
   type IClub,
+  type IDiscipline,
   type IPlayoffTie,
   isLeagueFormat,
   type ITournament,
@@ -17,14 +18,20 @@ import {
   PLAYOFF_ROUNDS,
   roundLegs,
 } from "@/domain";
-import { useSaveResult } from "@/hooks";
+import { useMatchCards, useSaveResult } from "@/hooks";
 import { useToast } from "@/providers";
 import {
   createPlayoffGames,
   deletePlayoffMatches,
   setPlayoffTeams,
 } from "@/source/TournamentSource";
-import { ChampionBadge, ClubLabel, FluentIcon, MatchRow } from "@/ui";
+import {
+  ChampionBadge,
+  ClubLabel,
+  FluentIcon,
+  MatchCards,
+  MatchRow,
+} from "@/ui";
 import { formatScore } from "@/utils";
 
 interface IPlayoffTieCardProps {
@@ -34,6 +41,8 @@ interface IPlayoffTieCardProps {
   editable: boolean;
   /** Clubs already in another tie of the same round. */
   taken: Set<string>;
+  /** Cards and bans of the whole tournament. */
+  discipline: IDiscipline;
 }
 
 interface IClubOption {
@@ -56,9 +65,11 @@ const PlayoffTieCard = ({
   clubsById,
   editable,
   taken,
+  discipline,
 }: IPlayoffTieCardProps) => {
   const { show } = useToast();
   const saveResult = useSaveResult(tournament, tie.games);
+  const { addCards, removeCard } = useMatchCards(tournament);
   const [editing, setEditing] = useState(false);
   const [home, setHome] = useState<string | null>(tie.home);
   const [away, setAway] = useState<string | null>(tie.away);
@@ -285,6 +296,16 @@ const PlayoffTieCard = ({
           editable={editable && !editing}
           meta={gameLabel(game) ?? undefined}
           onSave={(result) => saveResult(game, result)}
+          footer={
+            <MatchCards
+              match={game}
+              clubsById={clubsById}
+              discipline={discipline}
+              editable={editable && !editing}
+              onAdd={(cards) => addCards(game, cards)}
+              onRemove={(card) => removeCard(game, card)}
+            />
+          }
         />
       ))}
 
@@ -325,6 +346,15 @@ const PlayoffTieCard = ({
             editable
             meta={gameLabel(replay) ?? undefined}
             onSave={(result) => saveResult(replay, result)}
+            // Not stored yet: missing players only, cards after saving.
+            footer={
+              <MatchCards
+                match={replay}
+                clubsById={clubsById}
+                discipline={discipline}
+                editable={false}
+              />
+            }
           />
         </>
       )}

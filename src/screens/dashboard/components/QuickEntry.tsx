@@ -1,4 +1,7 @@
+import { useMemo } from "react";
+
 import {
+  computeDiscipline,
   describeMatch,
   type IClub,
   type IMatch,
@@ -8,8 +11,8 @@ import {
   latestResult,
   upcomingMatches,
 } from "@/domain";
-import { useSaveResult } from "@/hooks";
-import { EmptyState, MatchRow, SectionCard } from "@/ui";
+import { useMatchCards, useSaveResult } from "@/hooks";
+import { EmptyState, MatchCards, MatchRow, SectionCard } from "@/ui";
 import { formatScore } from "@/utils";
 
 interface IQuickEntryProps {
@@ -30,6 +33,10 @@ interface IEntry {
  */
 const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
   const saveResult = useSaveResult(tournament, matches);
+  const { addCards, removeCard } = useMatchCards(tournament);
+  const discipline = useMemo(() => computeDiscipline(matches), [matches]);
+  // A pending extra game is not stored yet, so it cannot take cards.
+  const isStored = (match: IMatch) => matches.some((m) => m.id === match.id);
   const clubsById = new Map<string, IClub>(
     tournament.clubs.map((club) => [club.id, club])
   );
@@ -62,6 +69,16 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
               editable
               meta={describeMatch(match, isLeagueFormat(tournament.format))}
               onSave={(result) => saveResult(match, result)}
+              footer={
+                <MatchCards
+                  match={match}
+                  clubsById={clubsById}
+                  discipline={discipline}
+                  editable={isStored(match)}
+                  onAdd={(cards) => addCards(match, cards)}
+                  onRemove={(card) => removeCard(match, card)}
+                />
+              }
             />
           </div>
         ))}

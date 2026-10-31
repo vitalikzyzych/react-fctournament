@@ -67,6 +67,13 @@ const validateReferences = (file: ITournamentFile): string[] => {
     if (match.home === match.away) {
       errors.push(`${label}: клуб не може грати сам із собою`);
     }
+    (match.cards ?? []).forEach((card) => {
+      if (card.club !== match.home && card.club !== match.away) {
+        errors.push(
+          `${label}: картка гравця "${card.player}" для клубу "${card.club}", який не грає в цьому матчі`
+        );
+      }
+    });
     [match.home, match.away].forEach((clubId) => {
       const club = clubsById.get(clubId);
       if (!club) {

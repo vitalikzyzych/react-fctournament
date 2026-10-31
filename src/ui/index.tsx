@@ -9,6 +9,7 @@ export {
 } from "./CountryFlag";
 export { default as EmptyState } from "./EmptyState";
 export { default as FluentIcon, type IconName } from "./FluentIcon";
+export { default as MatchCards } from "./MatchCards";
 export { default as MatchRow } from "./MatchRow";
 export { default as PlayerBadge } from "./PlayerBadge";
 export { default as PlayerVersusCard } from "./PlayerVersusCard";

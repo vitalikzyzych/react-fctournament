@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useState } from "react";
+import { type KeyboardEvent, type ReactNode, useState } from "react";
 
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -17,6 +17,8 @@ interface IMatchRowProps {
   onSave?: (result: IScore | null) => void;
   /** Small "Група A · Тур 2" line above the clubs, for mixed lists. */
   meta?: string;
+  /** Full-width line under the clubs (cards, missing players). */
+  footer?: ReactNode;
 }
 
 const toDraft = (result: IScore | null) => ({
@@ -41,6 +43,7 @@ const MatchRow = ({
   editable,
   onSave,
   meta,
+  footer,
 }: IMatchRowProps) => {
   const [draft, setDraft] = useState(() => toDraft(match.result));
   const home = clubsById.get(match.home);
@@ -164,6 +167,7 @@ const MatchRow = ({
           />
         </div>
       )}
+      {footer && <div className="match-row__footer">{footer}</div>}
     </div>
   );
 };

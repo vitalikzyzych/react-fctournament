@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+import {
+  CARD_ID_PATTERN,
+  MAX_MATCH_CARDS,
+  MAX_PLAYER_NAME,
+  newCardId,
+} from "./cards";
 import { MAX_PLAYOFF_GAMES, PLAYOFF_ROUND_IDS } from "./playoff";
 import { PLAYER_IDS, SCHEMA_VERSION, TOURNAMENT_FORMATS } from "./types";
 
@@ -20,6 +26,21 @@ export const scoreSchema = z.object({ home: goals, away: goals });
 // A missing result is read as "not played yet".
 const result = scoreSchema.nullable().default(null);
 
+// Cards are optional; a card without an id gets one on import.
+const cards = z
+  .array(
+    z
+      .object({
+        id: z.string().regex(CARD_ID_PATTERN).optional(),
+        club: slug,
+        player: z.string().trim().min(1).max(MAX_PLAYER_NAME),
+        type: z.enum(["yellow", "red"]),
+      })
+      .transform((card) => ({ ...card, id: card.id ?? newCardId() }))
+  )
+  .max(MAX_MATCH_CARDS)
+  .optional();
+
 const groupMatchSchema = z.object({
   id: z.string().regex(MATCH_ID_PATTERN),
   stage: z.literal("group"),
@@ -28,6 +49,7 @@ const groupMatchSchema = z.object({
   home: slug,
   away: slug,
   result,
+  cards,
 });
 
 const playoffMatchSchema = z.object({
@@ -39,6 +61,7 @@ const playoffMatchSchema = z.object({
   home: slug,
   away: slug,
   result,
+  cards,
 });
 
 export const tournamentFileSchema = z.object({

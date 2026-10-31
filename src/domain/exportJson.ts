@@ -29,6 +29,7 @@ const toFileMatch = (match: IMatch): IMatch =>
         home: match.home,
         away: match.away,
         result: match.result,
+        ...(match.cards?.length ? { cards: match.cards } : {}),
       }
     : {
         id: match.id,
@@ -39,6 +40,7 @@ const toFileMatch = (match: IMatch): IMatch =>
         home: match.home,
         away: match.away,
         result: match.result,
+        ...(match.cards?.length ? { cards: match.cards } : {}),
       };
 
 /** Tournament back to the JSON exchange format, ready to save or hand to ChatGPT. */

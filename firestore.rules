@@ -62,6 +62,12 @@ service cloud.firestore {
       return value == null || isText(value, 60);
     }
 
+    // Cards of a match: a short list of {id, club, player, type} maps. The
+    // rules cannot look inside every element, so they check the list size.
+    function isCards(cards) {
+      return cards is list && cards.size() <= 30;
+    }
+
     function isTeams(data) {
       return isText(data.home, 60)
         && isText(data.away, 60)
@@ -70,8 +76,9 @@ service cloud.firestore {
 
     function isGroupMatch(data) {
       let fields = ['stage', 'group', 'matchday', 'home', 'away', 'result', 'updatedAt'];
-      return data.keys().hasOnly(fields)
+      return data.keys().hasOnly(fields.concat(['cards']))
         && data.keys().hasAll(fields)
+        && isCards(data.get('cards', []))
         && data.stage == 'group'
         && isText(data.group, 4)
         && data.matchday is int && data.matchday >= 1 && data.matchday <= 50
@@ -84,8 +91,9 @@ service cloud.firestore {
     // replays. The document id is fixed: round + tie + "-" + game, "QF1-2".
     function isPlayoffMatch(data, matchId) {
       let fields = ['stage', 'round', 'tie', 'game', 'home', 'away', 'result', 'updatedAt'];
-      return data.keys().hasOnly(fields)
+      return data.keys().hasOnly(fields.concat(['cards']))
         && data.keys().hasAll(fields)
+        && isCards(data.get('cards', []))
         && data.stage == 'playoff'
         && data.tie is int && data.tie >= 1
         && ((data.round == 'QF' && data.tie <= 4)
@@ -137,15 +145,18 @@ service cloud.firestore {
           && (!exists(tournamentPath(tournamentId)) || isActive(tournamentId));
 
         // Group match: only the score changes. Playoff game: the score and the
-        // teams (a wrongly picked club can be corrected).
+        // teams (a wrongly picked club can be corrected). Cards change on
+        // their own and leave updatedAt alone.
         allow update: if isActive(tournamentId)
-          && request.resource.data.updatedAt == request.time
-          && ((resource.data.stage == 'group'
-               && changedOnly(['result', 'updatedAt'])
-               && isResult(request.resource.data.result))
-              || (resource.data.stage == 'playoff'
-                  && changedOnly(['home', 'away', 'result', 'updatedAt'])
-                  && isPlayoffMatch(request.resource.data, matchId)));
+          && ((changedOnly(['cards'])
+               && isCards(request.resource.data.cards))
+              || (request.resource.data.updatedAt == request.time
+                  && ((resource.data.stage == 'group'
+                       && changedOnly(['result', 'updatedAt'])
+                       && isResult(request.resource.data.result))
+                      || (resource.data.stage == 'playoff'
+                          && changedOnly(['home', 'away', 'result', 'updatedAt'])
+                          && isPlayoffMatch(request.resource.data, matchId)))));
 
         // Group matches only together with the whole tournament in one batch.
         // Playoff games also on their own (removing a tie or a stale replay)

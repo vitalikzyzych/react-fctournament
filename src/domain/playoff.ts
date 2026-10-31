@@ -185,6 +185,8 @@ export const pendingReplay = (tie: IPlayoffTie): IPlayoffMatch | null => {
     id: playoffMatchId(tie.round, tie.tie, game),
     game,
     result: null,
+    // A new game starts without the previous game's cards.
+    cards: [],
   };
 };
 
