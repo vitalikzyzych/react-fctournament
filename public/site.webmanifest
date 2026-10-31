@@ -1,0 +1,20 @@
+{
+  "name": "FC Турніри",
+  "short_name": "FC Турніри",
+  "description": "Турніри EA SPORTS FC між S і V: результати, таблиці, плей-офф і вся історія.",
+  "lang": "uk",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -165,6 +165,7 @@ tournaments/{tournamentId}/matches/{matchId}
 - Saving does not wait for the server: Firestore updates the local snapshot at once and the promise settles later (much later when offline). Errors (for example a rules rejection) show a toast and the snapshot rolls back.
 - With no Firebase config, `App.tsx` renders `FirebaseSetupNotice` instead of the app.
 - `vite:preloadError` in `main.tsx` reloads once after a deploy removes old lazy chunks.
+- **Icons and link previews** (2026-10-31): `public/` holds `favicon.svg` (S and V badges), PNG icons (32, 180, 192, 512, maskable 512), `site.webmanifest` and `og-image.png` (1200x630). `index.html` has the description, Open Graph and Twitter tags with absolute `https://eafc-tournament-75465.web.app/...` URLs, and `robots noindex` (no sign-in, so the app stays out of search results). The PNGs were rendered once from HTML in headless Chrome; there is no build step for them.
 - Firestore reads: the whole history loads on each app open (tournaments + all matches). With dozens of tournaments that is about a thousand reads per open, well inside the free 50k per day.
 
 ## Status
