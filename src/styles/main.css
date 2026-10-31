@@ -781,6 +781,14 @@ code {
   grid-area: actions;
 }
 
+/* Compact save and clear buttons. */
+.match-row__actions .p-button.p-button-icon-only {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: 0.55rem;
+}
+
 .match-row:not(:has(.match-row__meta)) {
   grid-template-areas:
     "home home-score actions"
@@ -839,6 +847,107 @@ code {
   }
 }
 
+/* Featured match (dashboard quick entry): crests and flags behind the row
+   (ui/MatchBackdrop.tsx). Everything else sits above the backdrop. */
+.match-row--showcase {
+  position: relative;
+  overflow: hidden;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+.match-row--showcase > :not(.match-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Save and clear stay readable over the away crest. */
+/* Rounded-square buttons in a rounded-square box: the box radius is the
+   button radius (0.55rem) plus the padding, so the corners run parallel. */
+.match-row--showcase .match-row__actions {
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--surface-ground) 80%, transparent);
+}
+
+.match-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.match-backdrop__side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  overflow: hidden;
+}
+
+.match-backdrop__side.is-home {
+  left: 0;
+}
+
+.match-backdrop__side.is-away {
+  right: 0;
+}
+
+/* The flag fills the half and fades out towards the middle. */
+.match-backdrop__flag {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.12;
+}
+
+.is-home .match-backdrop__flag {
+  mask-image: linear-gradient(90deg, black 0%, transparent 85%);
+}
+
+.is-away .match-backdrop__flag {
+  mask-image: linear-gradient(270deg, black 0%, transparent 85%);
+}
+
+/* The crest is large, tilted and cut by the edge of the card. */
+.match-backdrop__crest {
+  position: absolute;
+  top: 50%;
+  width: 9rem;
+  height: 9rem;
+  object-fit: contain;
+  opacity: 0.22;
+}
+
+.is-home .match-backdrop__crest {
+  left: -1.5rem;
+  transform: translateY(-50%) rotate(-12deg);
+}
+
+.is-away .match-backdrop__crest {
+  right: -1.5rem;
+  transform: translateY(-50%) rotate(12deg);
+}
+
+/* Phones stack home above away: the home crest sits higher, the away
+   crest lower, next to their clubs. */
+@media screen and (max-width: 767px) {
+  .match-backdrop__crest {
+    width: 6.5rem;
+    height: 6.5rem;
+  }
+
+  .is-home .match-backdrop__crest {
+    top: 35%;
+  }
+
+  .is-away .match-backdrop__crest {
+    top: 65%;
+  }
+}
+
 /* Cards and missing players under a match (ui/MatchCards.tsx) */
 .match-row__footer {
   grid-column: 1 / -1;
@@ -847,6 +956,57 @@ code {
 
 .match-row__footer:empty {
   display: none;
+}
+
+/* An editable row with a footer puts the save and clear buttons on the
+   footer line, right of "+ Картки": one action bar under the score, and the
+   club names get the width. */
+.match-row:not(.match-row--readonly):has(> .match-row__footer:not(:empty))
+  > .match-row__footer {
+  grid-area: footer;
+}
+
+.match-row:not(.match-row--readonly):has(> .match-row__footer:not(:empty))
+  > .match-row__actions {
+  align-self: end;
+}
+
+@media screen and (max-width: 767px) {
+  .match-row:not(.match-row--readonly):has(> .match-row__footer:not(:empty)) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "meta meta"
+      "home home-score"
+      "away away-score"
+      "footer actions";
+  }
+
+  .match-row:not(.match-row--readonly):not(:has(.match-row__meta)):has(
+      > .match-row__footer:not(:empty)
+    ) {
+    grid-template-areas:
+      "home home-score"
+      "away away-score"
+      "footer actions";
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .match-row:not(.match-row--readonly):has(> .match-row__footer:not(:empty)) {
+    grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "meta meta meta meta meta meta"
+      "home home-score sep away-score away away"
+      "footer footer footer footer footer actions";
+  }
+
+  .match-row:not(.match-row--readonly):not(:has(.match-row__meta)):has(
+      > .match-row__footer:not(:empty)
+    ) {
+    grid-template-areas:
+      "home home-score sep away-score away away"
+      "footer footer footer footer footer actions";
+  }
 }
 
 .card-icon {

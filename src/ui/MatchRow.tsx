@@ -6,6 +6,7 @@ import { classNames } from "primereact/utils";
 
 import ClubLabel from "./ClubLabel";
 import FluentIcon from "./FluentIcon";
+import MatchBackdrop from "./MatchBackdrop";
 
 import { type IClub, type IMatch, type IScore, MAX_GOALS } from "@/domain";
 
@@ -19,6 +20,8 @@ interface IMatchRowProps {
   meta?: string;
   /** Full-width line under the clubs (cards, missing players). */
   footer?: ReactNode;
+  /** Large crests and flags behind the row, for featured matches. */
+  showcase?: boolean;
 }
 
 const toDraft = (result: IScore | null) => ({
@@ -44,6 +47,7 @@ const MatchRow = ({
   onSave,
   meta,
   footer,
+  showcase,
 }: IMatchRowProps) => {
   const [draft, setDraft] = useState(() => toDraft(match.result));
   const home = clubsById.get(match.home);
@@ -106,8 +110,10 @@ const MatchRow = ({
       className={classNames("match-row", {
         "match-row--dirty": isDirty,
         "match-row--readonly": !editable,
+        "match-row--showcase": showcase,
       })}
     >
+      {showcase && <MatchBackdrop home={home} away={away} />}
       {meta && <div className="match-row__meta">{meta}</div>}
       <ClubLabel
         name={home?.name ?? match.home}

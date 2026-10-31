@@ -68,6 +68,7 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
               clubsById={clubsById}
               editable
               meta={describeMatch(match, isLeagueFormat(tournament.format))}
+              showcase
               onSave={(result) => saveResult(match, result)}
               footer={
                 <MatchCards

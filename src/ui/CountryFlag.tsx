@@ -143,6 +143,9 @@ export const resolveFlag = (
   return catalogCode && isFlagCode(catalogCode) ? catalogCode : null;
 };
 
+/** Image file of a flag, for backgrounds. */
+export const flagUrl = (code: FlagCode): string => FLAGS[code];
+
 interface ICountryFlagProps {
   code: FlagCode;
   title?: string;

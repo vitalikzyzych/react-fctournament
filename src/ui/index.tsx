@@ -5,6 +5,7 @@ export { default as CodeConfirmDialog } from "./CodeConfirmDialog";
 export {
   default as CountryFlag,
   type FlagCode,
+  flagUrl,
   resolveFlag,
 } from "./CountryFlag";
 export { default as EmptyState } from "./EmptyState";
