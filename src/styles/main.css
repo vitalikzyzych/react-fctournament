@@ -1261,6 +1261,62 @@ code {
 }
 
 /* Biggest wins: scores line up in the middle column */
+/* Dashboard quick entry: earlier games of the playoff tie */
+.earlier-games {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--surface-border);
+  border-radius: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.earlier-games__row {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Clubs hug the score like a scoreline; long names are cut with "...". */
+.earlier-games__row > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.earlier-games__row > :nth-last-child(3) {
+  justify-self: end;
+}
+
+.earlier-games__row > :last-child {
+  justify-self: start;
+}
+
+.earlier-games__label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-color-secondary);
+}
+
+.earlier-games .score-chip {
+  min-width: 2.75rem;
+  padding: 0.1rem 0.4rem;
+}
+
+/* Phones: the label on its own line above the clubs and score. */
+@media screen and (max-width: 575px) {
+  .earlier-games__row {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .earlier-games__label {
+    grid-column: 1 / -1;
+  }
+}
+
 .big-win {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);

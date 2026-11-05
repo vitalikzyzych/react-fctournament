@@ -15,6 +15,7 @@ import {
   canPair,
   computePlayoff,
   describeMatch,
+  earlierTieGames,
   findChampion,
   groupMatches,
   newTieGames,
@@ -241,6 +242,23 @@ describe("statistics", () => {
 });
 
 describe("playoff", () => {
+  it("shows the earlier games of a tie from the next game's side", () => {
+    const [first, second] = newTieGames("QF", 1, "real-madrid", "inter");
+    const legs = [{ ...first, result: { home: 2, away: 1 } }, second];
+    expect(earlierTieGames(first, legs)).toBeNull();
+    expect(earlierTieGames(second, legs)).toEqual({
+      games: [legs[0]],
+      // Game 2 is at Inter: Inter 1, Real Madrid 2.
+      aggregate: { home: 1, away: 2 },
+    });
+    const played = [legs[0], { ...second, result: { home: 1, away: 0 } }];
+    const extra = pendingReplay(computePlayoff(played)[0])!;
+    expect(earlierTieGames(extra, played)?.aggregate).toEqual({
+      home: 2,
+      away: 2,
+    });
+  });
+
   const file = validateTournamentFile(completedExample, noExisting).file!;
   const tournament = toTournament(file);
   type RawMatch = Record<string, unknown> & { id: string; result: unknown };

@@ -159,6 +159,36 @@ export const computePlayoff = (matches: IMatch[]): IPlayoffTie[] => {
   );
 };
 
+export interface IEarlierGames {
+  /** Played games of the tie before this one, in order. */
+  games: IPlayoffMatch[];
+  /** Goals over those games, from this game's home and away clubs. */
+  aggregate: IScore;
+}
+
+/**
+ * The played games of the same tie before a playoff game (the first leg for
+ * a second leg, both legs for an extra game). Null for group matches and
+ * for the first game of a tie.
+ */
+export const earlierTieGames = (
+  match: IMatch,
+  matches: IMatch[]
+): IEarlierGames | null => {
+  if (match.stage !== "playoff") return null;
+  const games = playoffMatches(matches)
+    .filter(
+      (game) =>
+        game.round === match.round &&
+        game.tie === match.tie &&
+        game.game < match.game &&
+        game.result !== null
+    )
+    .sort((a, b) => a.game - b.game);
+  if (!games.length) return null;
+  return { games, aggregate: aggregateOf(match.home, games) };
+};
+
 /** Club id that won the final, or null. */
 export const findChampion = (matches: IMatch[]): string | null =>
   computePlayoff(matches).find((tie) => tie.round === "F")?.winner ?? null;

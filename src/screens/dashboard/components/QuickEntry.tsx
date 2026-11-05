@@ -1,8 +1,11 @@
 import { useMemo } from "react";
 
+import EarlierGames from "./EarlierGames";
+
 import {
   computeDiscipline,
   describeMatch,
+  earlierTieGames,
   type IClub,
   type IMatch,
   isLeagueFormat,
@@ -58,31 +61,42 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
   return (
     <SectionCard title="Матчі зараз">
       <div className="flex flex-column gap-3">
-        {entries.map(({ label, match }) => (
-          <div key={label} className="flex flex-column gap-2">
-            <span className="text-500 text-xs font-semibold">{label}</span>
-            <MatchRow
-              // Remount on any stored change so the draft starts from it.
-              key={`${match.id}:${match.home}:${match.away}:${formatScore(match.result)}`}
-              match={match}
-              clubsById={clubsById}
-              editable
-              meta={describeMatch(match, isLeagueFormat(tournament.format))}
-              showcase
-              onSave={(result) => saveResult(match, result)}
-              footer={
-                <MatchCards
-                  match={match}
+        {entries.map(({ label, match }) => {
+          const earlier = earlierTieGames(match, matches);
+          return (
+            <div key={label} className="flex flex-column gap-2">
+              <span className="text-500 text-xs font-semibold">{label}</span>
+              {earlier && (
+                <EarlierGames
+                  earlier={earlier}
+                  home={match.home}
+                  away={match.away}
                   clubsById={clubsById}
-                  discipline={discipline}
-                  editable={isStored(match)}
-                  onAdd={(cards) => addCards(match, cards)}
-                  onRemove={(card) => removeCard(match, card)}
                 />
-              }
-            />
-          </div>
-        ))}
+              )}
+              <MatchRow
+                // Remount on any stored change so the draft starts from it.
+                key={`${match.id}:${match.home}:${match.away}:${formatScore(match.result)}`}
+                match={match}
+                clubsById={clubsById}
+                editable
+                meta={describeMatch(match, isLeagueFormat(tournament.format))}
+                showcase
+                onSave={(result) => saveResult(match, result)}
+                footer={
+                  <MatchCards
+                    match={match}
+                    clubsById={clubsById}
+                    discipline={discipline}
+                    editable={isStored(match)}
+                    onAdd={(cards) => addCards(match, cards)}
+                    onRemove={(card) => removeCard(match, card)}
+                  />
+                }
+              />
+            </div>
+          );
+        })}
         {latest && !upcoming.length && (
           <EmptyState
             icon="CheckmarkCircle"
