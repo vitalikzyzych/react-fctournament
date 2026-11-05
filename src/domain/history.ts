@@ -5,6 +5,7 @@ import {
   findChampion,
   groupMatches,
   type PlayoffReach,
+  statMatches,
 } from "./playoff";
 import {
   addResult,
@@ -115,20 +116,21 @@ export const countTitles = (
   return titles;
 };
 
-export const summarizeTournament = ({
-  tournament,
-  matches,
-}: ITournamentWithMatches): ITournamentSummary => {
-  const played = matches.filter(isPlayed);
+export const summarizeTournament = (
+  { tournament, matches }: ITournamentWithMatches,
+  includePlayoff = true
+): ITournamentSummary => {
+  const counted = statMatches(matches, includePlayoff);
+  const played = counted.filter(isPlayed);
   return {
     tournament,
-    totalMatches: matches.length,
+    totalMatches: counted.length,
     playedMatches: played.length,
     totalGoals: played.reduce(
       (sum, m) => sum + m.result.home + m.result.away,
       0
     ),
-    players: computePlayerRecords(tournament.clubs, matches),
+    players: computePlayerRecords(tournament.clubs, counted),
     groupLeaders: tournament.groups.flatMap((group) => {
       const rows = computeStandings(
         tournament.clubs.filter((club) => club.group === group.id),
@@ -143,27 +145,39 @@ export const summarizeTournament = ({
 
 /** Oldest first, so tables and charts read left to right in time. */
 export const summarizeTournaments = (
-  list: ITournamentWithMatches[]
-): ITournamentSummary[] => [...list].sort(byNumber).map(summarizeTournament);
+  list: ITournamentWithMatches[],
+  includePlayoff = true
+): ITournamentSummary[] =>
+  [...list]
+    .sort(byNumber)
+    .map((item) => summarizeTournament(item, includePlayoff));
 
 export const computeAllTimePlayers = (
-  list: ITournamentWithMatches[]
+  list: ITournamentWithMatches[],
+  includePlayoff = true
 ): PlayerRecords =>
   sumPlayerRecords(
-    list.map((t) => computePlayerRecords(t.tournament.clubs, t.matches))
+    list.map((t) =>
+      computePlayerRecords(
+        t.tournament.clubs,
+        statMatches(t.matches, includePlayoff)
+      )
+    )
   );
 
 /** Every club that played in any tournament, with its per-tournament records. */
 export const computeClubHistories = (
-  list: ITournamentWithMatches[]
+  list: ITournamentWithMatches[],
+  includePlayoff = true
 ): IClubHistory[] => {
   const histories = new Map<string, IClubHistory>();
 
   [...list].sort(byNumber).forEach(({ tournament, matches }) => {
-    const ordered = sortMatches(matches);
+    const counted = statMatches(matches, includePlayoff);
+    const ordered = sortMatches(counted);
     const records = buildRecords(
       tournament.clubs.map((club) => club.id),
-      matches
+      counted
     );
     const reach = computePlayoffReach(matches);
     const championId = findChampionClub(tournament, matches)?.id;
@@ -231,7 +245,8 @@ export const computeClubHistories = (
 export const computeHeadToHead = (
   list: ITournamentWithMatches[],
   clubA: string,
-  clubB: string
+  clubB: string,
+  includePlayoff = true
 ): IHeadToHead => {
   const h2h: IHeadToHead = {
     clubA,
@@ -247,7 +262,7 @@ export const computeHeadToHead = (
   const record = emptyRecord();
 
   [...list].sort(byNumber).forEach(({ tournament, matches }) => {
-    const between = matches
+    const between = statMatches(matches, includePlayoff)
       .filter(isPlayed)
       .filter(
         (m) =>
@@ -276,23 +291,26 @@ export const computeHeadToHead = (
 
 /** Club pairs that met in two or more tournaments, most frequent first. */
 export const listRivalries = (
-  list: ITournamentWithMatches[]
+  list: ITournamentWithMatches[],
+  includePlayoff = true
 ): IHeadToHead[] => {
   const tournamentsByPair = new Map<string, Set<string>>();
   list.forEach(({ tournament, matches }) =>
-    matches.filter(isPlayed).forEach((match) => {
-      const key = [match.home, match.away].sort().join("|");
-      const set = tournamentsByPair.get(key) ?? new Set<string>();
-      set.add(tournament.id);
-      tournamentsByPair.set(key, set);
-    })
+    statMatches(matches, includePlayoff)
+      .filter(isPlayed)
+      .forEach((match) => {
+        const key = [match.home, match.away].sort().join("|");
+        const set = tournamentsByPair.get(key) ?? new Set<string>();
+        set.add(tournament.id);
+        tournamentsByPair.set(key, set);
+      })
   );
 
   return [...tournamentsByPair.entries()]
     .filter(([, tournaments]) => tournaments.size >= 2)
     .map(([key]) => {
       const [clubA, clubB] = key.split("|");
-      return computeHeadToHead(list, clubA, clubB);
+      return computeHeadToHead(list, clubA, clubB, includePlayoff);
     })
     .sort((a, b) => b.matches.length - a.matches.length);
 };

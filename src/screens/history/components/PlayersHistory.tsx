@@ -17,9 +17,15 @@ import {
 } from "@/ui";
 import { formatAverage, formatPercent } from "@/utils";
 
-const PlayersHistory = ({ all }: { all: ITournamentWithMatches[] }) => {
-  const totals = computeAllTimePlayers(all);
-  const summaries = summarizeTournaments(all);
+const PlayersHistory = ({
+  all,
+  includePlayoff,
+}: {
+  all: ITournamentWithMatches[];
+  includePlayoff: boolean;
+}) => {
+  const totals = computeAllTimePlayers(all, includePlayoff);
+  const summaries = summarizeTournaments(all, includePlayoff);
   const totalGoals = summaries.reduce((sum, s) => sum + s.totalGoals, 0);
 
   return (

@@ -70,6 +70,14 @@ export const playoffMatches = (matches: IMatch[]) =>
   matches.filter((match) => match.stage === "playoff");
 
 /**
+ * Matches that count in statistics: all of them, or the group stage only
+ * when the "with playoff" switch is off. Champions, titles and playoff reach
+ * always use every match.
+ */
+export const statMatches = (matches: IMatch[], includePlayoff: boolean) =>
+  includePlayoff ? matches : groupMatches(matches);
+
+/**
  * Home and away swap from game to game: game 1 at the first club, game 2 (the
  * second leg, or a final replay) at the second, game 3 back at the first.
  */

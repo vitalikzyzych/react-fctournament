@@ -4,7 +4,13 @@ import ChampionBadge from "./ChampionBadge";
 import PlayerBadge from "./PlayerBadge";
 import StatusTag from "./StatusTag";
 
-import type { IClub, ITournament, PlayerId, PlayerRecords } from "@/domain";
+import type {
+  ICardCount,
+  IClub,
+  ITournament,
+  PlayerId,
+  PlayerRecords,
+} from "@/domain";
 import { plural } from "@/utils";
 
 interface ITournamentHeroProps {
@@ -16,6 +22,8 @@ interface ITournamentHeroProps {
   champion?: IClub | null;
   /** League formats: winner of the league table. */
   leagueWinner?: IClub | null;
+  /** Yellow and red cards of each player's clubs, shown under the badges. */
+  cards?: Record<PlayerId, ICardCount>;
   actions?: ReactNode;
 }
 
@@ -65,11 +73,17 @@ const TournamentHero = ({
   totalMatches,
   champion,
   leagueWinner,
+  cards,
   actions,
 }: ITournamentHeroProps) => {
   const progress = totalMatches ? (playedMatches / totalMatches) * 100 : 0;
   const nameOf = (id: PlayerId) =>
     tournament.players.find((p) => p.id === id)?.name ?? id;
+
+  // Shown once the tournament has any card, for both sides alike.
+  const showCards =
+    cards !== undefined &&
+    cards.S.yellow + cards.S.red + cards.V.yellow + cards.V.red > 0;
 
   // The badge already shows the letter; a real name is shown under it.
   const side = (id: PlayerId) => (
@@ -77,6 +91,21 @@ const TournamentHero = ({
       <PlayerBadge player={id} size="xl" />
       {nameOf(id) !== id && (
         <span className="hero__side-label">{nameOf(id)}</span>
+      )}
+      {showCards && (
+        <span
+          className="hero__cards"
+          aria-label={`Картки ${id}: жовтих ${cards[id].yellow}, червоних ${cards[id].red}`}
+        >
+          <span>
+            <span className="card-icon card-icon--yellow" />
+            {cards[id].yellow}
+          </span>
+          <span>
+            <span className="card-icon card-icon--red" />
+            {cards[id].red}
+          </span>
+        </span>
       )}
     </div>
   );

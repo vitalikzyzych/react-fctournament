@@ -79,12 +79,21 @@ const clubOption = (option: { value: string; label: string }) => (
   <ClubLabel name={option.label} clubId={option.value} />
 );
 
-const HeadToHead = ({ all }: { all: ITournamentWithMatches[] }) => {
+const HeadToHead = ({
+  all,
+  includePlayoff,
+}: {
+  all: ITournamentWithMatches[];
+  includePlayoff: boolean;
+}) => {
   const names = useMemo(
     () => buildClubNames(all.map((t) => t.tournament)),
     [all]
   );
-  const rivalries = useMemo(() => listRivalries(all), [all]);
+  const rivalries = useMemo(
+    () => listRivalries(all, includePlayoff),
+    [all, includePlayoff]
+  );
   const options = [...names.entries()]
     .map(([value, label]) => ({ value, label }))
     .sort((a, b) => a.label.localeCompare(b.label));
@@ -93,7 +102,7 @@ const HeadToHead = ({ all }: { all: ITournamentWithMatches[] }) => {
   const [clubB, setClubB] = useState<string | null>(null);
   const h2h =
     clubA && clubB && clubA !== clubB
-      ? computeHeadToHead(all, clubA, clubB)
+      ? computeHeadToHead(all, clubA, clubB, includePlayoff)
       : null;
 
   return (

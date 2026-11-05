@@ -53,6 +53,7 @@ const TournamentDetails = () => {
       <TournamentHero
         tournament={tournament}
         players={stats.players}
+        cards={stats.playerCards}
         playedMatches={stats.playedMatches}
         totalMatches={stats.totalMatches}
         champion={findChampionClub(tournament, matches)}

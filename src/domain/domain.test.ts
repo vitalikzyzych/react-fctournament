@@ -9,6 +9,7 @@ import {
   computeHeadToHead,
   countTitles,
   findChampionClub,
+  summarizeTournament,
 } from "./history";
 import {
   canPair,
@@ -215,6 +216,21 @@ describe("statistics", () => {
     const h2h = computeHeadToHead(list, "real-madrid", "arsenal");
     expect(h2h.matches).toHaveLength(4);
     expect(h2h.tournamentCount).toBe(2);
+  });
+
+  it("leaves the playoff out on request, but not the champion", () => {
+    const list = [{ tournament, matches: file.matches }];
+    const groupOnly = computeClubHistories(list, false);
+    const champion = findChampionClub(tournament, file.matches)!;
+    const history = groupOnly.find((h) => h.clubId === champion.id)!;
+    expect(history.entries[0].matches.every((m) => m.stage === "group")).toBe(
+      true
+    );
+    expect(history.entries[0].playoff).toBe("champion");
+    expect(history.titles).toBe(1);
+    // 32 group matches, all between an S and a V club.
+    expect(summarizeTournament(list[0], false).players.S.played).toBe(32);
+    expect(summarizeTournament(list[0], false).champion?.id).toBe(champion.id);
   });
 
   it("export round-trips through validation", () => {

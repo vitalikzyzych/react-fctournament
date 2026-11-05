@@ -683,6 +683,22 @@ code {
   font-weight: 500;
 }
 
+.hero__cards {
+  display: inline-flex;
+  gap: 0.6rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-ground) 70%, transparent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.hero__cards > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
 .hero__side-label {
   font-size: 0.72rem;
   font-weight: 700;

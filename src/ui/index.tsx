@@ -14,6 +14,7 @@ export { default as MatchCards } from "./MatchCards";
 export { default as MatchRow } from "./MatchRow";
 export { default as PlayerBadge } from "./PlayerBadge";
 export { default as PlayerVersusCard } from "./PlayerVersusCard";
+export { default as PlayoffToggle } from "./PlayoffToggle";
 export { default as SectionCard } from "./SectionCard";
 export { default as StandingsTable } from "./StandingsTable";
 export { default as StatCard } from "./StatCard";

@@ -14,8 +14,17 @@ import {
 import { ClubLabel, SectionCard } from "@/ui";
 import { formatSigned } from "@/utils";
 
-const ClubsHistory = ({ all }: { all: ITournamentWithMatches[] }) => {
-  const histories = useMemo(() => computeClubHistories(all), [all]);
+const ClubsHistory = ({
+  all,
+  includePlayoff,
+}: {
+  all: ITournamentWithMatches[];
+  includePlayoff: boolean;
+}) => {
+  const histories = useMemo(
+    () => computeClubHistories(all, includePlayoff),
+    [all, includePlayoff]
+  );
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<IClubHistory | null>(null);
 
