@@ -94,7 +94,7 @@ A planned tournament shows its schedule but takes no results until it starts.
 
 ## A club has no crest
 
-Crests come from a catalog of about 500 clubs (ESPN team lists) that ships with the app. Matching is automatic, by club id and then by name, every time a page is shown. Nothing needs to run for an import.
+Crests come from a catalog of about 500 clubs and about 200 national teams (ESPN team lists) that ships with the app. A national team's crest is its flag, as ESPN shows it. Matching is automatic, by club id and then by name, every time a page is shown. Nothing needs to run for an import.
 
 A club without a crest shows the first letter of its name in a circle, and the import preview lists it under "Немає логотипа для".
 
@@ -111,6 +111,7 @@ To fix it:
 3. For each club still listed, find out why:
    - **The name differs from ESPN's** (for example "Inter" against "Internazionale"): add a line to `ALIASES` in `scripts/build-club-catalog.ts`, our name on the left, ESPN's display name on the right. Run step 2 again.
    - **ESPN does not cover the club's league**: add the league to `LEAGUES` in the same file (ESPN league slug and flag code, for example `["pol.1", "pl"]`). Run step 2 again.
+   - **The club is in no current league list** (for example relegated, like Sivasspor): find its ESPN id with `curl -s "https://site.web.api.espn.com/apis/search/v2?query=<club>&limit=3"` (the team result has `t:<id>` in its `uid`) and add it to `EXTRA_TEAMS` with a league it played in and its flag code. Run step 2 again.
 4. `npm run deploy`. No re-import is needed; the crest appears once the new catalog is live.
 
 ## A club has no flag

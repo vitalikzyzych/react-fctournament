@@ -381,6 +381,18 @@
       "country": "fr",
       "dark": true
     },
+    "162": {
+      "name": "Italy",
+      "country": null,
+      "dark": true,
+      "nation": "ita"
+    },
+    "164": {
+      "name": "Spain",
+      "country": null,
+      "dark": true,
+      "nation": "esp"
+    },
     "165": {
       "name": "Nantes",
       "country": "fr",
@@ -500,6 +512,90 @@
       "name": "D.C. United",
       "country": null,
       "dark": true
+    },
+    "202": {
+      "name": "Argentina",
+      "country": null,
+      "dark": true,
+      "nation": "arg"
+    },
+    "203": {
+      "name": "Mexico",
+      "country": null,
+      "dark": true,
+      "nation": "mex"
+    },
+    "204": {
+      "name": "Bolivia",
+      "country": null,
+      "dark": true,
+      "nation": "bol"
+    },
+    "205": {
+      "name": "Brazil",
+      "country": null,
+      "dark": true,
+      "nation": "bra"
+    },
+    "206": {
+      "name": "Canada",
+      "country": null,
+      "dark": true,
+      "nation": "can"
+    },
+    "207": {
+      "name": "Chile",
+      "country": null,
+      "dark": true,
+      "nation": "chi"
+    },
+    "208": {
+      "name": "Colombia",
+      "country": null,
+      "dark": true,
+      "nation": "col"
+    },
+    "209": {
+      "name": "Ecuador",
+      "country": null,
+      "dark": true,
+      "nation": "ecu"
+    },
+    "210": {
+      "name": "Paraguay",
+      "country": null,
+      "dark": true,
+      "nation": "par"
+    },
+    "211": {
+      "name": "Peru",
+      "country": null,
+      "dark": true,
+      "nation": "per"
+    },
+    "212": {
+      "name": "Uruguay",
+      "country": null,
+      "dark": true,
+      "nation": "uru"
+    },
+    "213": {
+      "name": "Venezuela",
+      "country": null,
+      "dark": true,
+      "nation": "ven"
+    },
+    "214": {
+      "name": "Costa Rica",
+      "country": null,
+      "dark": true,
+      "nation": "crc"
+    },
+    "215": {
+      "name": "Honduras",
+      "country": null,
+      "dark": true,
+      "nation": "hon"
     },
     "216": {
       "name": "Atlas",
@@ -951,6 +1047,234 @@
       "country": "gr",
       "dark": true
     },
+    "444": {
+      "name": "Estonia",
+      "country": null,
+      "dark": true,
+      "nation": "est"
+    },
+    "445": {
+      "name": "Cyprus",
+      "country": null,
+      "dark": true,
+      "nation": "cyp"
+    },
+    "447": {
+      "name": "Faroe Islands",
+      "country": null,
+      "dark": true,
+      "nation": "fro"
+    },
+    "448": {
+      "name": "England",
+      "country": null,
+      "dark": true,
+      "nation": "eng"
+    },
+    "449": {
+      "name": "Netherlands",
+      "country": null,
+      "dark": true,
+      "nation": "ned"
+    },
+    "450": {
+      "name": "Czechia",
+      "country": null,
+      "dark": true,
+      "nation": "cze"
+    },
+    "451": {
+      "name": "South Korea",
+      "country": null,
+      "dark": true,
+      "nation": "kor"
+    },
+    "452": {
+      "name": "Bosnia-Herzegovina",
+      "country": null,
+      "dark": true,
+      "nation": "bih"
+    },
+    "453": {
+      "name": "Malta",
+      "country": null,
+      "dark": true,
+      "nation": "mlt"
+    },
+    "454": {
+      "name": "Russia",
+      "country": null,
+      "dark": true,
+      "nation": "rus"
+    },
+    "455": {
+      "name": "Greece",
+      "country": null,
+      "dark": true,
+      "nation": "gre"
+    },
+    "457": {
+      "name": "Ukraine",
+      "country": null,
+      "dark": true,
+      "nation": "ukr"
+    },
+    "458": {
+      "name": "Finland",
+      "country": null,
+      "dark": true,
+      "nation": "fin"
+    },
+    "459": {
+      "name": "Belgium",
+      "country": null,
+      "dark": true,
+      "nation": "bel"
+    },
+    "460": {
+      "name": "Lithuania",
+      "country": null,
+      "dark": true,
+      "nation": "ltu"
+    },
+    "461": {
+      "name": "Israel",
+      "country": null,
+      "dark": true,
+      "nation": "isr"
+    },
+    "462": {
+      "name": "Bulgaria",
+      "country": null,
+      "dark": true,
+      "nation": "bul"
+    },
+    "463": {
+      "name": "North Macedonia",
+      "country": null,
+      "dark": true,
+      "nation": "mkd"
+    },
+    "464": {
+      "name": "Norway",
+      "country": null,
+      "dark": true,
+      "nation": "nor"
+    },
+    "465": {
+      "name": "Türkiye",
+      "country": null,
+      "dark": true,
+      "nation": "tur"
+    },
+    "466": {
+      "name": "Sweden",
+      "country": null,
+      "dark": true,
+      "nation": "swe"
+    },
+    "467": {
+      "name": "South Africa",
+      "country": null,
+      "dark": true,
+      "nation": "rsa"
+    },
+    "468": {
+      "name": "Slovakia",
+      "country": null,
+      "dark": true,
+      "nation": "svk"
+    },
+    "469": {
+      "name": "Iran",
+      "country": null,
+      "dark": true,
+      "nation": "irn"
+    },
+    "470": {
+      "name": "Iceland",
+      "country": null,
+      "dark": true,
+      "nation": "isl"
+    },
+    "471": {
+      "name": "Poland",
+      "country": null,
+      "dark": true,
+      "nation": "pol"
+    },
+    "472": {
+      "name": "Slovenia",
+      "country": null,
+      "dark": true,
+      "nation": "svn"
+    },
+    "473": {
+      "name": "Romania",
+      "country": null,
+      "dark": true,
+      "nation": "rou"
+    },
+    "474": {
+      "name": "Austria",
+      "country": null,
+      "dark": true,
+      "nation": "aut"
+    },
+    "475": {
+      "name": "Switzerland",
+      "country": null,
+      "dark": true,
+      "nation": "sui"
+    },
+    "476": {
+      "name": "Republic of Ireland",
+      "country": null,
+      "dark": true,
+      "nation": "irl"
+    },
+    "477": {
+      "name": "Croatia",
+      "country": null,
+      "dark": true,
+      "nation": "cro"
+    },
+    "478": {
+      "name": "France",
+      "country": null,
+      "dark": true,
+      "nation": "fra"
+    },
+    "479": {
+      "name": "Denmark",
+      "country": null,
+      "dark": true,
+      "nation": "den"
+    },
+    "480": {
+      "name": "Hungary",
+      "country": null,
+      "dark": true,
+      "nation": "hun"
+    },
+    "481": {
+      "name": "Germany",
+      "country": null,
+      "dark": true,
+      "nation": "ger"
+    },
+    "482": {
+      "name": "Portugal",
+      "country": null,
+      "dark": true,
+      "nation": "por"
+    },
+    "483": {
+      "name": "Moldova",
+      "country": null,
+      "dark": true,
+      "nation": "mda"
+    },
     "489": {
       "name": "Hajduk Split",
       "country": null,
@@ -1026,6 +1350,78 @@
       "country": "dk",
       "dark": true
     },
+    "578": {
+      "name": "Wales",
+      "country": null,
+      "dark": true,
+      "nation": "wal"
+    },
+    "579": {
+      "name": "Armenia",
+      "country": null,
+      "dark": true,
+      "nation": "arm"
+    },
+    "580": {
+      "name": "Scotland",
+      "country": null,
+      "dark": true,
+      "nation": "sco"
+    },
+    "581": {
+      "name": "Azerbaijan",
+      "country": null,
+      "dark": true,
+      "nation": "aze"
+    },
+    "582": {
+      "name": "Luxembourg",
+      "country": null,
+      "dark": true,
+      "nation": "lux"
+    },
+    "583": {
+      "name": "Belarus",
+      "country": null,
+      "dark": true,
+      "nation": "blr"
+    },
+    "584": {
+      "name": "Georgia",
+      "country": null,
+      "dark": true,
+      "nation": "geo"
+    },
+    "585": {
+      "name": "Albania",
+      "country": null,
+      "dark": true,
+      "nation": "alb"
+    },
+    "586": {
+      "name": "Northern Ireland",
+      "country": null,
+      "dark": true,
+      "nation": "nir"
+    },
+    "587": {
+      "name": "Andorra",
+      "country": null,
+      "dark": true,
+      "nation": "and"
+    },
+    "588": {
+      "name": "San Marino",
+      "country": null,
+      "dark": true,
+      "nation": "smr"
+    },
+    "589": {
+      "name": "Liechtenstein",
+      "country": null,
+      "dark": true,
+      "nation": "lie"
+    },
     "597": {
       "name": "Dinamo Zagreb",
       "country": null,
@@ -1066,6 +1462,72 @@
       "country": null,
       "dark": true
     },
+    "624": {
+      "name": "Algeria",
+      "country": null,
+      "dark": true,
+      "nation": "alg"
+    },
+    "627": {
+      "name": "Japan",
+      "country": null,
+      "dark": true,
+      "nation": "jpn"
+    },
+    "628": {
+      "name": "Australia",
+      "country": null,
+      "dark": true,
+      "nation": "aus"
+    },
+    "653": {
+      "name": "Angola",
+      "country": null,
+      "dark": true,
+      "nation": "ang"
+    },
+    "654": {
+      "name": "Senegal",
+      "country": null,
+      "dark": true,
+      "nation": "sen"
+    },
+    "655": {
+      "name": "Saudi Arabia",
+      "country": null,
+      "dark": true,
+      "nation": "ksa"
+    },
+    "656": {
+      "name": "Cameroon",
+      "country": null,
+      "dark": true,
+      "nation": "cmr"
+    },
+    "657": {
+      "name": "Nigeria",
+      "country": null,
+      "dark": true,
+      "nation": "nga"
+    },
+    "658": {
+      "name": "China",
+      "country": null,
+      "dark": true,
+      "nation": "chn"
+    },
+    "659": {
+      "name": "Tunisia",
+      "country": null,
+      "dark": true,
+      "nation": "tun"
+    },
+    "660": {
+      "name": "United States",
+      "country": null,
+      "dark": true,
+      "nation": "usa"
+    },
     "789": {
       "name": "Goztepe",
       "country": "tr",
@@ -1085,6 +1547,12 @@
       "name": "Flamengo",
       "country": "br",
       "dark": true
+    },
+    "841": {
+      "name": "Kuwait",
+      "country": null,
+      "dark": true,
+      "nation": "kuw"
     },
     "874": {
       "name": "Corinthians",
@@ -1151,6 +1619,12 @@
       "country": "gr",
       "dark": true
     },
+    "1038": {
+      "name": "Jamaica",
+      "country": null,
+      "dark": true,
+      "nation": "jam"
+    },
     "1068": {
       "name": "Atlético Madrid",
       "country": "es",
@@ -1170,6 +1644,12 @@
       "name": "Besiktas",
       "country": "tr",
       "dark": true
+    },
+    "1928": {
+      "name": "Hong Kong",
+      "country": null,
+      "dark": true,
+      "nation": "hkg"
     },
     "1929": {
       "name": "Benfica",
@@ -1216,6 +1696,12 @@
       "country": "se",
       "dark": true
     },
+    "2405": {
+      "name": "Malaysia",
+      "country": null,
+      "dark": true,
+      "nation": "mas"
+    },
     "2428": {
       "name": "Hannover 96",
       "country": "de",
@@ -1256,6 +1742,12 @@
       "country": "nl",
       "dark": true
     },
+    "2570": {
+      "name": "Uzbekistan",
+      "country": null,
+      "dark": true,
+      "nation": "uzb"
+    },
     "2572": {
       "name": "Como",
       "country": "it",
@@ -1275,6 +1767,162 @@
       "name": "Iraklis",
       "country": "gr",
       "dark": false
+    },
+    "2597": {
+      "name": "Cape Verde",
+      "country": null,
+      "dark": true,
+      "nation": "cpv"
+    },
+    "2619": {
+      "name": "Kazakhstan",
+      "country": null,
+      "dark": true,
+      "nation": "kaz"
+    },
+    "2620": {
+      "name": "Egypt",
+      "country": null,
+      "dark": true,
+      "nation": "egy"
+    },
+    "2621": {
+      "name": "Libya",
+      "country": null,
+      "dark": true,
+      "nation": "lby"
+    },
+    "2627": {
+      "name": "Trinidad and Tobago",
+      "country": null,
+      "dark": true,
+      "nation": "tri"
+    },
+    "2637": {
+      "name": "Barbados",
+      "country": null,
+      "dark": true,
+      "nation": "brb"
+    },
+    "2640": {
+      "name": "Bahamas",
+      "country": null,
+      "dark": true,
+      "nation": "bah"
+    },
+    "2641": {
+      "name": "Belize",
+      "country": null,
+      "dark": true,
+      "nation": "blz"
+    },
+    "2642": {
+      "name": "Aruba",
+      "country": null,
+      "dark": true,
+      "nation": "aru"
+    },
+    "2643": {
+      "name": "Bermuda",
+      "country": null,
+      "dark": true,
+      "nation": "ber"
+    },
+    "2644": {
+      "name": "British Virgin Islands",
+      "country": null,
+      "dark": true,
+      "nation": "bvi"
+    },
+    "2645": {
+      "name": "US Virgin Islands",
+      "country": null,
+      "dark": true,
+      "nation": "usvi"
+    },
+    "2646": {
+      "name": "Cayman Islands",
+      "country": null,
+      "dark": true,
+      "nation": "cay"
+    },
+    "2647": {
+      "name": "Cuba",
+      "country": null,
+      "dark": true,
+      "nation": "cub"
+    },
+    "2649": {
+      "name": "Dominican Republic",
+      "country": null,
+      "dark": true,
+      "nation": "dom"
+    },
+    "2650": {
+      "name": "El Salvador",
+      "country": null,
+      "dark": true,
+      "nation": "slv"
+    },
+    "2651": {
+      "name": "Grenada",
+      "country": null,
+      "dark": true,
+      "nation": "grn"
+    },
+    "2652": {
+      "name": "Guatemala",
+      "country": null,
+      "dark": true,
+      "nation": "gua"
+    },
+    "2653": {
+      "name": "Guyana",
+      "country": null,
+      "dark": true,
+      "nation": "guy"
+    },
+    "2654": {
+      "name": "Haiti",
+      "country": null,
+      "dark": true,
+      "nation": "hai"
+    },
+    "2658": {
+      "name": "Nicaragua",
+      "country": null,
+      "dark": true,
+      "nation": "nca"
+    },
+    "2659": {
+      "name": "Panama",
+      "country": null,
+      "dark": true,
+      "nation": "pan"
+    },
+    "2661": {
+      "name": "St. Lucia",
+      "country": null,
+      "dark": true,
+      "nation": "lca"
+    },
+    "2662": {
+      "name": "St. Kitts and Nevis",
+      "country": null,
+      "dark": true,
+      "nation": "skn"
+    },
+    "2664": {
+      "name": "Suriname",
+      "country": null,
+      "dark": true,
+      "nation": "sur"
+    },
+    "2666": {
+      "name": "New Zealand",
+      "country": null,
+      "dark": true,
+      "nation": "nzl"
     },
     "2674": {
       "name": "Santos",
@@ -1306,6 +1954,12 @@
       "country": "nl",
       "dark": true
     },
+    "2728": {
+      "name": "Martinique",
+      "country": null,
+      "dark": true,
+      "nation": "mtq"
+    },
     "2734": {
       "name": "Sampdoria",
       "country": "it",
@@ -1325,6 +1979,66 @@
       "name": "Vålerenga",
       "country": "no",
       "dark": true
+    },
+    "2841": {
+      "name": "Oman",
+      "country": null,
+      "dark": true,
+      "nation": "oma"
+    },
+    "2844": {
+      "name": "Benin",
+      "country": null,
+      "dark": true,
+      "nation": "ben"
+    },
+    "2845": {
+      "name": "Burkina Faso",
+      "country": null,
+      "dark": true,
+      "nation": "bka"
+    },
+    "2847": {
+      "name": "Guinea",
+      "country": null,
+      "dark": true,
+      "nation": "gui"
+    },
+    "2848": {
+      "name": "Kenya",
+      "country": null,
+      "dark": true,
+      "nation": "ken"
+    },
+    "2849": {
+      "name": "Mali",
+      "country": null,
+      "dark": true,
+      "nation": "mli"
+    },
+    "2850": {
+      "name": "Congo DR",
+      "country": null,
+      "dark": true,
+      "nation": "cod"
+    },
+    "2851": {
+      "name": "Rwanda",
+      "country": null,
+      "dark": true,
+      "nation": "rwa"
+    },
+    "2869": {
+      "name": "Morocco",
+      "country": null,
+      "dark": true,
+      "nation": "mar"
+    },
+    "2917": {
+      "name": "Jordan",
+      "country": null,
+      "dark": true,
+      "nation": "jor"
     },
     "2922": {
       "name": "Getafe",
@@ -1546,6 +2260,11 @@
       "country": "be",
       "dark": true
     },
+    "3691": {
+      "name": "Sivasspor",
+      "country": "tr",
+      "dark": false
+    },
     "3696": {
       "name": "Moreirense",
       "country": "pt",
@@ -1676,6 +2395,120 @@
       "country": "it",
       "dark": false
     },
+    "4205": {
+      "name": "Liberia",
+      "country": null,
+      "dark": true,
+      "nation": "lbr"
+    },
+    "4211": {
+      "name": "Uganda",
+      "country": null,
+      "dark": true,
+      "nation": "uga"
+    },
+    "4214": {
+      "name": "Zimbabwe",
+      "country": null,
+      "dark": true,
+      "nation": "zim"
+    },
+    "4231": {
+      "name": "Gabon",
+      "country": null,
+      "dark": true,
+      "nation": "gab"
+    },
+    "4245": {
+      "name": "Botswana",
+      "country": null,
+      "dark": true,
+      "nation": "bot"
+    },
+    "4277": {
+      "name": "Zambia",
+      "country": null,
+      "dark": true,
+      "nation": "zam"
+    },
+    "4319": {
+      "name": "Sudan",
+      "country": null,
+      "dark": true,
+      "nation": "sud"
+    },
+    "4325": {
+      "name": "Malawi",
+      "country": null,
+      "dark": true,
+      "nation": "mwi"
+    },
+    "4356": {
+      "name": "Togo",
+      "country": null,
+      "dark": true,
+      "nation": "tog"
+    },
+    "4375": {
+      "name": "Iraq",
+      "country": null,
+      "dark": true,
+      "nation": "irq"
+    },
+    "4380": {
+      "name": "Syria",
+      "country": null,
+      "dark": true,
+      "nation": "syr"
+    },
+    "4381": {
+      "name": "Bahrain",
+      "country": null,
+      "dark": true,
+      "nation": "bhr"
+    },
+    "4384": {
+      "name": "Singapore",
+      "country": null,
+      "dark": true,
+      "nation": "sin"
+    },
+    "4385": {
+      "name": "India",
+      "country": null,
+      "dark": true,
+      "nation": "ind"
+    },
+    "4388": {
+      "name": "Lebanon",
+      "country": null,
+      "dark": true,
+      "nation": "lib"
+    },
+    "4390": {
+      "name": "Maldives",
+      "country": null,
+      "dark": true,
+      "nation": "mdv"
+    },
+    "4396": {
+      "name": "Thailand",
+      "country": null,
+      "dark": true,
+      "nation": "tha"
+    },
+    "4397": {
+      "name": "United Arab Emirates",
+      "country": null,
+      "dark": true,
+      "nation": "uae"
+    },
+    "4398": {
+      "name": "Qatar",
+      "country": null,
+      "dark": true,
+      "nation": "qat"
+    },
     "4405": {
       "name": "SC Rheindorf Altach",
       "country": "at",
@@ -1691,6 +2524,12 @@
       "country": "es",
       "dark": true
     },
+    "4469": {
+      "name": "Ghana",
+      "country": null,
+      "dark": true,
+      "nation": "gha"
+    },
     "4471": {
       "name": "Karlsruher SC",
       "country": "de",
@@ -1705,6 +2544,66 @@
       "name": "Real Salt Lake",
       "country": null,
       "dark": true
+    },
+    "4789": {
+      "name": "Ivory Coast",
+      "country": null,
+      "dark": true,
+      "nation": "civ"
+    },
+    "4861": {
+      "name": "Solomon Islands",
+      "country": null,
+      "dark": true,
+      "nation": "sol"
+    },
+    "4862": {
+      "name": "Fiji",
+      "country": null,
+      "dark": true,
+      "nation": "fij"
+    },
+    "4863": {
+      "name": "Tahiti",
+      "country": null,
+      "dark": true,
+      "nation": "tah"
+    },
+    "4864": {
+      "name": "Vanuatu",
+      "country": null,
+      "dark": true,
+      "nation": "van"
+    },
+    "4884": {
+      "name": "Cook Islands",
+      "country": null,
+      "dark": true,
+      "nation": "cok"
+    },
+    "4885": {
+      "name": "Papua New Guinea",
+      "country": null,
+      "dark": true,
+      "nation": "png"
+    },
+    "4886": {
+      "name": "American Samoa",
+      "country": null,
+      "dark": true,
+      "nation": "asa"
+    },
+    "4888": {
+      "name": "New Caledonia",
+      "country": null,
+      "dark": true,
+      "nation": "ncd"
+    },
+    "4895": {
+      "name": "Indonesia",
+      "country": null,
+      "dark": true,
+      "nation": "idn"
     },
     "4936": {
       "name": "Remo",
@@ -1736,10 +2635,82 @@
       "country": "es",
       "dark": true
     },
+    "5518": {
+      "name": "Cambodia",
+      "country": null,
+      "dark": true,
+      "nation": "cam"
+    },
+    "5533": {
+      "name": "Madagascar",
+      "country": null,
+      "dark": true,
+      "nation": "mad"
+    },
+    "5534": {
+      "name": "Mauritius",
+      "country": null,
+      "dark": true,
+      "nation": "mri"
+    },
     "5579": {
       "name": "OH Leuven",
       "country": "be",
       "dark": true
+    },
+    "5775": {
+      "name": "Djibouti",
+      "country": null,
+      "dark": true,
+      "nation": "dji"
+    },
+    "5777": {
+      "name": "Ethiopia",
+      "country": null,
+      "dark": true,
+      "nation": "eth"
+    },
+    "5778": {
+      "name": "Tanzania",
+      "country": null,
+      "dark": true,
+      "nation": "tan"
+    },
+    "5779": {
+      "name": "Burundi",
+      "country": null,
+      "dark": true,
+      "nation": "bdi"
+    },
+    "5780": {
+      "name": "Afghanistan",
+      "country": null,
+      "dark": true,
+      "nation": "afg"
+    },
+    "5781": {
+      "name": "Pakistan",
+      "country": null,
+      "dark": true,
+      "nation": "pak"
+    },
+    "5782": {
+      "name": "Sri Lanka",
+      "country": null,
+      "dark": true,
+      "nation": "sri"
+    },
+    "5783": {
+      "name": "Bangladesh",
+      "country": null,
+      "dark": true,
+      "nation": "ban"
+    },
+    "5784": {
+      "name": "Bhutan",
+      "country": null,
+      "dark": true,
+      "nation": "bhu"
     },
     "5786": {
       "name": "KV Kortrijk",
@@ -1750,6 +2721,12 @@
       "name": "Union St.-Gilloise",
       "country": "be",
       "dark": true
+    },
+    "6014": {
+      "name": "Yemen",
+      "country": null,
+      "dark": true,
+      "nation": "yem"
     },
     "6077": {
       "name": "Houston Dynamo FC",
@@ -1766,6 +2743,12 @@
       "country": "br",
       "dark": true
     },
+    "6167": {
+      "name": "Palestine",
+      "country": null,
+      "dark": true,
+      "nation": "ple"
+    },
     "6273": {
       "name": "Grêmio",
       "country": "br",
@@ -1776,15 +2759,75 @@
       "country": "de",
       "dark": true
     },
+    "6640": {
+      "name": "Lesotho",
+      "country": null,
+      "dark": true,
+      "nation": "les"
+    },
     "6672": {
       "name": "Kristiansund BK",
       "country": "no",
       "dark": false
     },
+    "6686": {
+      "name": "Eswatini",
+      "country": null,
+      "dark": true,
+      "nation": "swz"
+    },
+    "6722": {
+      "name": "Macau",
+      "country": null,
+      "dark": true,
+      "nation": "mac"
+    },
+    "6723": {
+      "name": "Tajikistan",
+      "country": null,
+      "dark": true,
+      "nation": "tjk"
+    },
+    "6724": {
+      "name": "Kyrgyz Republic",
+      "country": null,
+      "dark": true,
+      "nation": "kgz"
+    },
+    "6725": {
+      "name": "Namibia",
+      "country": null,
+      "dark": true,
+      "nation": "nam"
+    },
+    "6726": {
+      "name": "Seychelles",
+      "country": null,
+      "dark": true,
+      "nation": "sey"
+    },
     "6750": {
       "name": "IK Start",
       "country": "no",
       "dark": true
+    },
+    "6757": {
+      "name": "Serbia",
+      "country": null,
+      "dark": true,
+      "nation": "srb"
+    },
+    "6770": {
+      "name": "Myanmar",
+      "country": null,
+      "dark": true,
+      "nation": "mya"
+    },
+    "6775": {
+      "name": "Montenegro",
+      "country": null,
+      "dark": true,
+      "nation": "mne"
     },
     "6790": {
       "name": "Atromitos",
@@ -1840,6 +2883,30 @@
       "name": "Eldense",
       "country": "es",
       "dark": true
+    },
+    "7347": {
+      "name": "Philippines",
+      "country": null,
+      "dark": true,
+      "nation": "phi"
+    },
+    "7349": {
+      "name": "Vietnam",
+      "country": null,
+      "dark": true,
+      "nation": "vie"
+    },
+    "7368": {
+      "name": "Gambia",
+      "country": null,
+      "dark": true,
+      "nation": "gam"
+    },
+    "7507": {
+      "name": "Turkmenistan",
+      "country": null,
+      "dark": true,
+      "nation": "tkm"
     },
     "7632": {
       "name": "Atlético-MG",
@@ -1986,6 +3053,54 @@
       "country": "se",
       "dark": true
     },
+    "8600": {
+      "name": "Sierra Leone",
+      "country": null,
+      "dark": true,
+      "nation": "sle"
+    },
+    "8601": {
+      "name": "Comoros",
+      "country": null,
+      "dark": true,
+      "nation": "com"
+    },
+    "8663": {
+      "name": "Mongolia",
+      "country": null,
+      "dark": true,
+      "nation": "mgl"
+    },
+    "8937": {
+      "name": "Niger",
+      "country": null,
+      "dark": true,
+      "nation": "nig"
+    },
+    "8938": {
+      "name": "Equatorial Guinea",
+      "country": null,
+      "dark": true,
+      "nation": "eqg"
+    },
+    "8939": {
+      "name": "Mozambique",
+      "country": null,
+      "dark": true,
+      "nation": "moz"
+    },
+    "8940": {
+      "name": "Mauritania",
+      "country": null,
+      "dark": true,
+      "nation": "mtn"
+    },
+    "8942": {
+      "name": "Anguilla",
+      "country": null,
+      "dark": true,
+      "nation": "aia"
+    },
     "8950": {
       "name": "Defensa y Justicia",
       "country": "ar",
@@ -2076,6 +3191,24 @@
       "country": "de",
       "dark": true
     },
+    "10528": {
+      "name": "Central African Republic",
+      "country": null,
+      "dark": true,
+      "nation": "cta"
+    },
+    "10529": {
+      "name": "Guam",
+      "country": null,
+      "dark": true,
+      "nation": "gua"
+    },
+    "10596": {
+      "name": "St. Martin",
+      "country": null,
+      "dark": true,
+      "nation": "smn"
+    },
     "10678": {
       "name": "Pau",
       "country": "fr",
@@ -2141,10 +3274,28 @@
       "country": "gr",
       "dark": true
     },
+    "11678": {
+      "name": "Curaçao",
+      "country": null,
+      "dark": true,
+      "nation": "cuw"
+    },
     "11706": {
       "name": "Viktoria Plzen",
       "country": null,
       "dark": true
+    },
+    "11766": {
+      "name": "Puerto Rico",
+      "country": null,
+      "dark": true,
+      "nation": "pur"
+    },
+    "11808": {
+      "name": "Sao Tome and Principe",
+      "country": null,
+      "dark": true,
+      "nation": "stp"
     },
     "11884": {
       "name": "Red Star FC 93",
@@ -2206,6 +3357,24 @@
       "country": "be",
       "dark": true
     },
+    "13582": {
+      "name": "Dominica",
+      "country": null,
+      "dark": true,
+      "nation": "dma"
+    },
+    "13584": {
+      "name": "St. Vincent and the Grenadines",
+      "country": null,
+      "dark": true,
+      "nation": "vin"
+    },
+    "14561": {
+      "name": "Chinese Taipei",
+      "country": null,
+      "dark": true,
+      "nation": "tpe"
+    },
     "15720": {
       "name": "Atlético de San Luis",
       "country": "mx",
@@ -2215,6 +3384,12 @@
       "name": "Arouca",
       "country": "pt",
       "dark": true
+    },
+    "16721": {
+      "name": "Gibraltar",
+      "country": null,
+      "dark": true,
+      "nation": "gib"
     },
     "17362": {
       "name": "Minnesota United FC",
@@ -2261,10 +3436,22 @@
       "country": "fr",
       "dark": true
     },
+    "18243": {
+      "name": "Sint Maarten",
+      "country": null,
+      "dark": true,
+      "nation": "sma"
+    },
     "18267": {
       "name": "FC Cincinnati",
       "country": null,
       "dark": true
+    },
+    "18272": {
+      "name": "Kosovo",
+      "country": null,
+      "dark": true,
+      "nation": "kos"
     },
     "18418": {
       "name": "Atlanta United FC",
@@ -2300,6 +3487,12 @@
       "name": "Erzurum BB",
       "country": "tr",
       "dark": false
+    },
+    "19314": {
+      "name": "Bonaire",
+      "country": null,
+      "dark": true,
+      "nation": "boe"
     },
     "19685": {
       "name": "Estudiantes de Río Cuarto",
@@ -2572,6 +3765,7 @@
     "ado den haag": "2726",
     "aek": "887",
     "aek athens": "887",
+    "afghanistan": "5780",
     "agf": "7853",
     "agf aarhus": "7853",
     "aik": "994",
@@ -2600,24 +3794,32 @@
     "alanyaspor k": "9078",
     "alaves": "96",
     "albacete": "2737",
+    "albania": "585",
     "aldosivi": "9739",
+    "algeria": "624",
     "almeria": "6832",
     "alverca": "21613",
     "amed sfk": "132335",
     "america": "227",
+    "american samoa": "4886",
     "anderlecht": "441",
     "andorra": "20179",
     "angers": "7868",
+    "angola": "653",
+    "anguilla": "8942",
     "annecy": "18066",
     "antwerp": "17544",
     "ararat armenia": "20024",
     "arezzo": "3345",
+    "argentina": "202",
     "argentinos": "3",
     "argentinos juniors": "3",
     "aris": "11553",
+    "armenia": "579",
     "arminia bielefeld": "2506",
     "arouca": "15784",
     "arsenal": "359",
+    "aruba": "2642",
     "ascoli": "3346",
     "asteras trip": "8354",
     "asteras tripoli": "8354",
@@ -2644,15 +3846,22 @@
     "atromitos": "6790",
     "augsburg": "3841",
     "austin": "20906",
+    "australia": "628",
+    "austria": "474",
     "austria lustenau": "21540",
     "austria vienna": "1382",
     "auxerre": "172",
     "avellino": "4055",
     "az": "140",
     "az alkmaar": "140",
+    "azerbaijan": "581",
     "b c unione venezia": "17530",
+    "bahamas": "2640",
     "bahia": "9967",
+    "bahrain": "4381",
     "banfield": "235",
+    "bangladesh": "5783",
+    "barbados": "2637",
     "barcelona": "83",
     "barracas": "10060",
     "barracas central": "10060",
@@ -2661,14 +3870,20 @@
     "bayer leverkusen": "131",
     "bayern": "132",
     "bayern munich": "132",
+    "belarus": "583",
+    "belgium": "459",
     "belgrano": "4",
     "belgrano cordoba": "4",
     "belgrano de cordoba": "4",
+    "belize": "2641",
     "benevento": "4059",
     "benfica": "1929",
+    "benin": "2844",
+    "bermuda": "2643",
     "besiktas": "1895",
     "betis": "244",
     "betis sevilla": "244",
+    "bhutan": "5784",
     "bielefeld": "2506",
     "birmingham": "392",
     "birmingham city": "392",
@@ -2680,16 +3895,20 @@
     "bochum": "121",
     "bodo glimt": "2980",
     "bodoglimt": "2980",
+    "bolivia": "204",
     "bologna": "107",
     "bolton": "358",
     "bolton wanderers": "358",
+    "bonaire": "19314",
     "borac": "20710",
     "borac banja luka": "20710",
     "boro": "369",
     "borussia dortmund": "124",
     "borussia mgladbach": "268",
     "borussia monchengladbach": "268",
+    "bosnia herzegovina": "452",
     "botafogo": "6086",
+    "botswana": "4245",
     "boulogne": "7869",
     "bournemouth": "349",
     "br ndby": "575",
@@ -2697,25 +3916,34 @@
     "braga": "2994",
     "bragantino": "6079",
     "brann": "620",
+    "brazil": "205",
     "bremen": "137",
     "brentford": "337",
     "brest": "6997",
     "brighton": "331",
     "brighton and hove albion": "331",
     "bristol city": "333",
+    "british virgin islands": "2644",
     "brndby": "575",
     "brommapojkar": "8221",
     "brommapojkarna": "8221",
     "brugge": "570",
+    "bulgaria": "462",
     "burgos": "12597",
+    "burkina faso": "2845",
     "burnley": "379",
+    "burundi": "5779",
     "c cordoba se": "11989",
     "c d nacional": "3472",
     "c palace": "384",
     "cadiz": "3842",
     "cagliari": "2925",
+    "cambodia": "5518",
     "cambuur": "3736",
     "cambuur leeuwarden": "3736",
+    "cameroon": "656",
+    "canada": "206",
+    "cape verde": "2597",
     "cardiff": "347",
     "cardiff city": "347",
     "carrarese": "3988",
@@ -2723,9 +3951,11 @@
     "castellon": "4438",
     "catanzaro": "3257",
     "caykur rizespor": "7656",
+    "cayman islands": "2646",
     "celta fortuna": "131858",
     "celta vigo": "85",
     "celtic": "256",
+    "central african republic": "10528",
     "central cordoba santiago del estero": "11989",
     "cercle brugge": "3610",
     "cercle brugge ksv": "3610",
@@ -2739,32 +3969,46 @@
     "chelsea": "363",
     "chicago": "182",
     "chicago fire": "182",
+    "chile": "207",
+    "china": "658",
+    "chinese taipei": "14561",
     "cincinnati": "18267",
     "clermont foot": "3171",
     "clube do remo": "4936",
     "cologne": "122",
+    "colombia": "208",
     "colorado": "184",
     "colorado rapids": "184",
     "columbus": "183",
     "columbus crew": "183",
     "como": "2572",
+    "comoros": "8601",
+    "congo dr": "2850",
+    "cook islands": "4884",
     "copenhagen": "909",
     "cordoba": "8447",
     "corinthians": "874",
     "coritiba": "3456",
     "coritiba fbc": "3456",
     "corum": "132334",
+    "costa rica": "214",
+    "cote d ivoire": "4789",
     "cottbus": "123",
     "coventry": "388",
     "coventry city": "388",
     "cr vasco da gama": "3454",
     "cremonese": "4050",
+    "croatia": "477",
     "cruz azul": "218",
     "cruzeiro": "2022",
     "crystal palace": "384",
     "cska sofia": "10834",
     "csu craiova": "8089",
     "ctral crdoba se": "11989",
+    "cuba": "2647",
+    "curacao": "11678",
+    "cyprus": "445",
+    "czechia": "450",
     "d c united": "193",
     "d dresden": "7017",
     "dallas": "185",
@@ -2775,6 +4019,7 @@
     "defensa y justicia": "8950",
     "degerfors": "20856",
     "degerfors if": "20856",
+    "denmark": "479",
     "deportivo": "90",
     "deportivo coruna": "90",
     "deportivo riestra": "17702",
@@ -2782,7 +4027,10 @@
     "derby county": "374",
     "dijon fco": "3170",
     "dinamo zagreb": "597",
+    "djibouti": "5775",
     "djurgarden": "2339",
+    "dominica": "13582",
+    "dominican republic": "2649",
     "dortmund": "124",
     "dundee": "261",
     "dundee united": "264",
@@ -2791,9 +4039,12 @@
     "dynamo dresden": "7017",
     "e braunschweig": "3067",
     "ec vitoria": "3457",
+    "ecuador": "209",
     "egnatia": "21943",
+    "egypt": "2620",
     "eibar": "3752",
     "eintracht frankfurt": "125",
+    "el salvador": "2650",
     "elche": "3751",
     "eldense": "7320",
     "elfsborg": "529",
@@ -2801,43 +4052,58 @@
     "empoli": "2574",
     "energie cottbus": "123",
     "energy cottbus": "123",
+    "england": "448",
+    "equatorial guinea": "8938",
     "erzurum": "19267",
     "erzurum bb": "19267",
     "espanyol": "88",
+    "estonia": "444",
     "estoril": "12216",
     "estrela": "21610",
     "estudiantes": "8",
     "estudiantes de la plata": "8",
     "estudiantes de rio cuarto": "19685",
     "estudiantes la plata": "8",
+    "eswatini": "6686",
+    "ethiopia": "5777",
     "everton": "368",
     "excelsior": "2566",
     "eyupspor": "20729",
     "f c k benhavn": "909",
     "falkirk": "254",
     "famalicao": "12698",
+    "faroe islands": "447",
     "fenerbahce": "436",
     "ferencvaros": "622",
     "feyenoord": "142",
     "feyenoord rotterdam": "142",
+    "fiji": "4862",
+    "finland": "458",
     "fiorentina": "109",
     "flamengo": "819",
     "fluminense": "3445",
     "fortuna": "143",
     "fortuna sittard": "143",
+    "france": "478",
     "frankfurt": "125",
     "fredrikstad": "3039",
     "freiburg": "126",
     "frosinone": "4057",
     "fulham": "370",
+    "gabon": "4231",
     "gais": "8222",
     "galatasaray": "432",
+    "gambia": "7368",
     "gaziantep": "20070",
     "genclerbirli": "996",
     "genclerbirligi": "996",
     "genk": "938",
     "genoa": "3263",
+    "georgia": "584",
+    "germany": "481",
     "getafe": "2922",
+    "ghana": "4469",
+    "gibraltar": "16721",
     "gijon": "3788",
     "gil vicente": "3699",
     "gimnasia la plata": "9",
@@ -2853,13 +4119,20 @@
     "grasshoppers": "492",
     "grazer": "21846",
     "grazer ak": "21846",
+    "greece": "455",
     "gremio": "6273",
+    "grenada": "2651",
     "grenoble": "6994",
     "greuther furth": "3070",
     "groningen": "145",
     "guadalajara": "219",
+    "guam": "10529",
+    "guatemala": "2652",
     "guimaraes": "5309",
+    "guinea": "2847",
     "guingamp": "171",
+    "guyana": "2653",
+    "haiti": "2654",
     "hajduk split": "489",
     "halmstads": "3017",
     "halmstads bk": "3017",
@@ -2882,13 +4155,17 @@
     "hibernian": "258",
     "hoffenheim": "7911",
     "holstein kiel": "7884",
+    "honduras": "215",
+    "hong kong": "1928",
     "horsens": "3585",
     "houston": "6077",
     "houston dynamo": "6077",
     "hull": "306",
     "hull city": "306",
+    "hungary": "480",
     "huracan": "10",
     "iberia 1999": "20025",
+    "iceland": "470",
     "if brommapojkarna": "8221",
     "if elfsborg": "529",
     "ifk": "2556",
@@ -2898,6 +4175,8 @@
     "ind rivadavia": "9744",
     "independiente": "11",
     "independiente rivadavia": "9744",
+    "india": "4385",
+    "indonesia": "4895",
     "instituto": "2975",
     "instituto cordoba": "2975",
     "instituto de cordoba": "2975",
@@ -2911,12 +4190,20 @@
     "ipswich town": "373",
     "iraklis": "2575",
     "iraklis saloniki": "2575",
+    "iran": "469",
+    "iraq": "4375",
+    "israel": "461",
     "istanbul basaksehir": "7914",
     "istanbul bb": "7914",
     "istanbul buyuksehir bsk": "7914",
+    "italy": "162",
+    "ivory coast": "4789",
     "jablonec": "7922",
     "jagiellonia": "11505",
     "jagiellonia bialystok": "11505",
+    "jamaica": "1038",
+    "japan": "627",
+    "jordan": "2917",
     "josko ried": "3759",
     "juarez": "17851",
     "juve stabia": "3975",
@@ -2933,19 +4220,24 @@
     "kasimpasa": "6870",
     "kasimpasa betbrain": "6870",
     "kauno zalgiris": "20028",
+    "kazakhstan": "2619",
+    "kenya": "2848",
     "kfum": "22165",
     "kfum oslo": "22165",
     "kifisia": "21969",
     "kilmarnock": "260",
     "kocaelispor": "995",
     "konyaspor": "7648",
+    "kosovo": "18272",
     "kristiansund": "6672",
     "kristiansund bk": "6672",
     "kristiansund bk betbrain": "6672",
     "kups kuopio": "8169",
+    "kuwait": "841",
     "kv kortrijk": "5786",
     "kv mechelen": "7879",
     "kvc westerlo": "606",
+    "kyrgyz republic": "6724",
     "la galaxy": "187",
     "la louviere": "131235",
     "lafc": "18966",
@@ -2957,6 +4249,7 @@
     "lazio rome": "112",
     "le havre": "3236",
     "le mans": "2697",
+    "lebanon": "4388",
     "lecce": "113",
     "lech poznan": "2990",
     "leeds": "357",
@@ -2964,14 +4257,19 @@
     "leganes": "17534",
     "lens": "175",
     "leon": "228",
+    "lesotho": "6640",
     "levadiakos": "5276",
     "levante": "1538",
     "leverkusen": "131",
     "levski sofia": "490",
+    "liberia": "4205",
+    "libya": "2621",
+    "liechtenstein": "589",
     "lille": "166",
     "lillestrom": "987",
     "lincoln city": "314",
     "lincoln red imps": "17856",
+    "lithuania": "460",
     "liverpool": "364",
     "lommel": "22269",
     "lorient": "273",
@@ -2979,16 +4277,24 @@
     "louis city": "21812",
     "lucerne": "7640",
     "lugano": "7672",
+    "luxembourg": "582",
     "luzern": "7640",
     "lyngby": "7860",
     "lyngby boldklub": "7860",
     "lyon": "167",
+    "macau": "6722",
+    "madagascar": "5533",
     "magdeburg": "10382",
     "mainz": "2950",
     "malaga": "99",
+    "malawi": "4325",
+    "malaysia": "2405",
+    "maldives": "4390",
+    "mali": "2849",
     "mallorca": "84",
     "malmo": "2720",
     "malmo ff": "2720",
+    "malta": "453",
     "man city": "382",
     "man utd": "360",
     "manchester city": "382",
@@ -2996,7 +4302,11 @@
     "mantova": "3991",
     "maritimo": "552",
     "marseille": "176",
+    "martinique": "2728",
+    "mauritania": "8940",
+    "mauritius": "5534",
     "metz": "177",
+    "mexico": "203",
     "miami": "20232",
     "middlesbrough": "369",
     "midtjylland": "572",
@@ -3009,15 +4319,22 @@
     "mjallby aif": "20301",
     "modena": "2573",
     "molde": "2715",
+    "moldova": "483",
     "monaco": "174",
+    "mongolia": "8663",
+    "montenegro": "6775",
     "monterrey": "220",
     "montpellier": "274",
     "montreal": "9720",
     "monza": "4007",
     "moreirense": "3696",
+    "morocco": "2869",
     "motherwell": "266",
+    "mozambique": "8939",
+    "myanmar": "6770",
     "nacional": "3472",
     "nacional de madeira": "3472",
+    "namibia": "6725",
     "nancy": "3267",
     "nancy lorraine": "3267",
     "nantes": "165",
@@ -3027,20 +4344,29 @@
     "nec nijmegen": "147",
     "necaxa": "229",
     "neom": "130899",
+    "netherlands": "449",
+    "new caledonia": "4888",
     "new england": "189",
     "new england revolution": "189",
     "new york": "190",
     "new york city": "17606",
+    "new zealand": "2666",
     "newcastle": "361",
     "newcastle united": "361",
     "newell s": "14",
     "newell s old boys": "14",
     "newells old boys": "14",
+    "nicaragua": "2658",
     "nice": "2502",
+    "niger": "8937",
+    "nigeria": "657",
     "nk celje": "3362",
     "nk publikum celje betbrain": "3362",
     "nordsj lland": "3101",
     "nordsjlland": "3101",
+    "north macedonia": "463",
+    "northern ireland": "586",
+    "norway": "464",
     "norwich": "381",
     "norwich city": "381",
     "nottingham forest": "393",
@@ -3053,6 +4379,7 @@
     "ofi crete": "1010",
     "oh leuven": "5579",
     "olympiacos": "435",
+    "oman": "2841",
     "omonia": "617",
     "omonia nicosia": "617",
     "orgryte": "131552",
@@ -3067,32 +4394,43 @@
     "paderborn 07": "3307",
     "padova": "3952",
     "pafos": "22281",
+    "pakistan": "5781",
     "palermo": "2923",
+    "palestine": "6167",
     "palmeiras": "2029",
+    "panama": "2659",
     "panathinaikos": "443",
     "panetolikos": "11431",
     "paok": "605",
     "paok salonika": "605",
+    "papua new guinea": "4885",
+    "paraguay": "210",
     "paris": "6851",
     "paris saint germain": "160",
     "parma": "115",
     "pau": "10678",
     "pec zwolle": "2565",
+    "peru": "211",
     "philadelphia": "10739",
     "philadelphia union": "10739",
+    "philippines": "7347",
     "pisa": "3956",
     "platense": "7764",
+    "poland": "471",
     "portland": "9723",
     "portland timbers": "9723",
     "porto": "437",
     "portsmouth": "385",
+    "portugal": "482",
     "preston": "394",
     "preston north end": "394",
     "psg": "160",
     "psv": "148",
     "psv eindhoven": "148",
     "puebla": "231",
+    "puerto rico": "11766",
     "pumas unam": "233",
+    "qatar": "4398",
     "qpr": "334",
     "queens park rangers": "334",
     "queretaro": "222",
@@ -3124,6 +4462,7 @@
     "reims": "3243",
     "remo": "4936",
     "rennes": "169",
+    "republic of ireland": "476",
     "rheindorf": "4405",
     "rheindorf altach": "4405",
     "riestra": "17702",
@@ -3132,9 +4471,12 @@
     "river plate": "16",
     "rodez aveyron": "7719",
     "roma": "104",
+    "romania": "473",
     "rosario central": "17",
     "rosenborg": "438",
     "royal charleroi": "3616",
+    "russia": "454",
+    "rwanda": "2851",
     "s bratislava": "521",
     "s nderjyske": "8118",
     "s nderjyske fodbold": "8118",
@@ -3149,38 +4491,55 @@
     "san jose": "191",
     "san jose earthquakes": "191",
     "san lorenzo": "18",
+    "san marino": "588",
     "sandefjord": "3279",
     "santa clara": "12215",
     "santos": "2674",
     "sao paulo": "2026",
+    "sao tome and principe": "11808",
     "sarmiento de junn": "10158",
     "sarmiento j": "10158",
     "sarmiento junin": "10158",
     "sarpsborg": "5002",
     "sarpsborg betbrain": "5002",
     "sassuolo": "3997",
+    "saudi arabia": "655",
     "schalke": "133",
     "schalke 04": "133",
+    "scotland": "580",
     "seattle": "9726",
     "seattle sounders": "9726",
+    "senegal": "654",
+    "serbia": "6757",
     "servette": "20032",
     "sevilla": "243",
+    "seychelles": "6726",
     "shakhtar": "493",
     "shakhtar donetsk": "493",
     "sheff utd": "398",
     "sheffield united": "398",
     "sheffield utd": "398",
+    "sierra leone": "8600",
     "silkeborg": "607",
     "silkeborg if": "607",
+    "singapore": "4384",
+    "sint maarten": "18243",
     "sint truidense": "936",
     "sion": "3076",
     "sion sitten": "3076",
     "sirius": "8547",
+    "sivasspor": "3691",
     "slavia prague": "494",
+    "slovakia": "468",
     "slovan bratislava": "521",
+    "slovenia": "472",
     "sochaux": "272",
+    "solomon islands": "4861",
     "sonderjyske": "8118",
+    "south africa": "467",
+    "south korea": "451",
     "southampton": "376",
+    "spain": "164",
     "sparta": "151",
     "sparta prague": "433",
     "sparta rotterdam": "151",
@@ -3191,14 +4550,19 @@
     "spurs": "367",
     "spvgg greuther frth": "3070",
     "spvgg greuther furth": "3070",
+    "sri lanka": "5782",
     "st etienne": "178",
     "st gallen": "557",
     "st johnstone": "267",
+    "st kitts and nevis": "2662",
     "st louis": "21812",
     "st louis city": "21812",
+    "st lucia": "2661",
+    "st martin": "10596",
     "st mirren": "250",
     "st pauli": "270",
     "st truiden": "936",
+    "st vincent and the grenadines": "13584",
     "stade de reims": "3243",
     "stade laval": "3266",
     "stade rennais": "169",
@@ -3209,21 +4573,31 @@
     "strasbourg": "180",
     "sturm graz": "3746",
     "stuttgart": "134",
+    "sudan": "4319",
     "sudtirol": "11139",
     "sunderland": "366",
+    "suriname": "2664",
     "swansea": "318",
     "swansea city": "318",
     "swarovski tirol": "18794",
+    "sweden": "466",
+    "switzerland": "475",
+    "syria": "4380",
+    "tahiti": "4863",
+    "tajikistan": "6723",
     "talleres": "19",
     "talleres cordoba": "19",
     "talleres de cordoba": "19",
+    "tanzania": "5778",
     "telstar": "3735",
     "tenerife": "245",
+    "thailand": "4396",
     "thun": "3024",
     "tigre": "7767",
     "tigres": "232",
     "tigres uanl": "232",
     "tijuana": "10125",
+    "togo": "4356",
     "toluca": "223",
     "torino": "239",
     "toronto": "7318",
@@ -3232,13 +4606,20 @@
     "tottenham hotspur": "367",
     "toulouse": "179",
     "trabzonspor": "997",
+    "trinidad and tobago": "2627",
     "tromso": "5270",
     "troyes": "170",
     "tsg hoffenheim": "7911",
     "tsv eintracht braunschweig": "3067",
     "tsv hartberg": "6907",
+    "tunisia": "659",
+    "turkey": "465",
+    "turkiye": "465",
+    "turkmenistan": "7507",
     "twente": "152",
     "udinese": "118",
+    "uganda": "4211",
+    "ukraine": "457",
     "un leon": "232",
     "unam": "233",
     "union berlin": "598",
@@ -3248,21 +4629,28 @@
     "union sg": "5807",
     "union st gilloise": "5807",
     "union st gilloise betbrain": "5807",
+    "united arab emirates": "4397",
+    "united states": "660",
     "universitatea craiova": "8089",
+    "uruguay": "212",
     "us avellino": "4055",
+    "us virgin islands": "2645",
     "usl 1 montreal": "9720",
     "utrecht": "153",
+    "uzbekistan": "2570",
     "valencia": "94",
     "valerenga": "2791",
     "valladolid": "95",
     "vancouver": "9727",
     "vancouver whitecaps": "9727",
+    "vanuatu": "4864",
     "vasco": "3454",
     "vasco da gama": "3454",
     "vasteras": "22163",
     "velez": "21",
     "velez sarsfield": "21",
     "venezia": "17530",
+    "venezuela": "213",
     "verona": "119",
     "vfb stuttgart": "134",
     "vfl bochum": "121",
@@ -3272,6 +4660,7 @@
     "viborg ff": "3153",
     "vicenza": "120",
     "vienna": "1382",
+    "vietnam": "7349",
     "viking": "510",
     "viktoria plzen": "11706",
     "villarreal": "102",
@@ -3281,6 +4670,7 @@
     "volos": "20043",
     "volos nfc": "20043",
     "waasland beveren": "13450",
+    "wales": "578",
     "watford": "395",
     "werder bremen": "137",
     "west brom": "383",
@@ -3297,7 +4687,10 @@
     "wolves": "380",
     "wrexham": "352",
     "wsg swarovski tirol": "18794",
+    "yemen": "6014",
     "young boys": "2722",
+    "zambia": "4277",
+    "zimbabwe": "4214",
     "zrich": "3019",
     "zulte waregem": "4691",
     "zurich": "3019",

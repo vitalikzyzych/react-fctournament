@@ -14,7 +14,10 @@ interface IBackdropSideProps {
 
 const CREST_PIXELS = 240;
 
-/** Flag wash and a large crest on one edge; a crest that fails is dropped. */
+/**
+ * Flag wash and a large crest on one edge; a crest that fails is dropped. A
+ * national team's crest is its flag, so with a flag wash it is left out.
+ */
 const BackdropSide = ({ club, side }: IBackdropSideProps) => {
   const [crestFailed, setCrestFailed] = useState(false);
   if (!club) return null;
@@ -25,7 +28,7 @@ const BackdropSide = ({ club, side }: IBackdropSideProps) => {
       {flag && (
         <img src={flagUrl(flag)} alt="" className="match-backdrop__flag" />
       )}
-      {catalogClub && !crestFailed && (
+      {catalogClub && !crestFailed && !(flag && catalogClub.nation) && (
         <img
           src={crestUrl(catalogClub, CREST_PIXELS)}
           alt=""

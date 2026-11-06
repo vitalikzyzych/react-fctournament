@@ -8,10 +8,14 @@ export interface ICatalogClub {
   /** flag-icons code ("es", "gb-eng"), when the club's league is known. */
   country: string | null;
   dark: boolean;
+  /** National team: ESPN's lowercase abbreviation ("arg"), for its image. */
+  nation?: string;
 }
 
-const teams: Record<string, { country: string | null; dark: boolean }> =
-  catalog.teams;
+const teams: Record<
+  string,
+  { country: string | null; dark: boolean; nation?: string }
+> = catalog.teams;
 const names: Record<string, string> = catalog.names;
 const cache = new Map<string, ICatalogClub | null>();
 
@@ -33,8 +37,14 @@ export const findCatalogClub = (
   return found;
 };
 
-/** Crest image, resized by ESPN's CDN; the dark variant suits the dark theme. */
-export const crestUrl = (club: ICatalogClub, pixels: number): string =>
-  `https://a.espncdn.com/combiner/i?img=/i/teamlogos/soccer/${
-    club.dark ? "500-dark" : "500"
-  }/${club.espnId}.png&w=${pixels}&h=${pixels}`;
+/**
+ * Crest image, resized by ESPN's CDN; the dark variant suits the dark theme.
+ * National teams have theirs under "countries", by abbreviation.
+ */
+export const crestUrl = (club: ICatalogClub, pixels: number): string => {
+  const size = club.dark ? "500-dark" : "500";
+  const path = club.nation
+    ? `countries/${size}/${club.nation}`
+    : `soccer/${size}/${club.espnId}`;
+  return `https://a.espncdn.com/combiner/i?img=/i/teamlogos/${path}.png&w=${pixels}&h=${pixels}`;
+};

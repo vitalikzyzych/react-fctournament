@@ -48,6 +48,18 @@ const LEAGUES: [string, string | null][] = [
   ["uefa.europa.conf", null],
 ];
 
+/**
+ * National teams (ESPN's friendlies list has about 200). Read after the club
+ * leagues, so a club keeps its name when a country shares it. Their images
+ * live under ESPN's "countries" path, by the team's abbreviation.
+ */
+const NATIONS_LEAGUE = "fifa.friendly";
+
+/** Clubs in no league list above (relegated, for example): ESPN id, league, country. */
+const EXTRA_TEAMS: [string, string, string | null][] = [
+  ["3691", "tur.1", "tr"], // Sivasspor
+];
+
 /** Our name (as the app or ChatGPT writes it) to the ESPN display name. */
 const ALIASES: Record<string, string> = {
   Inter: "Internazionale",
@@ -56,6 +68,8 @@ const ALIASES: Record<string, string> = {
   Leverkusen: "Bayer Leverkusen",
   Shakhtar: "Shakhtar Donetsk",
   AEK: "AEK Athens",
+  Turkey: "Türkiye",
+  "Côte d'Ivoire": "Ivory Coast",
 };
 
 interface IEspnTeam {
@@ -65,6 +79,7 @@ interface IEspnTeam {
   shortDisplayName: string;
   name: string;
   location: string;
+  abbreviation?: string;
   logos?: { rel: string[] }[];
 }
 
@@ -77,6 +92,8 @@ interface ICatalogTeam {
   country: string | null;
   /** ESPN has a version drawn for dark backgrounds. */
   dark: boolean;
+  /** National team: the lowercase abbreviation of its image ("arg"). */
+  nation?: string;
 }
 
 const fetchLeague = async (league: string): Promise<IEspnTeam[]> => {
@@ -108,6 +125,44 @@ const addName = (name: string, id: string) => {
   names.set(key, id);
 };
 
+const fetchTeam = async (league: string, id: string): Promise<IEspnTeam> => {
+  const response = await fetch(
+    `https://site.api.espn.com/apis/site/v2/sports/soccer/${league}/teams/${id}`
+  );
+  if (!response.ok) throw new Error(`${league}/${id}: HTTP ${response.status}`);
+  // Parsed JSON from ESPN, as in fetchLeague.
+  return ((await response.json()) as { team: IEspnTeam }).team;
+};
+
+const addTeam = (team: IEspnTeam, country: string | null, nation = false) => {
+  const known = teams.get(team.id);
+  if (!known) {
+    teams.set(team.id, {
+      name: team.displayName,
+      country,
+      dark: (team.logos ?? []).some((logo) => logo.rel.includes("dark")),
+      ...(nation && team.abbreviation
+        ? { nation: team.abbreviation.toLowerCase() }
+        : {}),
+    });
+  } else if (!known.country && country) {
+    known.country = country;
+  }
+  const slugName = team.slug.split(".").slice(1).join(" ").replace(/_/g, " ");
+  // A country is matched by its own names only; its "location" and slug
+  // repeat them, and its short name is often an abbreviation.
+  (nation
+    ? [team.displayName, team.name]
+    : [
+        team.displayName,
+        team.shortDisplayName,
+        team.name,
+        team.location,
+        slugName,
+      ]
+  ).forEach((name) => addName(name, team.id));
+};
+
 for (const [league, country] of LEAGUES) {
   let leagueTeams: IEspnTeam[];
   try {
@@ -116,27 +171,24 @@ for (const [league, country] of LEAGUES) {
     console.warn(`skipped ${league}: ${String(error)}`);
     continue;
   }
-  for (const team of leagueTeams) {
-    const known = teams.get(team.id);
-    if (!known) {
-      teams.set(team.id, {
-        name: team.displayName,
-        country,
-        dark: (team.logos ?? []).some((logo) => logo.rel.includes("dark")),
-      });
-    } else if (!known.country && country) {
-      known.country = country;
-    }
-    const slugName = team.slug.split(".").slice(1).join(" ").replace(/_/g, " ");
-    [
-      team.displayName,
-      team.shortDisplayName,
-      team.name,
-      team.location,
-      slugName,
-    ].forEach((name) => addName(name, team.id));
-  }
+  leagueTeams.forEach((team) => addTeam(team, country));
   console.log(`${league}: ${leagueTeams.length} clubs`);
+}
+
+for (const [id, league, country] of EXTRA_TEAMS) {
+  try {
+    addTeam(await fetchTeam(league, id), country);
+  } catch (error) {
+    console.warn(`skipped team ${id}: ${String(error)}`);
+  }
+}
+
+try {
+  const nations = await fetchLeague(NATIONS_LEAGUE);
+  nations.forEach((team) => addTeam(team, null, true));
+  console.log(`${NATIONS_LEAGUE}: ${nations.length} national teams`);
+} catch (error) {
+  console.warn(`skipped ${NATIONS_LEAGUE}: ${String(error)}`);
 }
 
 const idByDisplayName = new Map(

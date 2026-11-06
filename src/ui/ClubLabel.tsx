@@ -37,7 +37,11 @@ const ClubLabel = ({
   className,
 }: IClubLabelProps) => {
   const catalogClub = findCatalogClub(clubId, name);
-  const flag = showFlag ? resolveFlag(country, catalogClub?.country) : null;
+  // A national team's crest is already its flag.
+  const flag =
+    showFlag && !catalogClub?.nation
+      ? resolveFlag(country, catalogClub?.country)
+      : null;
 
   return (
     <span

@@ -86,9 +86,11 @@ const ClubHistoryDialog = ({ history, onHide }: IClubHistoryDialogProps) => {
   const catalogClub = history
     ? findCatalogClub(history.clubId, history.name)
     : null;
-  const flag = history
-    ? resolveFlag(history.country, catalogClub?.country)
-    : null;
+  // A national team's crest is already its flag.
+  const flag =
+    history && !catalogClub?.nation
+      ? resolveFlag(history.country, catalogClub?.country)
+      : null;
 
   return (
     <Dialog
