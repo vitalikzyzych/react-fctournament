@@ -4,13 +4,15 @@ import { classNames } from "primereact/utils";
 
 import ClubLabel from "./ClubLabel";
 
-import type { IStandingRow } from "@/domain";
+import type { IClub, IStandingRow } from "@/domain";
 import { formatSigned } from "@/utils";
 
 interface IStandingsTableProps {
   rows: IStandingRow[];
   /** Club ids in a playoff place, marked next to the position. */
   qualified?: Set<string>;
+  /** Makes rows clickable, for example to open the club's matches. */
+  onClubClick?: (club: IClub) => void;
 }
 
 const num = (field: keyof IStandingRow, header: string, title: string) => (
@@ -23,12 +25,25 @@ const num = (field: keyof IStandingRow, header: string, title: string) => (
 );
 
 /** Group table: points, goal difference, head-to-head (see domain/standings.ts). */
-const StandingsTable = ({ rows, qualified }: IStandingsTableProps) => (
+const StandingsTable = ({
+  rows,
+  qualified,
+  onClubClick,
+}: IStandingsTableProps) => (
   <DataTable
     value={rows}
     dataKey="club.id"
     size="small"
     className="standings-table"
+    onRowClick={
+      onClubClick
+        ? (e) => {
+            const row = rows[e.index];
+            if (row) onClubClick(row.club);
+          }
+        : undefined
+    }
+    rowClassName={() => (onClubClick ? "cursor-pointer" : "")}
   >
     <Column
       header="#"

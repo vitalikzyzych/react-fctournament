@@ -1,6 +1,7 @@
 export { default as ChampionBadge } from "./ChampionBadge";
 export { default as ClubCrest } from "./ClubCrest";
 export { default as ClubLabel } from "./ClubLabel";
+export { default as ClubMatchesDialog } from "./ClubMatchesDialog";
 export { default as CodeConfirmDialog } from "./CodeConfirmDialog";
 export {
   default as CountryFlag,

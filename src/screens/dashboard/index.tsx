@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "primereact/button";
@@ -26,6 +26,7 @@ import {
 } from "@/domain";
 import { pickCurrentTournament, useTournamentData } from "@/providers";
 import {
+  ClubMatchesDialog,
   EmptyState,
   FluentIcon,
   MatchCards,
@@ -44,6 +45,7 @@ const Dashboard = () => {
   const current = pickCurrentTournament(all);
   const allTime = useMemo(() => computeAllTimePlayers(all), [all]);
   const summaries = useMemo(() => summarizeTournaments(all), [all]);
+  const [selectedClub, setSelectedClub] = useState<IClub | null>(null);
 
   if (!current) {
     return (
@@ -236,11 +238,18 @@ const Dashboard = () => {
               <StandingsTable
                 rows={groupTable(tournament, matches, group.id)}
                 qualified={qualified}
+                onClubClick={setSelectedClub}
               />
             </SectionCard>
           </div>
         ))}
       </div>
+      <ClubMatchesDialog
+        tournament={tournament}
+        matches={matches}
+        club={selectedClub}
+        onHide={() => setSelectedClub(null)}
+      />
     </>
   );
 };

@@ -24,6 +24,26 @@ export const DRAW_POINTS = 1;
 export const isPlayed = (match: IMatch): match is IPlayedMatch =>
   match.result !== null;
 
+export type MatchOutcome = "win" | "draw" | "loss";
+
+export const OUTCOME_LABELS: Record<MatchOutcome, string> = {
+  win: "перемога",
+  draw: "нічия",
+  loss: "поразка",
+};
+
+/** Win, draw or loss from the club's side; null while not played. */
+export const matchOutcome = (
+  match: IMatch,
+  clubId: string
+): MatchOutcome | null => {
+  if (!match.result) return null;
+  const own = match.home === clubId ? match.result.home : match.result.away;
+  const other = match.home === clubId ? match.result.away : match.result.home;
+  if (own > other) return "win";
+  return own === other ? "draw" : "loss";
+};
+
 export const emptyRecord = (): IRecord => ({
   played: 0,
   won: 0,

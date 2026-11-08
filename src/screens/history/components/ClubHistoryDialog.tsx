@@ -8,8 +8,9 @@ import {
   type IClub,
   type IClubHistory,
   type IClubHistoryEntry,
-  type IMatch,
   isLeagueFormat,
+  matchOutcome,
+  OUTCOME_LABELS,
   roundName,
 } from "@/domain";
 import {
@@ -26,15 +27,6 @@ interface IClubHistoryDialogProps {
   history: IClubHistory | null;
   onHide: () => void;
 }
-
-/** Win, draw or loss from the club's side; nothing while not played. */
-const outcome = (match: IMatch, clubId: string): string | null => {
-  if (!match.result) return null;
-  const own = match.home === clubId ? match.result.home : match.result.away;
-  const other = match.home === clubId ? match.result.away : match.result.home;
-  if (own > other) return "перемога";
-  return own === other ? "нічия" : "поразка";
-};
 
 /** Every match of the club in one tournament, read-only. */
 const TournamentMatches = ({
@@ -61,14 +53,14 @@ const TournamentMatches = ({
       </div>
       <div className="flex flex-column gap-2">
         {matches.map((match) => {
-          const result = outcome(match, clubId);
+          const result = matchOutcome(match, clubId);
           return (
             <MatchRow
               key={match.id}
               match={match}
               clubsById={clubsById}
               editable={false}
-              meta={`${describeMatch(match, league)} · ${result ?? "не зіграно"}`}
+              meta={`${describeMatch(match, league)} · ${result ? OUTCOME_LABELS[result] : "не зіграно"}`}
             />
           );
         })}
