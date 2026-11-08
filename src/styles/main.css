@@ -1261,6 +1261,126 @@ code {
 }
 
 /* Biggest wins: scores line up in the middle column */
+/* League timeline (bump chart): one line per club, S red and V blue */
+.timeline-chart {
+  min-height: 4rem;
+}
+
+.timeline-chart svg {
+  display: block;
+  overflow: visible;
+}
+
+.timeline-grid {
+  stroke: var(--surface-border);
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
+.timeline-axis {
+  fill: var(--text-color-secondary);
+  font-size: 11px;
+}
+
+.timeline-axis--current {
+  fill: var(--primary-color);
+  font-weight: 700;
+}
+
+.timeline-row {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.timeline--focus .timeline-row:not(.is-focus) {
+  opacity: 0.15;
+}
+
+/* Wider invisible stroke: an easier target than the 2px line. */
+.timeline-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 12;
+}
+
+.timeline-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.6;
+}
+
+.timeline-row.is-focus .timeline-line {
+  stroke-width: 3.5;
+  opacity: 1;
+}
+
+.timeline-line--S {
+  stroke: var(--red-500);
+}
+
+.timeline-line--V {
+  stroke: var(--blue-500);
+}
+
+/* A 2px ring in the card colour keeps the crest readable over the lines. */
+.timeline-crest-ring {
+  fill: var(--surface-card);
+  stroke-width: 1.5;
+}
+
+.timeline-crest-ring--S {
+  stroke: var(--red-500);
+}
+
+.timeline-crest-ring--V {
+  stroke: var(--blue-500);
+}
+
+.timeline-label {
+  transition: transform 0.45s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-label {
+    transition: none;
+  }
+}
+
+.timeline-name {
+  fill: var(--text-color);
+  font-size: 12px;
+}
+
+.timeline-row.is-focus .timeline-name {
+  font-weight: 700;
+}
+
+.timeline-points {
+  fill: var(--text-color-secondary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.timeline-qualified,
+.timeline-legend-dot {
+  fill: var(--primary-color);
+  background: var(--primary-color);
+}
+
+.timeline-legend-dot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+}
+
+/* Fixed height, so the chart does not jump when a club is highlighted. */
+.timeline-focus {
+  min-height: 2.75rem;
+}
+
 /* Dashboard quick entry: earlier games of the playoff tie */
 .earlier-games {
   display: flex;

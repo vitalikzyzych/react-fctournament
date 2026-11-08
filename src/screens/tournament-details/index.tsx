@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import { TabPanel, TabView } from "primereact/tabview";
 
+import LeagueTimelineTab from "./components/LeagueTimelineTab";
 import MatchesTab from "./components/MatchesTab";
 import PlayoffTab from "./components/PlayoffTab";
 import StandingsTab from "./components/StandingsTab";
@@ -75,6 +76,11 @@ const TournamentDetails = () => {
         <TabPanel header="Плей-офф">
           <PlayoffTab tournament={tournament} matches={matches} />
         </TabPanel>
+        {isLeagueFormat(tournament.format) && (
+          <TabPanel header="Динаміка">
+            <LeagueTimelineTab tournament={tournament} matches={matches} />
+          </TabPanel>
+        )}
         <TabPanel header="Статистика">
           <StatsTab tournament={tournament} matches={matches} />
         </TabPanel>

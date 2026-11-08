@@ -9,6 +9,7 @@ export * from "./schedule";
 export * from "./schema";
 export * from "./standings";
 export * from "./stats";
+export * from "./timeline";
 export * from "./types";
 export * from "./validateFormat";
 export * from "./validation";
