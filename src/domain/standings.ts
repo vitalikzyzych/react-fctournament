@@ -91,6 +91,44 @@ export const buildRecords = (
   return records;
 };
 
+export interface IFormEntry {
+  match: IPlayedMatch;
+  outcome: MatchOutcome;
+}
+
+/** Results shown in a table's form column. */
+export const FORM_LENGTH = 5;
+
+/**
+ * The last results of every club in the given matches (a group's), oldest
+ * first, in play order (matchday, then id).
+ */
+export const computeForm = (
+  matches: IMatch[],
+  length = FORM_LENGTH
+): Map<string, IFormEntry[]> => {
+  const form = new Map<string, IFormEntry[]>();
+  matches
+    .filter(isPlayed)
+    .sort(
+      (a, b) =>
+        (a.stage === "group" ? a.matchday : 0) -
+          (b.stage === "group" ? b.matchday : 0) ||
+        a.id.localeCompare(b.id, undefined, { numeric: true })
+    )
+    .forEach((match) =>
+      [match.home, match.away].forEach((clubId) => {
+        const outcome = matchOutcome(match, clubId);
+        if (!outcome) return;
+        const list = form.get(clubId) ?? [];
+        list.push({ match, outcome });
+        form.set(clubId, list);
+      })
+    );
+  form.forEach((list, clubId) => form.set(clubId, list.slice(-length)));
+  return form;
+};
+
 /**
  * Group table. Order: points, goal difference, head-to-head between the tied
  * clubs (points, goal difference, goals in those matches), goals scored, name.

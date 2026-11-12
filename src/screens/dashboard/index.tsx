@@ -9,6 +9,7 @@ import { PageHeader } from "@/components";
 import {
   computeAllTimePlayers,
   computeDiscipline,
+  computeForm,
   computeTournamentStats,
   describeMatch,
   findChampionClub,
@@ -19,11 +20,13 @@ import {
   type IMatch,
   isLeagueFormat,
   isPlayed,
+  leagueKnockoutClubs,
   playoffMatches,
   playoffQualifiers,
   sortMatches,
   summarizeTournaments,
 } from "@/domain";
+import { usePlayoffChances } from "@/hooks";
 import { pickCurrentTournament, useTournamentData } from "@/providers";
 import {
   ClubMatchesDialog,
@@ -46,6 +49,10 @@ const Dashboard = () => {
   const allTime = useMemo(() => computeAllTimePlayers(all), [all]);
   const summaries = useMemo(() => summarizeTournaments(all), [all]);
   const [selectedClub, setSelectedClub] = useState<IClub | null>(null);
+  const chances = usePlayoffChances(
+    current?.tournament,
+    current?.matches ?? []
+  );
 
   if (!current) {
     return (
@@ -77,6 +84,9 @@ const Dashboard = () => {
   const discipline = computeDiscipline(matches);
   const qualified = league
     ? new Set(playoffQualifiers(tournament, matches))
+    : undefined;
+  const knockout = league
+    ? new Set(leagueKnockoutClubs(tournament, matches))
     : undefined;
 
   const recent = stored
@@ -238,7 +248,15 @@ const Dashboard = () => {
               <StandingsTable
                 rows={groupTable(tournament, matches, group.id)}
                 qualified={qualified}
+                knockout={knockout}
                 onClubClick={setSelectedClub}
+                form={computeForm(
+                  groupStage.filter((m) => m.group === group.id)
+                )}
+                chances={chances}
+                chanceTitle={
+                  league ? "Шанс вийти в 1/8 фіналу напряму" : undefined
+                }
               />
             </SectionCard>
           </div>

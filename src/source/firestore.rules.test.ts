@@ -208,6 +208,27 @@ describe("firestore.rules", () => {
     );
   });
 
+  it("accepts the league rounds: knockout and round of 16", async () => {
+    const games = [
+      ...newTieGames("KO", 8, "real-madrid", "inter"),
+      ...newTieGames("R16", 8, "arsenal", "napoli"),
+    ];
+    expect(games.map((g) => g.id)).toEqual([
+      "KO8-1",
+      "KO8-2",
+      "R168-1",
+      "R168-2",
+    ]);
+    await createPlayoffGames("rules-new", games);
+    await expect(
+      createPlayoffGames("rules-new", newTieGames("R16", 9, "ajax", "porto"))
+    ).rejects.toThrow();
+    await deletePlayoffMatches(
+      "rules-new",
+      games.map((g) => g.id)
+    );
+  });
+
   it("rejects malformed playoff games", async () => {
     const valid: IPlayoffMatch = {
       id: "SF1-1",

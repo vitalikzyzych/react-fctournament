@@ -1,8 +1,11 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 
+import PlayersProgressChart from "./PlayersProgressChart";
+
 import {
   computeAllTimePlayers,
+  computePlayerProgress,
   type ITournamentSummary,
   type ITournamentWithMatches,
   summarizeTournaments,
@@ -26,6 +29,7 @@ const PlayersHistory = ({
 }) => {
   const totals = computeAllTimePlayers(all, includePlayoff);
   const summaries = summarizeTournaments(all, includePlayoff);
+  const progress = computePlayerProgress(summaries);
   const totalGoals = summaries.reduce((sum, s) => sum + s.totalGoals, 0);
 
   return (
@@ -161,6 +165,14 @@ const PlayersHistory = ({
           </DataTable>
         </SectionCard>
       </div>
+
+      {progress.length > 1 && (
+        <div className="col-12">
+          <SectionCard title="S проти V від турніру до турніру">
+            <PlayersProgressChart progress={progress} />
+          </SectionCard>
+        </div>
+      )}
     </div>
   );
 };

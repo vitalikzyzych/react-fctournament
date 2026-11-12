@@ -1172,6 +1172,11 @@ code {
   max-width: 11rem;
 }
 
+/* A long name ends in an ellipsis instead of running into the next column. */
+.standings-table__club > * {
+  max-width: 100%;
+}
+
 .position-chip {
   display: inline-flex;
   align-items: center;
@@ -1206,6 +1211,11 @@ code {
 .position-chip--qualified {
   box-shadow: inset 0 0 0 1px var(--primary-color);
   color: var(--primary-color);
+}
+
+/* League: a place in the knockout round (before the round of 16). */
+.position-chip--knockout {
+  box-shadow: inset 0 0 0 1px var(--text-color-secondary);
 }
 
 .points {
@@ -1369,6 +1379,17 @@ code {
   background: var(--primary-color);
 }
 
+.timeline-knockout {
+  fill: none;
+  stroke: var(--text-color-secondary);
+  stroke-width: 1.5;
+}
+
+.timeline-legend-dot--knockout {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--text-color-secondary);
+}
+
 .timeline-legend-dot {
   display: inline-block;
   width: 0.45rem;
@@ -1516,4 +1537,107 @@ code {
 /* PrimeFlex widths stop at 30rem; wider dialogs use this. */
 .dialog-wide {
   max-width: 44rem;
+}
+
+/* Standings: form (last results) and playoff chance */
+.form-chips {
+  display: inline-flex;
+  gap: 0.2rem;
+}
+
+.form-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--surface-0);
+}
+
+.form-chip--win {
+  background: var(--green-500);
+}
+
+.form-chip--draw {
+  background: var(--surface-400);
+}
+
+.form-chip--loss {
+  background: var(--orange-500);
+}
+
+.chance {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.chance--high {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* History: S and V running totals per tournament (lines reuse .timeline-*) */
+.progress-chart svg {
+  display: block;
+  overflow: visible;
+  cursor: crosshair;
+}
+
+.progress-chart .timeline-line {
+  opacity: 1;
+}
+
+.progress-crosshair {
+  stroke: var(--text-color-secondary);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  opacity: 0.6;
+}
+
+.progress-dot {
+  stroke: var(--surface-card);
+  stroke-width: 2;
+}
+
+.progress-dot--S {
+  fill: var(--red-500);
+}
+
+.progress-dot--V {
+  fill: var(--blue-500);
+}
+
+.progress-end-label {
+  fill: var(--text-color);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.progress-detail {
+  min-height: 3.25rem;
+}
+
+.standings-wrap {
+  container-type: inline-size;
+}
+
+@container (max-width: 560px) {
+  .standings-table .standings-table__wide {
+    display: none;
+  }
+}
+
+@container (max-width: 400px) {
+  .standings-table .standings-table__club {
+    max-width: 8.5rem;
+  }
+
+  /* Room for the name: no flag or pot on a phone. */
+  .standings-table__club .pot-tag,
+  .standings-table__club .country-flag {
+    display: none;
+  }
 }

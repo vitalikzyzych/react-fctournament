@@ -165,6 +165,37 @@ export const computeAllTimePlayers = (
     )
   );
 
+export interface IPlayerProgress {
+  summary: ITournamentSummary;
+  /** S and V records over this tournament and every one before it. */
+  totals: PlayerRecords;
+  /** Titles per player up to and including this tournament. */
+  titles: Record<PlayerId, number>;
+}
+
+/**
+ * Running S and V totals tournament after tournament (by number), for the
+ * history chart. Tournaments without a played match are left out.
+ */
+export const computePlayerProgress = (
+  summaries: ITournamentSummary[]
+): IPlayerProgress[] => {
+  const played = summaries.filter((s) => s.playedMatches > 0);
+  const titles: Record<PlayerId, number> = { S: 0, V: 0 };
+  return played.map((summary, index) => {
+    if (summary.champion && countsAsTitle(summary.tournament)) {
+      titles[summary.champion.owner] += 1;
+    }
+    return {
+      summary,
+      totals: sumPlayerRecords(
+        played.slice(0, index + 1).map((s) => s.players)
+      ),
+      titles: { ...titles },
+    };
+  });
+};
+
 /** Every club that played in any tournament, with its per-tournament records. */
 export const computeClubHistories = (
   list: ITournamentWithMatches[],

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { computeForm } from "./standings";
 import { computeTournamentStats } from "./stats";
 import type { ICard, IClub, IGroupMatch } from "./types";
 
@@ -80,5 +81,17 @@ describe("tournament stats", () => {
     expect(stats.unbeatenStreaks).toEqual([
       { club: clubs[0], count: 3, ongoing: false },
     ]);
+  });
+});
+
+describe("form", () => {
+  it("keeps the last results per club, oldest first", () => {
+    const form = computeForm(matches, 3);
+    expect(form.get("real")?.map((f) => f.outcome)).toEqual([
+      "draw",
+      "win",
+      "loss",
+    ]);
+    expect(form.get("inter")?.map((f) => f.outcome)).toEqual(["loss", "draw"]);
   });
 });

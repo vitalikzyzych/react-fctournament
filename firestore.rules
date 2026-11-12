@@ -87,8 +87,9 @@ service cloud.firestore {
         && data.updatedAt == request.time;
     }
 
-    // Playoff game: round QF (4 ties), SF (2 ties) or F (1 tie); game 1 and
-    // replays. The document id is fixed: round + tie + "-" + game, "QF1-2".
+    // Playoff game: round KO and R16 (8 ties each, league only, checked by
+    // the import), QF (4 ties), SF (2 ties) or F (1 tie); legs and replays.
+    // The document id is fixed: round + tie + "-" + game, "QF1-2".
     function isPlayoffMatch(data, matchId) {
       let fields = ['stage', 'round', 'tie', 'game', 'home', 'away', 'result', 'updatedAt'];
       return data.keys().hasOnly(fields.concat(['cards']))
@@ -96,7 +97,8 @@ service cloud.firestore {
         && isCards(data.get('cards', []))
         && data.stage == 'playoff'
         && data.tie is int && data.tie >= 1
-        && ((data.round == 'QF' && data.tie <= 4)
+        && ((data.round in ['KO', 'R16'] && data.tie <= 8)
+            || (data.round == 'QF' && data.tie <= 4)
             || (data.round == 'SF' && data.tie <= 2)
             || (data.round == 'F' && data.tie == 1))
         && data.game is int && data.game >= 1 && data.game <= 20

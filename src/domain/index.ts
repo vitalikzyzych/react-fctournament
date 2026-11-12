@@ -1,4 +1,5 @@
 export * from "./cards";
+export * from "./chances";
 export * from "./draw";
 export * from "./exportJson";
 export * from "./formats";

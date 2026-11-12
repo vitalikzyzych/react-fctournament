@@ -7,6 +7,7 @@ import { toTournamentFile } from "./exportJson";
 import {
   computeClubHistories,
   computeHeadToHead,
+  computePlayerProgress,
   countTitles,
   findChampionClub,
   summarizeTournament,
@@ -467,5 +468,22 @@ describe("playoff", () => {
     expect(validateTournamentFile(raw, noExisting).errors.join()).toContain(
       "у двох парах"
     );
+  });
+});
+
+describe("player progress", () => {
+  it("adds up S and V tournament after tournament", () => {
+    const file = validateTournamentFile(completedExample, noExisting).file!;
+    const first = toTournament(file);
+    const second = { ...first, id: "t2", number: first.number + 1 };
+    const summaries = [first, second].map((tournament) =>
+      summarizeTournament({ tournament, matches: file.matches })
+    );
+    const progress = computePlayerProgress(summaries);
+    expect(progress).toHaveLength(2);
+    expect(progress[1].totals.S.won).toBe(2 * summaries[0].players.S.won);
+    const owner = summaries[0].champion!.owner;
+    expect(progress[0].titles[owner]).toBe(1);
+    expect(progress[1].titles[owner]).toBe(2);
   });
 });

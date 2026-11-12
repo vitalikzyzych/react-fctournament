@@ -1,3 +1,4 @@
+import { isLeagueFormat } from "./formats";
 import {
   computePlayoff,
   findChampion,
@@ -111,7 +112,7 @@ const validateReferences = (file: ITournamentFile): string[] => {
 /**
  * Playoff games: fixed ids, ties within the round, the same two clubs in every
  * game of a tie (home and away may swap), and an extra game beyond the legs
- * of the round (2 in QF and SF, 1 final) only after the games before it ended
+ * of the round (2 in KO, R16, QF and SF, 1 final) only after the games before it ended
  * level on aggregate. Teams are picked by hand, so nothing ties a later round
  * to the winners of an earlier one.
  */
@@ -126,7 +127,13 @@ const validatePlayoff = (file: ITournamentFile): string[] => {
         `matches: матч плей-офф "${game.id}" має мати id "${expectedId}" (раунд, пара, номер гри)`
       );
     }
-    const ties = PLAYOFF_ROUNDS.find((r) => r.id === game.round)?.ties ?? 0;
+    const info = PLAYOFF_ROUNDS.find((r) => r.id === game.round);
+    if (info?.leagueOnly && !isLeagueFormat(file.tournament.format)) {
+      errors.push(
+        `matches: матч "${game.id}": раунд ${game.round} є лише в лізі (sv-league-40)`
+      );
+    }
+    const ties = info?.ties ?? 0;
     if (game.tie > ties) {
       errors.push(
         `matches: матч "${game.id}": у раунді ${game.round} лише ${ties} пар(и)`

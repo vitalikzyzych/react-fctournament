@@ -157,9 +157,9 @@ Example: the second leg of quarter-final 2, at the second club.
 
 | Field | Type | Rules |
 |---|---|---|
-| `id` | string | Must be `{round}{tie}-{game}`, for example `QF1-1`, `QF1-2`, `SF1-1`, `F1-1`. |
+| `id` | string | Must be `{round}{tie}-{game}`, for example `QF1-1`, `QF1-2`, `SF1-1`, `F1-1`, `KO3-2`, `R168-1`. |
 | `stage` | string | `playoff`. |
-| `round` | string | `QF` (quarter-final, ties 1 to 4), `SF` (semi-final, ties 1 and 2) or `F` (final, tie 1). |
+| `round` | string | `QF` (quarter-final, ties 1 to 4), `SF` (semi-final, ties 1 and 2) or `F` (final, tie 1). A league (`sv-league-40`) also has `KO` (knockout round, ties 1 to 8) and `R16` (round of 16, ties 1 to 8), two legs each; other formats refuse them. |
 | `tie` | integer | Number of the tie within the round. |
 | `game` | integer | `1` and `2` for the legs of a quarter-final or semi-final (`1` for the final), then `3`, `4`, ... for replays (`2`, `3`, ... in the final). Up to 20. |
 | `home`, `away` | string | Club `id`s from `clubs`. The same two clubs in every game of a tie. Game 1 at the first club, game 2 at the second, and so on. |

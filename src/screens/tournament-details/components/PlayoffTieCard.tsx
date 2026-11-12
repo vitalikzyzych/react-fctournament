@@ -12,10 +12,10 @@ import {
   type IDiscipline,
   type IPlayoffTie,
   isLeagueFormat,
+  isStrictPairing,
   type ITournament,
   newTieGames,
   pendingReplay,
-  PLAYOFF_ROUNDS,
   roundLegs,
 } from "@/domain";
 import { useMatchCards, useSaveResult } from "@/hooks";
@@ -76,8 +76,8 @@ const PlayoffTieCard = ({
 
   const isEmpty = tie.games.length === 0;
   const legs = roundLegs(tie.round);
-  const strict = PLAYOFF_ROUNDS.find((r) => r.id === tie.round)?.strictPairing;
   const league = isLeagueFormat(tournament.format);
+  const strict = isStrictPairing(tie.round, league);
   const anyPlayed = tie.games.some((game) => game.result !== null);
   const showPickers = editable && (isEmpty || editing);
   const replay = editable ? pendingReplay(tie) : null;

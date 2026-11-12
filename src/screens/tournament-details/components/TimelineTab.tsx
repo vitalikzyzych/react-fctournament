@@ -1,20 +1,24 @@
-import { type RefObject, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "primereact/button";
 import { InputSwitch } from "primereact/inputswitch";
+import { SelectButton } from "primereact/selectbutton";
 import { Slider } from "primereact/slider";
 import { classNames } from "primereact/utils";
 
 import {
   computeTimeline,
   type IMatch,
+  isLeagueFormat,
   type ITimelineRow,
   type ITournament,
+  LEAGUE_KNOCKOUT_PER_PLAYER,
   LEAGUE_QUALIFIERS_PER_PLAYER,
-  type PlayerId,
+  PLAYER_IDS,
   seededRandom,
   simulateResults,
 } from "@/domain";
+import { useWidth } from "@/hooks";
 import {
   ClubLabel,
   EmptyState,
@@ -24,14 +28,13 @@ import {
 } from "@/ui";
 import { crestUrl, findCatalogClub } from "@/utils";
 
-interface ILeagueTimelineTabProps {
+interface ITimelineTabProps {
   tournament: ITournament;
   matches: IMatch[];
 }
 
 /** Animation speed: one matchday takes this long. */
 const MS_PER_MATCHDAY = 1400;
-const ROW = 22;
 const TOP = 30;
 const LEFT = 34;
 const CREST = 16;
@@ -54,49 +57,56 @@ const valueAt = (values: number[], t: number) => {
   return values[day] + (values[day + 1] - values[day]) * (clamped - day);
 };
 
-const useWidth = (ref: RefObject<HTMLDivElement | null>) => {
-  const [width, setWidth] = useState(0);
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-    const observer = new ResizeObserver(([entry]) =>
-      setWidth(entry.contentRect.width)
-    );
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [ref]);
-  return width;
-};
-
 const shorten = (name: string, max: number) =>
   name.length > max ? `${name.slice(0, max - 1)}…` : name;
 
-/** The 4 best S and the 4 best V clubs at one matchday (the playoff places). */
-const qualifiersAt = (rows: ITimelineRow[], day: number): Set<string> => {
-  if (day === 0) return new Set();
+/**
+ * The playoff places at one matchday: the first two of a group; in a league
+ * the 4 best S and the 4 best V clubs (round of 16) and the next 8 of each
+ * player (knockout round).
+ */
+const placesAt = (
+  rows: ITimelineRow[],
+  day: number,
+  league: boolean
+): { direct: Set<string>; knockout: Set<string> } => {
+  if (day === 0) return { direct: new Set(), knockout: new Set() };
+  if (!league) {
+    return {
+      direct: new Set(
+        rows.filter((row) => row.positions[day] <= 2).map((row) => row.club.id)
+      ),
+      knockout: new Set(),
+    };
+  }
   const sorted = [...rows].sort((a, b) => a.positions[day] - b.positions[day]);
-  const pick = (owner: PlayerId) =>
-    sorted
-      .filter((row) => row.club.owner === owner)
-      .slice(0, LEAGUE_QUALIFIERS_PER_PLAYER)
-      .map((row) => row.club.id);
-  return new Set([...pick("S"), ...pick("V")]);
+  const pick = (from: number, to: number) =>
+    PLAYER_IDS.flatMap((owner) =>
+      sorted
+        .filter((row) => row.club.owner === owner)
+        .slice(from, to)
+        .map((row) => row.club.id)
+    );
+  const direct = LEAGUE_QUALIFIERS_PER_PLAYER;
+  return {
+    direct: new Set(pick(0, direct)),
+    knockout: new Set(pick(direct, direct + LEAGUE_KNOCKOUT_PER_PLAYER)),
+  };
 };
 
 const dayLabel = (day: number) => (day === 0 ? "Старт" : `М${day}`);
 
 /**
- * How the league table moved, matchday by matchday, as a bump chart. One
+ * How the league table (or one group) moved, matchday by matchday, as a bump
+ * chart. One
  * line per club in its player's colour, the crest at the line's tip.
  * "Відтворити" animates it. Real results show the matchdays played so far;
  * the simulation fills unplayed matches with random scores (nothing is
  * stored) to preview a whole season.
  */
-const LeagueTimelineTab = ({
-  tournament,
-  matches,
-}: ILeagueTimelineTabProps) => {
-  const groupId = tournament.groups[0]?.id ?? "L";
+const TimelineTab = ({ tournament, matches }: ITimelineTabProps) => {
+  const league = isLeagueFormat(tournament.format);
+  const [groupId, setGroupId] = useState(tournament.groups[0]?.id ?? "L");
   const hasResults = matches.some(
     (m) => m.stage === "group" && m.result !== null
   );
@@ -162,18 +172,27 @@ const LeagueTimelineTab = ({
     setSimulate(on);
   };
 
+  const pickGroup = (id: string) => {
+    setPlaying(false);
+    setTime(null);
+    setSelected(null);
+    setGroupId(id);
+  };
+
   const focus = hovered ?? selected;
   const focusRow = timeline.rows.find((row) => row.club.id === focus);
   const day = Math.round(shown);
-  const qualified = qualifiersAt(timeline.rows, day);
+  const places = placesAt(timeline.rows, day, league);
+  // A group of 4 gets taller rows than a league of 40.
+  const rowHeight = timeline.rows.length <= 8 ? 40 : 22;
 
   const narrow = width < 640;
   const right = narrow ? 104 : 190;
   const plotWidth = Math.max(0, width - LEFT - right);
   const plotRight = LEFT + plotWidth;
-  const height = TOP + timeline.rows.length * ROW + 8;
+  const height = TOP + timeline.rows.length * rowHeight + 8;
   const x = (t: number) => LEFT + (axisDays ? (t * plotWidth) / axisDays : 0);
-  const y = (position: number) => TOP + (position - 0.5) * ROW;
+  const y = (position: number) => TOP + (position - 0.5) * rowHeight;
   const eased = easedTime(shown);
 
   const path = (row: ITimelineRow) => {
@@ -225,6 +244,18 @@ const LeagueTimelineTab = ({
         </div>
 
         <div className="flex flex-wrap align-items-center gap-3 text-sm">
+          {tournament.groups.length > 1 && (
+            <SelectButton
+              value={groupId}
+              onChange={(e) => e.value && pickGroup(e.value)}
+              options={tournament.groups.map((group) => ({
+                label: group.name,
+                value: group.id,
+              }))}
+              allowEmpty={false}
+              aria-label="Група"
+            />
+          )}
           <label className="inline-flex align-items-center gap-2 cursor-pointer">
             <InputSwitch
               checked={simulate}
@@ -244,7 +275,17 @@ const LeagueTimelineTab = ({
           <span className="flex align-items-center gap-2 text-600">
             <PlayerBadge player="S" /> клуби S
             <PlayerBadge player="V" /> клуби V
-            <span className="timeline-legend-dot" /> місце в плей-офф
+            {league ? (
+              <>
+                <span className="timeline-legend-dot" /> 1/8 фіналу
+                <span className="timeline-legend-dot timeline-legend-dot--knockout" />{" "}
+                стикові матчі
+              </>
+            ) : (
+              <>
+                <span className="timeline-legend-dot" /> місце в плей-офф
+              </>
+            )}
           </span>
         </div>
 
@@ -398,12 +439,20 @@ const LeagueTimelineTab = ({
                           transform: `translateY(${y(row.positions[day])}px)`,
                         }}
                       >
-                        {qualified.has(club.id) && (
+                        {places.direct.has(club.id) && (
                           <circle
                             cx={plotRight + 18}
                             cy={0}
                             r={3}
                             className="timeline-qualified"
+                          />
+                        )}
+                        {places.knockout.has(club.id) && (
+                          <circle
+                            cx={plotRight + 18}
+                            cy={0}
+                            r={2.5}
+                            className="timeline-knockout"
                           />
                         )}
                         <text
@@ -434,4 +483,4 @@ const LeagueTimelineTab = ({
   );
 };
 
-export default LeagueTimelineTab;
+export default TimelineTab;

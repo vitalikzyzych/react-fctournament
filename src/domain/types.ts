@@ -19,7 +19,11 @@ export const TOURNAMENT_FORMATS: TournamentFormat[] = [
 export type MatchStage = "group" | "playoff";
 
 /** Playoff rounds in order: 4 quarter-final ties, 2 semi-final ties, 1 final. */
-export type PlayoffRound = "QF" | "SF" | "F";
+/**
+ * KO (knockout round) and R16 exist only in a league (sv-league-40); group
+ * tournaments start at QF.
+ */
+export type PlayoffRound = "KO" | "R16" | "QF" | "SF" | "F";
 
 export interface IPlayer {
   id: PlayerId;

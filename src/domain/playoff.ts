@@ -12,23 +12,39 @@ export interface IPlayoffRoundInfo {
   ties: number;
   /** Games created when a tie is set up: two legs, or a single final. */
   legs: number;
-  /**
-   * Picker rule for this round: the two clubs must belong to different
-   * players and come from different groups. Later rounds are free, because
-   * the winners left may all belong to one player or share a group.
-   */
-  strictPairing: boolean;
+  /** Only in a league: the knockout round and the round of 16. */
+  leagueOnly: boolean;
 }
 
 export const PLAYOFF_ROUNDS: IPlayoffRoundInfo[] = [
-  { id: "QF", name: "1/4 фіналу", ties: 4, legs: 2, strictPairing: true },
-  { id: "SF", name: "1/2 фіналу", ties: 2, legs: 2, strictPairing: false },
-  { id: "F", name: "Фінал", ties: 1, legs: 1, strictPairing: false },
+  { id: "KO", name: "Стикові матчі", ties: 8, legs: 2, leagueOnly: true },
+  { id: "R16", name: "1/8 фіналу", ties: 8, legs: 2, leagueOnly: true },
+  { id: "QF", name: "1/4 фіналу", ties: 4, legs: 2, leagueOnly: false },
+  { id: "SF", name: "1/2 фіналу", ties: 2, legs: 2, leagueOnly: false },
+  { id: "F", name: "Фінал", ties: 1, legs: 1, leagueOnly: false },
 ];
 
 export const PLAYOFF_ROUND_IDS: PlayoffRound[] = PLAYOFF_ROUNDS.map(
   (round) => round.id
 );
+
+/**
+ * Rounds of a format: a league plays a knockout round (places 5 to 12 of
+ * each player) and the round of 16 before the quarter-finals; group
+ * tournaments start at the quarter-finals.
+ */
+export const playoffRounds = (league: boolean): IPlayoffRoundInfo[] =>
+  PLAYOFF_ROUNDS.filter((round) => league || !round.leagueOnly);
+
+/**
+ * Picker rule of a round: the two clubs must belong to different players
+ * (and, in groups, come from different groups). It applies where the clubs
+ * come from the table: the group quarter-finals and the league knockout
+ * round. Later rounds are free, because the winners left may share a player
+ * or a group.
+ */
+export const isStrictPairing = (round: PlayoffRound, league: boolean) =>
+  league ? round === "KO" : round === "QF";
 
 export const MAX_PLAYOFF_GAMES = 20;
 
@@ -145,10 +161,21 @@ const buildTie = (
   };
 };
 
-/** Every tie slot of the bracket, including the empty ones. */
-export const computePlayoff = (matches: IMatch[]): IPlayoffTie[] => {
+/**
+ * Every tie slot of the bracket, including the empty ones. The league rounds
+ * (KO, R16) are included for a league, or when a game of them exists.
+ */
+export const computePlayoff = (
+  matches: IMatch[],
+  league = false
+): IPlayoffTie[] => {
   const games = playoffMatches(matches);
-  return PLAYOFF_ROUNDS.flatMap(({ id, ties }) =>
+  const withLeagueRounds =
+    league ||
+    games.some(
+      (game) => PLAYOFF_ROUNDS.find((r) => r.id === game.round)?.leagueOnly
+    );
+  return playoffRounds(withLeagueRounds).flatMap(({ id, ties }) =>
     Array.from({ length: ties }, (_, index) =>
       buildTie(
         id,
@@ -252,9 +279,10 @@ export const staleExtraGames = (
 };
 
 /**
- * Whether `candidate` may face `picked` in a tie of `round`. In the
- * quarter-finals the clubs must belong to different players and come from
- * different groups. A league has one group, so there only the player counts.
+ * Whether `candidate` may face `picked` in a tie of `round`. Where the rule
+ * applies (isStrictPairing) the clubs must belong to different players and,
+ * in groups, come from different groups. A league has one group, so there
+ * only the player counts.
  */
 export const canPair = (
   round: PlayoffRound,
@@ -264,7 +292,7 @@ export const canPair = (
 ): boolean => {
   if (!picked) return true;
   if (picked.id === candidate.id) return false;
-  if (!roundInfo(round).strictPairing) return true;
+  if (!isStrictPairing(round, league)) return true;
   return (
     picked.owner !== candidate.owner &&
     (league || picked.group !== candidate.group)

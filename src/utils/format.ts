@@ -18,6 +18,13 @@ export const formatPercent = (share: number): string =>
 export const formatScore = (score: IScore | null): string =>
   score ? `${score.home}:${score.away}` : "–:–";
 
+/** "<1%" and ">99%" at the ends: a simulation proves nothing for sure. */
+export const formatChance = (chance: number): string => {
+  if (chance < 0.005) return "<1%";
+  if (chance > 0.995) return ">99%";
+  return `${Math.round(chance * 100)}%`;
+};
+
 export const formatSigned = (n: number): string =>
   n > 0 ? `+${n}` : String(n);
 

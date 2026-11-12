@@ -13,11 +13,16 @@ import {
   type IPlayoffRoundInfo,
   type IPlayoffTie,
   isLeagueFormat,
+  isStrictPairing,
   type ITournament,
   pickDraw,
+  pickKnockoutDraw,
+  pickRound16Draw,
   type PlayerId,
   type PlayoffDraw,
   playoffQualifiers,
+  playoffRounds,
+  samePlayerPairs,
 } from "@/domain";
 import { useToast } from "@/providers";
 import { applyPlayoffDraw } from "@/source/TournamentSource";
@@ -31,20 +36,26 @@ interface IPlayoffDrawDialogProps {
   /** The round's tie slots, in order. */
   ties: IPlayoffTie[];
   /**
-   * Clubs of the semi-final draw (the quarter-final winners). Without it the
-   * players pick the clubs from the whole tournament.
+   * Clubs of the draw when they are known: the winners of the round before,
+   * or the league knockout clubs from the table. Without it the players pick
+   * the clubs from the whole tournament.
    */
   fixedClubs?: IClub[];
+  /** League round of 16: the clubs with a direct place, against fixedClubs. */
+  direct?: IClub[];
   onHide: () => void;
 }
 
 const PLAYERS: PlayerId[] = ["S", "V"];
 
 /**
- * Draw for a playoff round. Quarter-finals: pick four clubs of each player,
- * then every pair is S against V from another group. Semi-finals: the four
- * winners, kept apart by player and group as far as possible. The result is
- * shown first and saved only when approved. Mount it only while open.
+ * Draw for a playoff round. Group quarter-finals: pick four clubs of each
+ * player, then every pair is S against V from another group. League
+ * knockout round: places 5 to 12 of each player, S against V. League round
+ * of 16: direct clubs against knockout winners, S against V as far as
+ * possible. Later rounds: the winners, kept apart by player (and group) as
+ * far as possible. The result is shown first and saved only when approved.
+ * Mount it only while open.
  */
 const PlayoffDrawDialog = ({
   tournament,
@@ -52,6 +63,7 @@ const PlayoffDrawDialog = ({
   round,
   ties,
   fixedClubs,
+  direct,
   onHide,
 }: IPlayoffDrawDialogProps) => {
   const { show } = useToast();
@@ -84,6 +96,12 @@ const PlayoffDrawDialog = ({
 
   const perPlayer = round.ties;
   const clubs = fixedClubs ?? tournament.clubs;
+  const strict = isStrictPairing(round.id, league);
+  // 16 clubs have millions of pairings: these rounds draw directly.
+  const knockout = league && round.id === "KO";
+  const round16 = league && round.id === "R16";
+  const rounds = playoffRounds(league);
+  const previous = rounds[rounds.findIndex((r) => r.id === round.id) - 1];
   const selectedClubs = clubs.filter((club) => selected.includes(club.id));
   const countOf = (player: PlayerId) =>
     selectedClubs.filter((club) => club.owner === player).length;
@@ -92,7 +110,23 @@ const PlayoffDrawDialog = ({
     : PLAYERS.every((player) => countOf(player) === perPlayer);
 
   // At most 105 pairings of 8 clubs, cheap enough for every render.
-  const { draws, conflicts } = drawCandidates(round.id, selectedClubs, league);
+  const candidates =
+    knockout || round16
+      ? { draws: [], conflicts: 0 }
+      : drawCandidates(round.id, selectedClubs, league);
+  const { draws } = candidates;
+  const conflicts =
+    knockout || round16
+      ? draw
+        ? samePlayerPairs(draw)
+        : 0
+      : candidates.conflicts;
+  const canDraw = knockout
+    ? (fixedClubs?.length ?? 0) === round.ties * 2
+    : round16
+      ? (fixedClubs?.length ?? 0) === round.ties &&
+        (direct?.length ?? 0) === round.ties
+      : selectionReady && draws.length > 0;
 
   const pairRule = league
     ? "У кожній парі клуб S грає з клубом V."
@@ -107,7 +141,14 @@ const PlayoffDrawDialog = ({
     );
   };
 
-  const runDraw = () => setDraw(pickDraw(draws));
+  const runDraw = () =>
+    setDraw(
+      knockout
+        ? pickKnockoutDraw(fixedClubs ?? [])
+        : round16
+          ? pickRound16Draw(direct ?? [], fixedClubs ?? [])
+          : pickDraw(draws)
+    );
 
   const approve = () => {
     if (!draw) return;
@@ -213,17 +254,32 @@ const PlayoffDrawDialog = ({
         Жеребкування: {round.name}
       </h2>
       <p className="m-0 mb-3 text-600 text-sm">
-        {round.strictPairing
-          ? `Оберіть по ${perPlayer} клуби кожного гравця. ${pairRule}`
-          : league
-            ? "Переможці 1/4 фіналу. Пари розводяться так, щоб клуби одного гравця не грали між собою, якщо це можливо."
-            : "Переможці 1/4 фіналу. Пари розводяться так, щоб клуби одного гравця чи однієї групи не грали між собою, якщо це можливо."}
+        {knockout
+          ? "Клуби з 5-го по 12-те місце серед клубів кожного гравця в таблиці ліги. Кожен клуб S грає з випадковим клубом V."
+          : round16
+            ? "Кожен клуб з прямою путівкою грає з переможцем стикових матчів, клуб S з клубом V, наскільки це дозволяють переможці. Перший матч удома в переможця стикових матчів, другий удома в клубу з прямою путівкою."
+            : strict
+              ? `Оберіть по ${perPlayer} клуби кожного гравця. ${pairRule}`
+              : league
+                ? `Переможці раунду ${previous?.name ?? ""}. Пари розводяться так, щоб клуби одного гравця не грали між собою, якщо це можливо.`
+                : `Переможці раунду ${previous?.name ?? ""}. Пари розводяться так, щоб клуби одного гравця чи однієї групи не грали між собою, якщо це можливо.`}
       </p>
 
       {fixedClubs ? (
         <div className="flex flex-column gap-2 mb-3">
+          {direct && (
+            <>
+              <div className="section-title">Пряма путівка</div>
+              {direct.map((club) => (
+                <div key={club.id}>{clubLine(club)}</div>
+              ))}
+              <div className="section-title mt-2">
+                Переможці стикових матчів
+              </div>
+            </>
+          )}
           {fixedClubs.map((club) => (
-            <div key={club.id}>{clubLine(club)}</div>
+            <div key={club.id}>{clubLine(club, !round16)}</div>
           ))}
         </div>
       ) : (
@@ -240,7 +296,14 @@ const PlayoffDrawDialog = ({
         </div>
       )}
 
-      {selectionReady && draws.length === 0 && (
+      {selectionReady && !canDraw && (knockout || round16) && (
+        <div className="notice notice--error align-items-center mb-3">
+          <FluentIcon name="ErrorCircle" size={18} />
+          <span>Не всі клуби цього раунду відомі.</span>
+        </div>
+      )}
+
+      {selectionReady && !knockout && !round16 && draws.length === 0 && (
         <div className="notice notice--error align-items-center mb-3">
           <FluentIcon name="ErrorCircle" size={18} />
           <span>
@@ -268,7 +331,7 @@ const PlayoffDrawDialog = ({
           ))}
           <div className="text-500 text-xs">
             {round.legs > 1 ? "Перший матч удома в першого клубу пари. " : ""}
-            Можливих варіантів: {draws.length}.
+            {draws.length > 0 && `Можливих варіантів: ${draws.length}.`}
           </div>
           {conflicts > 0 && (
             <div className="notice notice--warning align-items-center">
@@ -310,7 +373,7 @@ const PlayoffDrawDialog = ({
           <Button
             label="Провести жеребкування"
             icon={<FluentIcon name="ArrowShuffle" />}
-            disabled={!selectionReady || draws.length === 0}
+            disabled={!canDraw}
             onClick={runDraw}
           />
         )}

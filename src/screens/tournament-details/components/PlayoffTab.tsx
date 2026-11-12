@@ -9,11 +9,16 @@ import PlayoffTieCard from "./PlayoffTieCard";
 import {
   computeDiscipline,
   computePlayoff,
+  groupMatches,
   type IClub,
   type IMatch,
+  type IPlayoffTie,
+  isLeagueFormat,
   type ITournament,
-  PLAYOFF_ROUNDS,
+  leagueKnockoutClubs,
+  playoffQualifiers,
   type PlayoffRound,
+  playoffRounds,
 } from "@/domain";
 import { FluentIcon } from "@/ui";
 
@@ -23,11 +28,14 @@ interface IPlayoffTabProps {
 }
 
 /**
- * Quarter-finals, semi-finals and final, each tie filled in by hand. Nothing
- * advances automatically: which clubs go through is decided by the players.
+ * The playoff rounds of the format (a league adds the knockout round and the
+ * round of 16), each tie filled in by hand or by a draw. Nothing advances
+ * automatically: which clubs go through is decided by the players.
  */
 const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
-  const ties = computePlayoff(matches);
+  const league = isLeagueFormat(tournament.format);
+  const rounds = playoffRounds(league);
+  const ties = computePlayoff(matches, league);
   // The playoff and the champion are edited only while the tournament is in
   // progress.
   const editable = tournament.status === "active";
@@ -38,13 +46,45 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
   const [drawRound, setDrawRound] = useState<PlayoffRound | null>(null);
   const discipline = useMemo(() => computeDiscipline(matches), [matches]);
 
-  // The semi-final draw needs every quarter-final decided.
-  const quarterWinners = ties
-    .filter((tie) => tie.round === "QF")
-    .map((tie) => (tie.winner ? clubsById.get(tie.winner) : undefined));
-  const semiClubs = quarterWinners.every((club) => club !== undefined)
-    ? quarterWinners.filter((club) => club !== undefined)
-    : null;
+  const clubsOf = (ids: string[]) =>
+    ids.map((id) => clubsById.get(id)).filter((club) => club !== undefined);
+  // Winners of a round once every tie of it is decided, otherwise null.
+  const winnersOf = (round: PlayoffRound): IClub[] | null => {
+    const roundTies: IPlayoffTie[] = ties.filter((t) => t.round === round);
+    return roundTies.every((tie) => tie.winner)
+      ? clubsOf(roundTies.map((tie) => tie.winner ?? ""))
+      : null;
+  };
+  // A league's knockout clubs come from the final table.
+  const leagueDone =
+    league && groupMatches(matches).every((m) => m.result !== null);
+
+  /**
+   * Clubs of a round's draw: null while they are not known yet, undefined
+   * for the group quarter-finals (picked in the dialog).
+   */
+  const drawClubs = (
+    round: PlayoffRound
+  ): { clubs?: IClub[]; direct?: IClub[] } | null => {
+    if (!league && round === "QF") return {};
+    if (round === "KO") {
+      return leagueDone
+        ? { clubs: clubsOf(leagueKnockoutClubs(tournament, matches)) }
+        : null;
+    }
+    const previous = rounds[rounds.findIndex((r) => r.id === round) - 1];
+    const winners = previous ? winnersOf(previous.id) : null;
+    if (!winners) return null;
+    if (round === "R16") {
+      return leagueDone
+        ? {
+            clubs: winners,
+            direct: clubsOf(playoffQualifiers(tournament, matches)),
+          }
+        : null;
+    }
+    return { clubs: winners };
+  };
 
   return (
     <div className="flex flex-column gap-4">
@@ -70,11 +110,14 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
         <div className="notice align-items-center">
           <FluentIcon name="Info" size={18} />
           <span>
-            Оберіть клуби для кожної пари вручну або проведіть жеребкування. У
-            1/4 і 1/2 фіналу пара грає два матчі: перший удома в першого клубу,
-            другий удома в другого. Переможець визначається за сумою голів.
-            Фінал складається з одного матчу. Якщо сума рівна або фінал
-            завершився нічиєю, грається перегравання.
+            {league &&
+              "Після ліги 4 найкращі клуби S і 4 найкращі клуби V виходять в 1/8 фіналу напряму. Наступні 8 клубів S і 8 клубів V грають стикові матчі, їх переможці доповнюють 1/8 фіналу. "}
+            Оберіть клуби для кожної пари вручну або проведіть жеребкування.{" "}
+            {league ? "До 1/2 фіналу включно" : "У 1/4 і 1/2 фіналу"} пара грає
+            два матчі: перший удома в першого клубу, другий удома в другого.
+            Переможець визначається за сумою голів. Фінал складається з одного
+            матчу. Якщо сума рівна або фінал завершився нічиєю, грається
+            перегравання.
           </span>
         </div>
       )}
@@ -84,14 +127,16 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
         editable={editable}
       />
 
-      {PLAYOFF_ROUNDS.map((round) => {
+      {rounds.map((round) => {
         const roundTies = ties.filter((tie) => tie.round === round.id);
         // A draw is offered until the first game of the round is played.
         const canDraw =
           editable &&
           round.id !== "F" &&
           roundTies.every((tie) => tie.games.every((g) => g.result === null));
-        const drawReady = round.id === "QF" || semiClubs !== null;
+        const drawSource = drawClubs(round.id);
+        const drawReady = drawSource !== null;
+        const previous = rounds[rounds.findIndex((r) => r.id === round.id) - 1];
         return (
           <section key={round.id}>
             <div className="flex align-items-center justify-content-between gap-2 mb-2">
@@ -106,7 +151,9 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
                   tooltip={
                     drawReady
                       ? undefined
-                      : "Стане доступним, коли завершаться всі пари 1/4 фіналу"
+                      : round.id === "KO" || !previous
+                        ? "Стане доступним, коли зіграно всі матчі ліги"
+                        : `Стане доступним, коли завершаться всі пари раунду ${previous.name}${round.id === "R16" && !leagueDone ? " і всі матчі ліги" : ""}`
                   }
                   tooltipOptions={{ position: "top", showOnDisabled: true }}
                   onClick={() => setDrawRound(round.id)}
@@ -119,7 +166,8 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
                 matches={matches}
                 round={round}
                 ties={roundTies}
-                fixedClubs={round.id === "SF" ? (semiClubs ?? []) : undefined}
+                fixedClubs={drawSource?.clubs}
+                direct={drawSource?.direct}
                 onHide={() => setDrawRound(null)}
               />
             )}
