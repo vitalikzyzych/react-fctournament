@@ -644,6 +644,114 @@ code {
   transform: translate(50%, -50%);
 }
 
+/* Goal replay (GoalReplay): a ball leaves its goal dot and flies into the
+   net, then flashes and fades; the net lights up in the scorer's colour.
+   V's shots go left into S's net, S's shots right into V's. */
+.goal-shot {
+  position: absolute;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--text-color);
+  opacity: 0;
+  animation: goal-shot 1.6s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+  /* From the dot to the goal mouth, about the height of the six-yard box. */
+  --from-y: calc(50% + var(--dy) * var(--box-h));
+  --to-y: calc(50% + var(--dy) * var(--box-h) * 0.3);
+}
+
+.goal-shot--v {
+  --from-x: calc(var(--dx) * var(--box-w));
+  --to-x: 0.35rem;
+  box-shadow: 0 0 0.7rem 0.15rem var(--player-v);
+}
+
+.goal-shot--s {
+  --from-x: calc(100% - var(--dx) * var(--box-w));
+  --to-x: calc(100% - 0.35rem);
+  box-shadow: 0 0 0.7rem 0.15rem var(--player-s);
+}
+
+@keyframes goal-shot {
+  0% {
+    left: var(--from-x);
+    top: var(--from-y);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  12% {
+    left: var(--from-x);
+    top: var(--from-y);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  55% {
+    left: var(--to-x);
+    top: var(--to-y);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  68% {
+    left: var(--to-x);
+    top: var(--to-y);
+    transform: translate(-50%, -50%) scale(2.2);
+  }
+  100% {
+    left: var(--to-x);
+    top: var(--to-y);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+}
+
+.goal-flash {
+  position: absolute;
+  top: 50%;
+  width: calc(var(--box-w) * 0.8);
+  height: calc(var(--box-h) * 0.8);
+  opacity: 0;
+  transform: translateY(-50%);
+  animation: goal-flash 1.6s ease-out forwards;
+}
+
+.goal-flash--v {
+  left: 0;
+  background: radial-gradient(
+    ellipse at left center,
+    color-mix(in srgb, var(--player-v) 60%, transparent),
+    transparent 70%
+  );
+}
+
+.goal-flash--s {
+  right: 0;
+  background: radial-gradient(
+    ellipse at right center,
+    color-mix(in srgb, var(--player-s) 60%, transparent),
+    transparent 70%
+  );
+}
+
+@keyframes goal-flash {
+  0%,
+  50% {
+    opacity: 0;
+  }
+  62% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goal-shot,
+  .goal-flash {
+    display: none;
+  }
+}
+
 .hero__info {
   grid-area: info;
 }

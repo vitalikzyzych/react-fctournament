@@ -1,6 +1,7 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import ChampionBadge from "./ChampionBadge";
+import GoalReplay, { goalDots } from "./GoalReplay";
 import PlayerBadge from "./PlayerBadge";
 import PlayerMoodBadge from "./PlayerMoodBadge";
 import StatusTag from "./StatusTag";
@@ -32,30 +33,6 @@ interface ITournamentHeroProps {
   winsRace?: IWinsRace | null;
   actions?: ReactNode;
 }
-
-/** Dots drawn per side at most, so a long league stays readable. */
-const MAX_GOAL_DOTS = 300;
-
-const frac = (n: number) => n - Math.floor(n);
-
-/**
- * Stable positions near one goal, as CSS variables in penalty-area units:
- * `--dx` from the goal line (1 is the edge of the box), `--dy` from the
- * middle (0.5 is the side of the box). Most dots land inside the box, the
- * rest just around it. The R2 sequence keeps them evenly spread and in place
- * when another goal is added.
- */
-const goalDots = (count: number) =>
-  Array.from({ length: Math.min(count, MAX_GOAL_DOTS) }, (_, i) => {
-    const u = frac(0.5 + (i + 1) * 0.7548777);
-    const v = frac(0.5 + (i + 1) * 0.5698403);
-    const dx = 0.06 + u ** 1.4 * 1.3;
-    const dy = (v - 0.5) * (1.25 - dx * 0.35);
-    return {
-      "--dx": dx.toFixed(3),
-      "--dy": dy.toFixed(3),
-    } as CSSProperties;
-  });
 
 const penaltyArea = (side: "s" | "v") => (
   <div className={`pitch-goal pitch-goal--${side}`}>
@@ -142,6 +119,7 @@ const TournamentHero = ({
         {goalDots(players.S.goalsFor).map((style, i) => (
           <span key={`s${i}`} className="goal-dot goal-dot--s" style={style} />
         ))}
+        <GoalReplay goals={{ S: players.S.goalsFor, V: players.V.goalsFor }} />
       </div>
       <div className="hero__info min-w-0">
         <div className="flex flex-wrap align-items-center gap-2 mb-2 text-500 text-sm">
