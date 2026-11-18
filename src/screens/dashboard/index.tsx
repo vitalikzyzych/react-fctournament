@@ -289,7 +289,7 @@ const Dashboard = () => {
           </SectionCard>
         </div>
 
-        {achievements.length > 0 && (
+        {stats.playedMatches > 0 && (
           <div className="col-12">
             <SectionCard
               title="Досягнення турніру"
