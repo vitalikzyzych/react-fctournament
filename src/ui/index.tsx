@@ -1,3 +1,7 @@
+export {
+  ACHIEVEMENT_INFO,
+  default as AchievementList,
+} from "./AchievementList";
 export { default as ChampionBadge } from "./ChampionBadge";
 export { default as ClubCrest } from "./ClubCrest";
 export { default as ClubLabel } from "./ClubLabel";
@@ -9,9 +13,11 @@ export {
   flagUrl,
   resolveFlag,
 } from "./CountryFlag";
+export { default as DuelLineChart, type IDuelPoint } from "./DuelLineChart";
 export { default as EmptyState } from "./EmptyState";
 export { default as FluentIcon, type IconName } from "./FluentIcon";
 export { default as MatchCards } from "./MatchCards";
+export { default as MatchLine } from "./MatchLine";
 export { default as MatchRow } from "./MatchRow";
 export { default as PlayerBadge } from "./PlayerBadge";
 export { default as PlayerVersusCard } from "./PlayerVersusCard";

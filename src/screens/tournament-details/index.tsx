@@ -16,6 +16,7 @@ import {
   findLeagueWinner,
   isLeagueFormat,
 } from "@/domain";
+import { useWinsRace } from "@/hooks";
 import { useTournamentData } from "@/providers";
 import { EmptyState, FluentIcon, SectionCard, TournamentHero } from "@/ui";
 
@@ -23,6 +24,7 @@ const TournamentDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { all } = useTournamentData();
   const item = all.find((t) => t.tournament.id === id);
+  const winsRace = useWinsRace(item?.tournament, item?.matches ?? []);
 
   if (!item) {
     return (
@@ -55,6 +57,7 @@ const TournamentDetails = () => {
         tournament={tournament}
         players={stats.players}
         cards={stats.playerCards}
+        winsRace={winsRace}
         playedMatches={stats.playedMatches}
         totalMatches={stats.totalMatches}
         champion={findChampionClub(tournament, matches)}

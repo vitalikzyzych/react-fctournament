@@ -9,11 +9,13 @@ import {
   cardMoods,
   type ICardCount,
   type IClub,
+  isLeagueFormat,
   type ITournament,
+  type IWinsRace,
   type PlayerId,
   type PlayerRecords,
 } from "@/domain";
-import { plural } from "@/utils";
+import { formatChance, plural } from "@/utils";
 
 interface ITournamentHeroProps {
   tournament: ITournament;
@@ -26,6 +28,8 @@ interface ITournamentHeroProps {
   leagueWinner?: IClub | null;
   /** Yellow and red cards of each player's clubs, shown under the badges. */
   cards?: Record<PlayerId, ICardCount>;
+  /** Chance of each player ending the group stage with more wins. */
+  winsRace?: IWinsRace | null;
   actions?: ReactNode;
 }
 
@@ -76,6 +80,7 @@ const TournamentHero = ({
   champion,
   leagueWinner,
   cards,
+  winsRace,
   actions,
 }: ITournamentHeroProps) => {
   const progress = totalMatches ? (playedMatches / totalMatches) * 100 : 0;
@@ -164,6 +169,44 @@ const TournamentHero = ({
               голів {players.S.goalsFor}:{players.V.goalsFor}
             </div>
           </div>
+          {winsRace && (
+            <div
+              className="hero__race"
+              title="Симуляція решти матчів групового етапу або ліги (1000 разів, випадковий рахунок, клуби рівні за силою): хто закінчить його з більшою кількістю перемог"
+            >
+              <div className="text-500 text-xs mb-1">
+                Більше перемог після{" "}
+                {isLeagueFormat(tournament.format) ? "ліги" : "групового етапу"}
+              </div>
+              <div className="versus-bar">
+                <span
+                  className="versus-bar__s"
+                  style={{ width: `${winsRace.S * 100}%` }}
+                />
+                <span
+                  className="versus-bar__draw"
+                  style={{ width: `${winsRace.level * 100}%` }}
+                />
+                <span
+                  className="versus-bar__v"
+                  style={{ width: `${winsRace.V * 100}%` }}
+                />
+              </div>
+              <div className="flex justify-content-between text-xs font-bold mt-1">
+                <span className="hero__race-s">
+                  S {formatChance(winsRace.S)}
+                </span>
+                {winsRace.level >= 0.005 && (
+                  <span className="text-500 font-normal">
+                    порівну {formatChance(winsRace.level)}
+                  </span>
+                )}
+                <span className="hero__race-v">
+                  V {formatChance(winsRace.V)}
+                </span>
+              </div>
+            </div>
+          )}
           {(champion || leagueWinner) && (
             <div className="mt-3 flex flex-column align-items-center gap-2">
               {leagueWinner && <ChampionBadge club={leagueWinner} league />}

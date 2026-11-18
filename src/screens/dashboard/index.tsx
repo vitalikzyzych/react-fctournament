@@ -3,13 +3,19 @@ import { Link } from "react-router-dom";
 
 import { Button } from "primereact/button";
 
+import FormStrip from "./components/FormStrip";
+import MatchdayRecap from "./components/MatchdayRecap";
+import Milestones from "./components/Milestones";
 import QuickEntry from "./components/QuickEntry";
+import RecordsCard from "./components/RecordsCard";
 
 import { PageHeader } from "@/components";
 import {
+  computeAchievements,
   computeAllTimePlayers,
   computeDiscipline,
   computeForm,
+  computeMilestones,
   computeNextMatches,
   computeTournamentStats,
   describeMatch,
@@ -21,15 +27,17 @@ import {
   type IMatch,
   isLeagueFormat,
   isPlayed,
+  latestMatchdayRecap,
   leagueKnockoutClubs,
   playoffMatches,
   playoffQualifiers,
   sortMatches,
   summarizeTournaments,
 } from "@/domain";
-import { usePlayoffChances } from "@/hooks";
+import { usePlayoffChances, useWinsRace } from "@/hooks";
 import { pickCurrentTournament, useTournamentData } from "@/providers";
 import {
+  AchievementList,
   ClubMatchesDialog,
   EmptyState,
   FluentIcon,
@@ -50,10 +58,12 @@ const Dashboard = () => {
   const allTime = useMemo(() => computeAllTimePlayers(all), [all]);
   const summaries = useMemo(() => summarizeTournaments(all), [all]);
   const [selectedClub, setSelectedClub] = useState<IClub | null>(null);
+  const milestones = useMemo(() => computeMilestones(all), [all]);
   const chances = usePlayoffChances(
     current?.tournament,
     current?.matches ?? []
   );
+  const winsRace = useWinsRace(current?.tournament, current?.matches ?? []);
 
   if (!current) {
     return (
@@ -89,6 +99,10 @@ const Dashboard = () => {
   const knockout = league
     ? new Set(leagueKnockoutClubs(tournament, matches))
     : undefined;
+  const recap = latestMatchdayRecap(tournament.clubs, matches);
+  const achievements = computeAchievements(tournament, matches);
+  const achievementCount = (id: "S" | "V") =>
+    achievements.filter((a) => a.player === id).length;
 
   const recent = stored
     .filter(isPlayed)
@@ -107,6 +121,7 @@ const Dashboard = () => {
         tournament={tournament}
         players={stats.players}
         cards={stats.playerCards}
+        winsRace={winsRace}
         playedMatches={stats.playedMatches}
         totalMatches={stats.totalMatches}
         champion={findChampionClub(tournament, matches)}
@@ -154,6 +169,17 @@ const Dashboard = () => {
           <StatCard icon="History" label="Нічиїх" value={stats.draws} />
         </div>
 
+        <div className="col-12 lg:col-6">
+          <SectionCard title="Форма S і V" className="h-full">
+            <FormStrip clubs={tournament.clubs} matches={matches} />
+          </SectionCard>
+        </div>
+        <div className="col-12 lg:col-6">
+          <SectionCard title="Ювілеї" className="h-full">
+            <Milestones milestones={milestones} tournament={tournament} />
+          </SectionCard>
+        </div>
+
         <div className="col-12">
           <SectionCard
             title="Хто виграв турніри"
@@ -183,6 +209,26 @@ const Dashboard = () => {
             }
           >
             <PlayerVersusCard records={allTime} />
+          </SectionCard>
+        </div>
+
+        {recap && (
+          <div className="col-12 lg:col-6">
+            <SectionCard
+              title={`Підсумок туру ${recap.matchday}`}
+              className="h-full"
+            >
+              <MatchdayRecap
+                recap={recap}
+                tournament={tournament}
+                clubsById={clubsById}
+              />
+            </SectionCard>
+          </div>
+        )}
+        <div className={recap ? "col-12 lg:col-6" : "col-12"}>
+          <SectionCard title="Рекорди турніру" className="h-full">
+            <RecordsCard clubs={tournament.clubs} matches={matches} />
           </SectionCard>
         </div>
 
@@ -242,6 +288,21 @@ const Dashboard = () => {
             )}
           </SectionCard>
         </div>
+
+        {achievements.length > 0 && (
+          <div className="col-12">
+            <SectionCard
+              title="Досягнення турніру"
+              action={
+                <span className="flex align-items-center gap-2 text-sm font-semibold">
+                  S {achievementCount("S")} : {achievementCount("V")} V
+                </span>
+              }
+            >
+              <AchievementList items={achievements} clubsById={clubsById} />
+            </SectionCard>
+          </div>
+        )}
 
         {tournament.groups.map((group) => (
           <div key={group.id} className={league ? "col-12" : "col-12 md:col-6"}>

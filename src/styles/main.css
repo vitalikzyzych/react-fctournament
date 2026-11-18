@@ -756,6 +756,22 @@ code {
   gap: 0.3rem;
 }
 
+/* Chance of more wins after the group stage, under the score. */
+.hero__race {
+  width: 13rem;
+  max-width: 100%;
+  margin: 0.75rem auto 0;
+  cursor: default;
+}
+
+.hero__race-s {
+  color: var(--red-400);
+}
+
+.hero__race-v {
+  color: var(--blue-400);
+}
+
 .hero__side-label {
   font-size: 0.72rem;
   font-weight: 700;
@@ -1762,6 +1778,192 @@ code {
   /* Room for the name: no flag or pot on a phone. */
   .standings-table__club .pot-tag,
   .standings-table__club .country-flag {
+    display: none;
+  }
+}
+
+/* Dashboard: last S against V matches, oldest on the left (FormStrip). */
+.duel-strip {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+
+.duel-strip__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--surface-900);
+  cursor: default;
+}
+
+.duel-strip__cell--S {
+  background: linear-gradient(135deg, var(--red-400), var(--red-600));
+}
+
+.duel-strip__cell--V {
+  background: linear-gradient(135deg, var(--blue-400), var(--blue-600));
+}
+
+.duel-strip__cell--draw {
+  background: var(--surface-300);
+}
+
+.recap__score {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.milestone {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.milestone--reached {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+}
+
+/* Achievements: emoji, name and who earned it. */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.75rem;
+}
+
+.achievement {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--surface-border);
+  background: color-mix(in srgb, var(--surface-ground) 60%, transparent);
+  min-width: 0;
+}
+
+.achievement__count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--text-color-secondary);
+}
+
+.achievement__emoji {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.achievement-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3rem 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.achievement-row > :first-child {
+  text-align: left;
+}
+
+.achievement-row--total {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--surface-border);
+  font-weight: 800;
+}
+
+/* Statistics: how often each score happened (ScoreGrid). */
+.score-grid {
+  display: grid;
+  grid-template-columns: 1.75rem repeat(11, minmax(0, 2.5rem));
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.score-grid__axis {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+.score-grid__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 0.3rem;
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: default;
+}
+
+.score-grid__cell[data-empty] {
+  background: var(--surface-100);
+}
+
+/* Statistics: matches by their total goals (GoalsPerMatch). */
+.goals-chart {
+  display: grid;
+  grid-template-columns: repeat(13, minmax(0, 1fr));
+  gap: 0.25rem;
+  height: 10rem;
+}
+
+.goals-chart__col {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  min-height: 0;
+  cursor: default;
+}
+
+.goals-chart__bar {
+  min-height: 2px;
+  border-radius: 0.3rem 0.3rem 0 0;
+  background: var(--primary-color);
+}
+
+.goals-chart__bar--fest {
+  background: var(--orange-400);
+}
+
+.goals-chart__count,
+.goals-chart__label {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-color-secondary);
+}
+
+.goals-chart__count {
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+/* League pots: label, bar of points per match, numbers. */
+.pot-row {
+  display: grid;
+  grid-template-columns: auto minmax(3rem, 1fr) auto auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media screen and (max-width: 575px) {
+  .pot-row {
+    grid-template-columns: auto minmax(3rem, 1fr) auto;
+  }
+
+  .pot-row > :last-child {
     display: none;
   }
 }

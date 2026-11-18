@@ -1,6 +1,8 @@
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 
+import AchievementTotals from "./AchievementTotals";
+import MilestonesHistory from "./MilestonesHistory";
 import PlayersProgressChart from "./PlayersProgressChart";
 
 import {
@@ -163,6 +165,17 @@ const PlayersHistory = ({
               className="text-center"
             />
           </DataTable>
+        </SectionCard>
+      </div>
+
+      <div className="col-12 lg:col-6">
+        <SectionCard title="Досягнення за всю історію" className="h-full">
+          <AchievementTotals all={all} />
+        </SectionCard>
+      </div>
+      <div className="col-12 lg:col-6">
+        <SectionCard title="Ювілеї" className="h-full">
+          <MilestonesHistory all={all} />
         </SectionCard>
       </div>
 

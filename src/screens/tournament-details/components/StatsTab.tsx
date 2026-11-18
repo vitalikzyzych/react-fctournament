@@ -3,8 +3,14 @@ import { type ReactNode, useState } from "react";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 
+import GoalsPerMatch from "./GoalsPerMatch";
+import PotsCard from "./PotsCard";
+import RaceCard from "./RaceCard";
+import ScoreGrid from "./ScoreGrid";
+
 import {
   computeTournamentStats,
+  GOAL_FEST_GOALS,
   type ICardLeader,
   type IClubCount,
   type IClubStat,
@@ -120,10 +126,8 @@ const CardLeaders = ({ items }: { items: ICardLeader[] }) =>
 const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
   const [includePlayoff, setIncludePlayoff] = useState(true);
   const hasPlayoff = playoffMatches(matches).length > 0;
-  const stats = computeTournamentStats(
-    tournament.clubs,
-    statMatches(matches, includePlayoff)
-  );
+  const counted = statMatches(matches, includePlayoff);
+  const stats = computeTournamentStats(tournament.clubs, counted);
   const clubsById = new Map(tournament.clubs.map((club) => [club.id, club]));
   const league = isLeagueFormat(tournament.format);
 
@@ -190,10 +194,26 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
         <StatCard label="Нічиїх" value={stats.draws} />
       </div>
       <div className="col-6 md:col-4">
-        <StatCard label="Перемог господарів" value={stats.homeWins} />
+        <StatCard
+          label={`Голеад (${GOAL_FEST_GOALS}+ голів)`}
+          value={
+            counted.filter(
+              (m) =>
+                m.result && m.result.home + m.result.away >= GOAL_FEST_GOALS
+            ).length
+          }
+        />
       </div>
       <div className="col-6 md:col-4">
-        <StatCard label="Перемог гостей" value={stats.awayWins} />
+        <StatCard
+          label="Найбільше голів у матчі"
+          value={
+            stats.highestScoring[0]
+              ? stats.highestScoring[0].result.home +
+                stats.highestScoring[0].result.away
+              : 0
+          }
+        />
       </div>
       <div className="col-12 md:col-4">
         <StatCard label="Матчів 0:0" value={stats.goallessDraws} />
@@ -212,6 +232,28 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
           )}
         </SectionCard>
       </div>
+      <div className="col-12">
+        <SectionCard title="Гонка S і V по турах">
+          <RaceCard tournament={tournament} matches={counted} />
+        </SectionCard>
+      </div>
+      <div className="col-12 lg:col-6">
+        <SectionCard title="Частота рахунків" className="h-full">
+          <ScoreGrid matches={counted} />
+        </SectionCard>
+      </div>
+      <div className="col-12 lg:col-6">
+        <SectionCard title="Голів у матчі" className="h-full">
+          <GoalsPerMatch clubs={tournament.clubs} matches={counted} />
+        </SectionCard>
+      </div>
+      {league && (
+        <div className="col-12">
+          <SectionCard title="Кошики ліги">
+            <PotsCard tournament={tournament} matches={matches} />
+          </SectionCard>
+        </div>
+      )}
       <div className="col-12 md:col-6">
         <SectionCard title="Найбільше голів у матчі" className="h-full">
           {matchList(stats.highestScoring)}
