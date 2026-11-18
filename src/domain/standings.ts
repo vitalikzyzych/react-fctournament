@@ -1,4 +1,4 @@
-import type { IClub, IMatch, IScore } from "./types";
+import type { IClub, IGroupMatch, IMatch, IScore } from "./types";
 
 export interface IRecord {
   played: number;
@@ -127,6 +127,32 @@ export const computeForm = (
     );
   form.forEach((list, clubId) => form.set(clubId, list.slice(-length)));
   return form;
+};
+
+/**
+ * Every club's next unplayed group match in the given matches (a group's):
+ * the earliest matchday, then id. Shown as "?" ahead of the form.
+ */
+export const computeNextMatches = (
+  matches: IMatch[]
+): Map<string, IGroupMatch> => {
+  const next = new Map<string, IGroupMatch>();
+  matches
+    .filter(
+      (match): match is IGroupMatch =>
+        match.stage === "group" && match.result === null
+    )
+    .sort(
+      (a, b) =>
+        a.matchday - b.matchday ||
+        a.id.localeCompare(b.id, undefined, { numeric: true })
+    )
+    .forEach((match) =>
+      [match.home, match.away].forEach((clubId) => {
+        if (!next.has(clubId)) next.set(clubId, match);
+      })
+    );
+  return next;
 };
 
 /**

@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   CHANCE_RUNS,
   computeForm,
+  computeNextMatches,
   groupMatches,
   groupTable,
   type IClub,
@@ -32,6 +33,8 @@ const StandingsTab = ({ tournament, matches }: IStandingsTabProps) => {
     ? new Set(leagueKnockoutClubs(tournament, matches))
     : undefined;
   const chances = usePlayoffChances(tournament, matches);
+  const groupMatchesOf = (groupId: string) =>
+    groupMatches(matches).filter((match) => match.group === groupId);
 
   return (
     <div className="grid">
@@ -48,9 +51,12 @@ const StandingsTab = ({ tournament, matches }: IStandingsTabProps) => {
               qualified={qualified}
               knockout={knockout}
               onClubClick={setSelected}
-              form={computeForm(
-                groupMatches(matches).filter((m) => m.group === group.id)
-              )}
+              form={computeForm(groupMatchesOf(group.id))}
+              next={
+                tournament.status === "active"
+                  ? computeNextMatches(groupMatchesOf(group.id))
+                  : undefined
+              }
               chances={chances}
               chanceTitle={
                 league ? "Шанс вийти в 1/8 фіналу напряму" : undefined

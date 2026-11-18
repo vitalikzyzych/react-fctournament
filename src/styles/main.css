@@ -693,6 +693,63 @@ code {
   font-weight: 700;
 }
 
+/* Card mood (cardMoods): the hero badge drawn as a face, see PlayerMoodBadge. */
+.mood-badge svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--surface-900);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mood-badge .mood-badge__fill {
+  fill: var(--surface-900);
+}
+
+.mood-badge circle.mood-badge__fill {
+  stroke: none;
+}
+
+.mood-badge .mood-badge__teeth {
+  stroke: var(--surface-0);
+  stroke-width: 1.5;
+}
+
+.mood-badge .mood-badge__halo {
+  stroke: var(--yellow-300);
+  stroke-width: 2.5;
+}
+
+.mood-badge--furious {
+  animation: mood-shake 2.4s ease-in-out infinite;
+}
+
+@keyframes mood-shake {
+  0%,
+  86%,
+  100% {
+    transform: rotate(0);
+  }
+  89% {
+    transform: rotate(-7deg);
+  }
+  93% {
+    transform: rotate(7deg);
+  }
+  96% {
+    transform: rotate(-4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mood-badge--furious {
+    animation: none;
+  }
+}
+
 .hero__cards > span {
   display: inline-flex;
   align-items: center;
@@ -1542,17 +1599,17 @@ code {
 /* Standings: form (last results) and playoff chance */
 .form-chips {
   display: inline-flex;
-  gap: 0.2rem;
+  gap: 0.25rem;
 }
 
 .form-chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1.4rem;
+  height: 1.4rem;
   border-radius: 0.3rem;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--surface-0);
 }
@@ -1562,11 +1619,59 @@ code {
 }
 
 .form-chip--draw {
-  background: var(--surface-400);
+  background: var(--yellow-500);
 }
 
 .form-chip--loss {
-  background: var(--orange-500);
+  background: var(--red-500);
+}
+
+.form-chip:hover {
+  outline: 2px solid var(--text-color);
+  outline-offset: 1px;
+}
+
+/* Match card over a form chip (FormChips), fixed to the screen. */
+.form-tip {
+  position: fixed;
+  z-index: 1200;
+  transform: translate(-50%, calc(-100% - 0.5rem));
+  width: max-content;
+  max-width: 22rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-overlay);
+  box-shadow: 0 0.75rem 2rem -0.5rem var(--surface-ground);
+  pointer-events: none;
+  font-size: 0.85rem;
+}
+
+.form-tip__title {
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+.form-tip__match {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.form-tip__club {
+  max-width: 9rem;
+}
+
+.form-tip__score {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Not played yet: an outline instead of a fill. */
+.form-chip--next {
+  box-shadow: inset 0 0 0 1px var(--surface-400);
+  color: var(--text-color-secondary);
 }
 
 .chance {
@@ -1624,8 +1729,27 @@ code {
   container-type: inline-size;
 }
 
-@container (max-width: 560px) {
-  .standings-table .standings-table__wide {
+/* Narrower tables first drop the goals, then older form, then the form. */
+@container (max-width: 640px) {
+  .standings-table .standings-table__goals {
+    display: none;
+  }
+}
+
+@container (max-width: 540px) {
+  .standings-table .form-chip {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.65rem;
+  }
+
+  .standings-table .form-chip:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+@container (max-width: 420px) {
+  .standings-table .standings-table__form {
     display: none;
   }
 }

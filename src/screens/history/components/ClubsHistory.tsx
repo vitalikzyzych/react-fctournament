@@ -2,17 +2,65 @@ import { useMemo, useState } from "react";
 
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { SelectButton } from "primereact/selectbutton";
 
 import ClubHistoryDialog from "./ClubHistoryDialog";
 
 import {
   computeClubHistories,
   type IClubHistory,
+  type IRecord,
   type ITournamentWithMatches,
 } from "@/domain";
 import { ClubLabel, SectionCard } from "@/ui";
-import { formatSigned } from "@/utils";
+import { formatAverage, formatPercent, formatSigned } from "@/utils";
+
+type View = "total" | "average";
+
+const VIEWS: { label: string; value: View }[] = [
+  { label: "Усього", value: "total" },
+  { label: "За матч", value: "average" },
+];
+
+/** Averages of a handful of matches say little, so they can be left out. */
+const MIN_PLAYED = [1, 5, 10, 20].map((n) => ({
+  label: `від ${n} ${n === 1 ? "матчу" : "матчів"}`,
+  value: n,
+}));
+
+/** Per-match numbers of a club, for the "За матч" view. */
+interface IAverage {
+  /** Shares of wins, draws and losses, 0 to 1. */
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDiff: number;
+  points: number;
+}
+
+interface IClubRow extends IClubHistory {
+  average: IAverage;
+}
+
+const averageOf = (record: IRecord): IAverage => {
+  const per = (n: number) => (record.played ? n / record.played : 0);
+  return {
+    won: per(record.won),
+    drawn: per(record.drawn),
+    lost: per(record.lost),
+    goalsFor: per(record.goalsFor),
+    goalsAgainst: per(record.goalsAgainst),
+    goalDiff: per(record.goalDiff),
+    points: per(record.points),
+  };
+};
+
+const signedAverage = (n: number) =>
+  n > 0 ? `+${formatAverage(n)}` : formatAverage(n);
 
 const ClubsHistory = ({
   all,
@@ -21,16 +69,123 @@ const ClubsHistory = ({
   all: ITournamentWithMatches[];
   includePlayoff: boolean;
 }) => {
-  const histories = useMemo(
-    () => computeClubHistories(all, includePlayoff),
+  const histories = useMemo<IClubRow[]>(
+    () =>
+      computeClubHistories(all, includePlayoff).map((history) => ({
+        ...history,
+        average: averageOf(history.total),
+      })),
     [all, includePlayoff]
   );
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<IClubHistory | null>(null);
+  const [view, setView] = useState<View>("total");
+  const [minPlayed, setMinPlayed] = useState(5);
+  const average = view === "average";
 
-  const visible = histories.filter((h) =>
-    h.name.toLowerCase().includes(search.trim().toLowerCase())
+  const visible = histories.filter(
+    (h) =>
+      h.name.toLowerCase().includes(search.trim().toLowerCase()) &&
+      (!average || h.total.played >= minPlayed)
   );
+
+  const totalColumns = [
+    <Column
+      key="won"
+      field="total.won"
+      header="В"
+      sortable
+      className="text-center"
+    />,
+    <Column
+      key="drawn"
+      field="total.drawn"
+      header="Н"
+      sortable
+      className="text-center"
+    />,
+    <Column
+      key="lost"
+      field="total.lost"
+      header="П"
+      sortable
+      className="text-center"
+    />,
+    <Column
+      key="goals"
+      header="М"
+      body={(h: IClubRow) => `${h.total.goalsFor}:${h.total.goalsAgainst}`}
+      className="text-center white-space-nowrap"
+    />,
+    <Column
+      key="diff"
+      field="total.goalDiff"
+      header="±"
+      sortable
+      body={(h: IClubRow) => formatSigned(h.total.goalDiff)}
+      className="text-center"
+    />,
+    <Column
+      key="points"
+      field="total.points"
+      header="О"
+      sortable
+      className="text-center font-bold"
+    />,
+  ];
+
+  const share = (
+    key: "won" | "drawn" | "lost",
+    header: string,
+    title: string
+  ) => (
+    <Column
+      key={key}
+      field={`average.${key}`}
+      header={<span title={title}>{header}</span>}
+      sortable
+      body={(h: IClubRow) => formatPercent(h.average[key])}
+      className="text-center"
+    />
+  );
+
+  const averageColumns = [
+    share("won", "В %", "Частка виграних матчів"),
+    share("drawn", "Н %", "Частка нічиїх"),
+    share("lost", "П %", "Частка програних матчів"),
+    <Column
+      key="goalsFor"
+      field="average.goalsFor"
+      header={<span title="Забиті голи за матч">Заб.</span>}
+      sortable
+      body={(h: IClubRow) => formatAverage(h.average.goalsFor)}
+      className="text-center"
+    />,
+    <Column
+      key="goalsAgainst"
+      field="average.goalsAgainst"
+      header={<span title="Пропущені голи за матч">Проп.</span>}
+      sortable
+      body={(h: IClubRow) => formatAverage(h.average.goalsAgainst)}
+      className="text-center"
+    />,
+    <Column
+      key="diff"
+      field="average.goalDiff"
+      header={<span title="Різниця голів за матч">±</span>}
+      sortable
+      body={(h: IClubRow) => signedAverage(h.average.goalDiff)}
+      className="text-center"
+    />,
+    <Column
+      key="points"
+      field="average.points"
+      header={<span title="Очки за матч">О</span>}
+      sortable
+      body={(h: IClubRow) => formatAverage(h.average.points)}
+      className="text-center font-bold"
+    />,
+  ];
 
   return (
     <SectionCard
@@ -44,15 +199,43 @@ const ClubsHistory = ({
         />
       }
     >
+      <div className="flex flex-wrap align-items-center gap-2 mb-3">
+        <SelectButton
+          value={view}
+          onChange={(e) => e.value && setView(e.value)}
+          options={VIEWS}
+          allowEmpty={false}
+          aria-label="Показники"
+        />
+        {average && (
+          <Dropdown
+            value={minPlayed}
+            onChange={(e) => setMinPlayed(e.value)}
+            options={MIN_PLAYED}
+            aria-label="Мінімум матчів"
+          />
+        )}
+      </div>
       <DataTable
+        // A fresh sort per view: per match starts with the best points.
+        key={view}
+        sortField={average ? "average.points" : undefined}
+        sortOrder={average ? -1 : undefined}
         value={visible}
         dataKey="clubId"
         size="small"
         scrollable
         selectionMode="single"
-        onRowClick={(e) => setSelected(visible[e.index] ?? null)}
+        // The row index counts in the sorted order, so find the club by id.
+        onRowClick={(e) =>
+          setSelected(visible.find((h) => h.clubId === e.data.clubId) ?? null)
+        }
         rowClassName={() => "cursor-pointer"}
-        emptyMessage="Клубів не знайдено"
+        emptyMessage={
+          average
+            ? "Немає клубів з такою кількістю матчів"
+            : "Клубів не знайдено"
+        }
       >
         <Column
           field="name"
@@ -69,17 +252,17 @@ const ClubsHistory = ({
         />
         <Column
           header="Турн."
-          body={(h: IClubHistory) => h.entries.length}
+          body={(h: IClubRow) => h.entries.length}
           className="text-center"
         />
         <Column
           header="За S"
-          body={(h: IClubHistory) => h.timesByPlayer.S}
+          body={(h: IClubRow) => h.timesByPlayer.S}
           className="text-center"
         />
         <Column
           header="За V"
-          body={(h: IClubHistory) => h.timesByPlayer.V}
+          body={(h: IClubRow) => h.timesByPlayer.V}
           className="text-center"
         />
         <Column
@@ -94,42 +277,12 @@ const ClubsHistory = ({
           sortable
           className="text-center"
         />
-        <Column field="total.won" header="В" sortable className="text-center" />
-        <Column
-          field="total.drawn"
-          header="Н"
-          sortable
-          className="text-center"
-        />
-        <Column
-          field="total.lost"
-          header="П"
-          sortable
-          className="text-center"
-        />
-        <Column
-          header="М"
-          body={(h: IClubHistory) =>
-            `${h.total.goalsFor}:${h.total.goalsAgainst}`
-          }
-          className="text-center white-space-nowrap"
-        />
-        <Column
-          field="total.goalDiff"
-          header="±"
-          sortable
-          body={(h: IClubHistory) => formatSigned(h.total.goalDiff)}
-          className="text-center"
-        />
-        <Column
-          field="total.points"
-          header="О"
-          sortable
-          className="text-center font-bold"
-        />
+        {average ? averageColumns : totalColumns}
       </DataTable>
       <div className="text-sm text-600 mt-2">
         Натисніть на клуб, щоб побачити його виступи по турнірах.
+        {average &&
+          " За матч: частка результатів, голи й очки в середньому за один матч."}
       </div>
       <ClubHistoryDialog history={selected} onHide={() => setSelected(null)} />
     </SectionCard>

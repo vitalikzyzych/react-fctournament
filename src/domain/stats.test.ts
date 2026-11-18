@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { computeForm } from "./standings";
-import { computeTournamentStats } from "./stats";
+import { computeForm, computeNextMatches } from "./standings";
+import { cardMoods, computeTournamentStats } from "./stats";
 import type { ICard, IClub, IGroupMatch } from "./types";
 
 const clubs: IClub[] = [
@@ -93,5 +93,39 @@ describe("form", () => {
       "loss",
     ]);
     expect(form.get("inter")?.map((f) => f.outcome)).toEqual(["loss", "draw"]);
+  });
+
+  it("finds each club's next unplayed match", () => {
+    const next = computeNextMatches([
+      ...matches,
+      match(9, "ajax", "inter", null),
+      match(8, "real", "ajax", null),
+    ]);
+    expect(next.get("ajax")?.matchday).toBe(5);
+    expect(next.get("inter")?.matchday).toBe(5);
+    expect(next.get("real")?.matchday).toBe(8);
+  });
+});
+
+describe("card moods", () => {
+  const count = (yellow: number, red = 0) => ({ yellow, red });
+  const moods = (s: number, sRed: number, v: number, vRed: number) => {
+    const result = cardMoods({ S: count(s, sRed), V: count(v, vRed) });
+    return [result.S.mood, result.V.mood];
+  };
+
+  it("is polite without cards or with equal points", () => {
+    expect(moods(0, 0, 0, 0)).toEqual(["polite", "polite"]);
+    // A red is 3 points, as much as three yellows.
+    expect(moods(3, 0, 0, 1)).toEqual(["polite", "polite"]);
+  });
+
+  it("gets angrier step by step with more points than the other", () => {
+    expect(moods(1, 0, 0, 0)).toEqual(["neutral", "happy"]);
+    expect(moods(3, 0, 0, 0)).toEqual(["displeased", "happy"]);
+    expect(moods(2, 1, 0, 0)).toEqual(["annoyed", "angel"]);
+    expect(moods(5, 1, 0, 0)).toEqual(["angry", "angel"]);
+    expect(moods(6, 2, 0, 0)).toEqual(["furious", "angel"]);
+    expect(cardMoods({ S: count(2, 1), V: count(0) }).S.points).toBe(5);
   });
 });

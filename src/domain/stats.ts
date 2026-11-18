@@ -46,6 +46,57 @@ export interface ICardCount {
   red: number;
 }
 
+/** From polite to furious, shown as the face on the player's badge. */
+export const CARD_MOODS = [
+  "angel",
+  "happy",
+  "polite",
+  "neutral",
+  "displeased",
+  "annoyed",
+  "angry",
+  "furious",
+] as const;
+
+export type CardMood = (typeof CARD_MOODS)[number];
+
+/** Card points: a yellow is 1, a red is 3. */
+export const cardPoints = ({ yellow, red }: ICardCount) => yellow + 3 * red;
+
+/**
+ * Least point difference (own minus the other player's) for each mood, from
+ * the angriest down. Equal points, no cards included, are polite.
+ */
+const MOOD_STEPS: [number, CardMood][] = [
+  [12, "furious"],
+  [8, "angry"],
+  [5, "annoyed"],
+  [3, "displeased"],
+  [1, "neutral"],
+  [0, "polite"],
+  [-4, "happy"],
+];
+
+export interface ICardMood {
+  mood: CardMood;
+  points: number;
+}
+
+/**
+ * Each player's mood from the card points compared with the other player's:
+ * the more points ahead, the angrier the face; the more behind, the kinder.
+ */
+export const cardMoods = (
+  cards: Record<PlayerId, ICardCount>
+): Record<PlayerId, ICardMood> => {
+  const points = { S: cardPoints(cards.S), V: cardPoints(cards.V) };
+  const of = (own: number, other: number): ICardMood => ({
+    mood: MOOD_STEPS.find(([least]) => own - other >= least)?.[1] ?? "angel",
+    points: own,
+  });
+  return { S: of(points.S, points.V), V: of(points.V, points.S) };
+};
+
 export interface ITournamentStats {
   totalMatches: number;
   playedMatches: number;

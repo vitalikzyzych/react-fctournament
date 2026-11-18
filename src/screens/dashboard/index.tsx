@@ -10,6 +10,7 @@ import {
   computeAllTimePlayers,
   computeDiscipline,
   computeForm,
+  computeNextMatches,
   computeTournamentStats,
   describeMatch,
   findChampionClub,
@@ -253,6 +254,13 @@ const Dashboard = () => {
                 form={computeForm(
                   groupStage.filter((m) => m.group === group.id)
                 )}
+                next={
+                  tournament.status === "active"
+                    ? computeNextMatches(
+                        groupStage.filter((m) => m.group === group.id)
+                      )
+                    : undefined
+                }
                 chances={chances}
                 chanceTitle={
                   league ? "Шанс вийти в 1/8 фіналу напряму" : undefined

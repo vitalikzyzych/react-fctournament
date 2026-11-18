@@ -2,14 +2,16 @@ import type { CSSProperties, ReactNode } from "react";
 
 import ChampionBadge from "./ChampionBadge";
 import PlayerBadge from "./PlayerBadge";
+import PlayerMoodBadge from "./PlayerMoodBadge";
 import StatusTag from "./StatusTag";
 
-import type {
-  ICardCount,
-  IClub,
-  ITournament,
-  PlayerId,
-  PlayerRecords,
+import {
+  cardMoods,
+  type ICardCount,
+  type IClub,
+  type ITournament,
+  type PlayerId,
+  type PlayerRecords,
 } from "@/domain";
 import { plural } from "@/utils";
 
@@ -85,12 +87,26 @@ const TournamentHero = ({
     cards !== undefined &&
     cards.S.yellow + cards.S.red + cards.V.yellow + cards.V.red > 0;
 
+  // Faces whenever the cards are known: polite on both sides without cards.
+  const moods = cards ? cardMoods(cards) : null;
+
   // The badge already shows the letter; a real name is shown under it.
   const side = (id: PlayerId) => (
     <div className="flex flex-column align-items-center gap-2 text-center">
-      <PlayerBadge player={id} size="xl" />
-      {nameOf(id) !== id && (
-        <span className="hero__side-label">{nameOf(id)}</span>
+      {moods ? (
+        <PlayerMoodBadge
+          player={id}
+          mood={moods[id]}
+          otherPoints={moods[id === "S" ? "V" : "S"].points}
+        />
+      ) : (
+        <PlayerBadge player={id} size="xl" />
+      )}
+      {/* The face replaces the letter, so the letter moves under it. */}
+      {(moods || nameOf(id) !== id) && (
+        <span className="hero__side-label">
+          {nameOf(id) !== id ? nameOf(id) : id}
+        </span>
       )}
       {showCards && (
         <span
