@@ -64,37 +64,47 @@ export type CardMood = (typeof CARD_MOODS)[number];
 export const cardPoints = ({ yellow, red }: ICardCount) => yellow + 3 * red;
 
 /**
- * Least point difference (own minus the other player's) for each mood, from
- * the angriest down. Equal points, no cards included, are polite.
+ * Least card points per played match for each mood, from the angriest down.
+ * Below the last step a player is an angel. Before the first match both are
+ * polite.
  */
-const MOOD_STEPS: [number, CardMood][] = [
-  [12, "furious"],
-  [8, "angry"],
-  [5, "annoyed"],
-  [3, "displeased"],
-  [1, "neutral"],
-  [0, "polite"],
-  [-4, "happy"],
+export const MOOD_STEPS: [number, CardMood][] = [
+  [1.5, "furious"],
+  [1, "angry"],
+  [0.8, "annoyed"],
+  [0.6, "displeased"],
+  [0.4, "neutral"],
+  [0.25, "polite"],
+  [0.1, "happy"],
 ];
 
 export interface ICardMood {
   mood: CardMood;
   points: number;
+  /** Card points per played match. */
+  rate: number;
 }
 
 /**
- * Each player's mood from the card points compared with the other player's:
- * the more points ahead, the angrier the face; the more behind, the kinder.
+ * Each player's mood from their own card points per played match (yellow 1,
+ * red 3): the rougher the play, the angrier the face, whatever the other
+ * player does. Equal points over many matches can still be furious.
  */
 export const cardMoods = (
-  cards: Record<PlayerId, ICardCount>
+  cards: Record<PlayerId, ICardCount>,
+  played: number
 ): Record<PlayerId, ICardMood> => {
-  const points = { S: cardPoints(cards.S), V: cardPoints(cards.V) };
-  const of = (own: number, other: number): ICardMood => ({
-    mood: MOOD_STEPS.find(([least]) => own - other >= least)?.[1] ?? "angel",
-    points: own,
-  });
-  return { S: of(points.S, points.V), V: of(points.V, points.S) };
+  const of = (count: ICardCount): ICardMood => {
+    const points = cardPoints(count);
+    if (!played) return { mood: "polite", points, rate: 0 };
+    const rate = points / played;
+    return {
+      mood: MOOD_STEPS.find(([least]) => rate >= least)?.[1] ?? "angel",
+      points,
+      rate,
+    };
+  };
+  return { S: of(cards.S), V: of(cards.V) };
 };
 
 export interface ITournamentStats {

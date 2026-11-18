@@ -70,17 +70,13 @@ const TournamentHero = ({
     cards.S.yellow + cards.S.red + cards.V.yellow + cards.V.red > 0;
 
   // Faces whenever the cards are known: polite on both sides without cards.
-  const moods = cards ? cardMoods(cards) : null;
+  const moods = cards ? cardMoods(cards, playedMatches) : null;
 
   // The badge already shows the letter; a real name is shown under it.
   const side = (id: PlayerId) => (
     <div className="flex flex-column align-items-center gap-2 text-center">
       {moods ? (
-        <PlayerMoodBadge
-          player={id}
-          mood={moods[id]}
-          otherPoints={moods[id === "S" ? "V" : "S"].points}
-        />
+        <PlayerMoodBadge player={id} mood={moods[id]} played={playedMatches} />
       ) : (
         <PlayerBadge player={id} size="xl" />
       )}

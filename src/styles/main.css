@@ -802,6 +802,87 @@ code {
 }
 
 /* Card mood (cardMoods): the hero badge drawn as a face, see PlayerMoodBadge. */
+.mood-badge__hit {
+  display: inline-flex;
+  border-radius: 50%;
+  cursor: help;
+}
+
+/* Hover card: the numbers and the whole scale of faces. */
+.mood-tip {
+  position: fixed;
+  z-index: 1200;
+  width: 23rem;
+  max-width: calc(100vw - 16px);
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--surface-border);
+  background: var(--surface-overlay);
+  box-shadow: 0 0.75rem 2rem -0.5rem var(--surface-ground);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.mood-tip__faces,
+.mood-tip__ticks {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0.15rem;
+}
+
+.mood-tip__faces {
+  justify-items: center;
+  margin-top: 0.75rem;
+}
+
+.mood-tip__faces .player-badge--md {
+  width: min(1.75rem, 100%);
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.mood-badge--mini {
+  opacity: 0.35;
+  box-shadow: none;
+}
+
+.mood-badge--mini.mood-badge--current {
+  opacity: 1;
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
+.mood-tip__bar {
+  position: relative;
+  height: 0.45rem;
+  margin-top: 0.6rem;
+  border-radius: 1rem;
+  background: linear-gradient(
+    90deg,
+    var(--green-400),
+    var(--yellow-400),
+    var(--orange-500),
+    var(--red-600)
+  );
+}
+
+.mood-tip__marker {
+  position: absolute;
+  top: -0.3rem;
+  width: 0.25rem;
+  height: 1.05rem;
+  border-radius: 1rem;
+  background: var(--text-color);
+  box-shadow: 0 0 0 2px var(--surface-overlay);
+  transform: translateX(-50%);
+}
+
+.mood-tip__ticks {
+  margin-top: 0.35rem;
+  font-size: 0.65rem;
+  color: var(--text-color-secondary);
+}
+
 .mood-badge svg {
   width: 100%;
   height: 100%;
@@ -831,7 +912,7 @@ code {
   stroke-width: 2.5;
 }
 
-.mood-badge--furious {
+.mood-badge--furious:not(.mood-badge--mini) {
   animation: mood-shake 2.4s ease-in-out infinite;
 }
 
@@ -853,7 +934,7 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mood-badge--furious {
+  .mood-badge--furious:not(.mood-badge--mini) {
     animation: none;
   }
 }

@@ -1,5 +1,16 @@
-import type { CardMood, ICardMood, PlayerId } from "@/domain";
-import { plural } from "@/utils";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
+import { classNames } from "primereact/utils";
+
+import {
+  CARD_MOODS,
+  type CardMood,
+  type ICardMood,
+  MOOD_STEPS,
+  type PlayerId,
+} from "@/domain";
+import { formatAverage, plural } from "@/utils";
 
 export const MOOD_LABELS: Record<CardMood, string> = {
   angel: "янгол",
@@ -51,30 +62,46 @@ const FACES: Record<CardMood, IFace> = {
 
 const pointsText = (n: number) => `${n} ${plural(n, ["очко", "очки", "очок"])}`;
 
-interface IPlayerMoodBadgeProps {
-  player: PlayerId;
-  mood: ICardMood;
-  /** The other player's card points, for the tooltip. */
-  otherPoints: number;
-}
+/** Lower bound of a mood in card points per match; the angel starts at 0. */
+const moodFrom = (mood: CardMood) =>
+  MOOD_STEPS.find(([, step]) => step === mood)?.[0] ?? 0;
 
-/**
- * The player's red or blue badge drawn as a face instead of the letter: the
- * further ahead in card points (yellow 1, red 3), the angrier the face.
- */
-const PlayerMoodBadge = ({
+/** Where the furious segment of the scale ends, for the marker only. */
+const SCALE_END = 2;
+
+/** Marker position on the scale, 0 to 1: equal room for every mood. */
+const scalePosition = (mood: CardMood, rate: number) => {
+  const index = CARD_MOODS.indexOf(mood);
+  const from = moodFrom(mood);
+  const next = CARD_MOODS[index + 1];
+  const to = next ? moodFrom(next) : SCALE_END;
+  const within = Math.min(Math.max((rate - from) / (to - from), 0), 1);
+  return (index + within) / CARD_MOODS.length;
+};
+
+/** The face of a mood, drawn over the player's red or blue circle. */
+const MoodFace = ({
   player,
-  mood: { mood, points },
-  otherPoints,
-}: IPlayerMoodBadgeProps) => {
+  mood,
+  size,
+  className,
+}: {
+  player: PlayerId;
+  mood: CardMood;
+  size: "md" | "xl";
+  className?: string;
+}) => {
   const face = FACES[mood];
-  const label = `${player}: ${MOOD_LABELS[mood]}. Картки: ${pointsText(points)} проти ${otherPoints} (жовта 1, червона 3)`;
   return (
     <span
-      className={`player-badge player-badge--${player} player-badge--xl mood-badge mood-badge--${mood}`}
-      role="img"
-      title={label}
-      aria-label={label}
+      className={classNames(
+        "player-badge",
+        `player-badge--${player}`,
+        `player-badge--${size}`,
+        "mood-badge",
+        `mood-badge--${mood}`,
+        className
+      )}
     >
       <svg viewBox="0 0 64 64" aria-hidden>
         {face.halo && (
@@ -104,6 +131,124 @@ const PlayerMoodBadge = ({
         )}
       </svg>
     </span>
+  );
+};
+
+interface IPlayerMoodBadgeProps {
+  player: PlayerId;
+  mood: ICardMood;
+  /** Played matches, for the explanation. */
+  played: number;
+}
+
+/**
+ * The player's red or blue badge drawn as a face instead of the letter: the
+ * more card points per match (yellow 1, red 3), the angrier the face.
+ * Hovering (or tapping, on a phone) opens a card with the numbers and the
+ * whole scale of faces, the player's place marked on it.
+ */
+const PlayerMoodBadge = ({ player, mood, played }: IPlayerMoodBadgeProps) => {
+  const [tip, setTip] = useState<{ x: number; y: number } | null>(null);
+  const label = `${player}: ${MOOD_LABELS[mood.mood]}. Картки: ${pointsText(mood.points)} за ${played} ${plural(played, ["матч", "матчі", "матчів"])}, ${formatAverage(mood.rate)} за матч`;
+
+  // The card is fixed to the screen: it closes on scroll and, on a phone,
+  // when something else is tapped.
+  useEffect(() => {
+    if (!tip) return;
+    const close = () => setTip(null);
+    const closeOutside = (e: Event) => {
+      if (!(e.target instanceof Element && e.target.closest(".mood-badge"))) {
+        close();
+      }
+    };
+    window.addEventListener("scroll", close, true);
+    document.addEventListener("pointerdown", closeOutside);
+    return () => {
+      window.removeEventListener("scroll", close, true);
+      document.removeEventListener("pointerdown", closeOutside);
+    };
+  }, [tip]);
+
+  const open = (target: HTMLElement) => {
+    const box = target.getBoundingClientRect();
+    const half = Math.min(window.innerWidth / 2 - 8, 184);
+    setTip({
+      x: Math.min(
+        Math.max(box.left + box.width / 2, half + 8),
+        window.innerWidth - half - 8
+      ),
+      y: box.bottom + 10,
+    });
+  };
+
+  const position = scalePosition(mood.mood, mood.rate);
+  const shown = CARD_MOODS.indexOf(mood.mood);
+
+  return (
+    <>
+      <span
+        role="img"
+        aria-label={label}
+        className="mood-badge__hit"
+        onPointerEnter={(e) => {
+          if (e.pointerType === "mouse") open(e.currentTarget);
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType === "mouse") setTip(null);
+        }}
+        onClick={(e) => open(e.currentTarget)}
+      >
+        <MoodFace player={player} mood={mood.mood} size="xl" />
+      </span>
+      {tip &&
+        createPortal(
+          <div
+            className="mood-tip"
+            role="tooltip"
+            style={{ left: tip.x, top: tip.y }}
+          >
+            <div className="font-semibold">
+              {player}: {MOOD_LABELS[mood.mood]}
+            </div>
+            <div className="text-sm text-600 mt-1">
+              {played
+                ? `${pointsText(mood.points)} за ${played} ${plural(played, ["матч", "матчі", "матчів"])}: ${formatAverage(mood.rate)} за матч`
+                : "Ще немає зіграних матчів"}
+            </div>
+            <div className="mood-tip__faces">
+              {CARD_MOODS.map((item, index) => (
+                <MoodFace
+                  key={item}
+                  player={player}
+                  mood={item}
+                  size="md"
+                  className={classNames("mood-badge--mini", {
+                    "mood-badge--current": index === shown,
+                  })}
+                />
+              ))}
+            </div>
+            <div className="mood-tip__bar">
+              <span
+                className="mood-tip__marker"
+                style={{ left: `${position * 100}%` }}
+              />
+            </div>
+            <div className="mood-tip__ticks">
+              {CARD_MOODS.map((item) => (
+                <span key={item}>
+                  {moodFrom(item) ? formatAverage(moodFrom(item)) : "0"}
+                </span>
+              ))}
+            </div>
+            <div className="text-xs text-500 mt-2">
+              Очки за картки на матч: жовта 1, червона 3. Число під обличчям:
+              звідки воно починається.
+            </div>
+          </div>,
+          document.body
+        )}
+    </>
   );
 };
 

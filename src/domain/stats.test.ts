@@ -109,23 +109,27 @@ describe("form", () => {
 
 describe("card moods", () => {
   const count = (yellow: number, red = 0) => ({ yellow, red });
-  const moods = (s: number, sRed: number, v: number, vRed: number) => {
-    const result = cardMoods({ S: count(s, sRed), V: count(v, vRed) });
-    return [result.S.mood, result.V.mood];
-  };
+  const mood = (yellow: number, red: number, played: number) =>
+    cardMoods({ S: count(yellow, red), V: count(0) }, played).S;
 
-  it("is polite without cards or with equal points", () => {
-    expect(moods(0, 0, 0, 0)).toEqual(["polite", "polite"]);
-    // A red is 3 points, as much as three yellows.
-    expect(moods(3, 0, 0, 1)).toEqual(["polite", "polite"]);
+  it("is polite before the first match", () => {
+    expect(mood(0, 0, 0).mood).toBe("polite");
   });
 
-  it("gets angrier step by step with more points than the other", () => {
-    expect(moods(1, 0, 0, 0)).toEqual(["neutral", "happy"]);
-    expect(moods(3, 0, 0, 0)).toEqual(["displeased", "happy"]);
-    expect(moods(2, 1, 0, 0)).toEqual(["annoyed", "angel"]);
-    expect(moods(5, 1, 0, 0)).toEqual(["angry", "angel"]);
-    expect(moods(6, 2, 0, 0)).toEqual(["furious", "angel"]);
-    expect(cardMoods({ S: count(2, 1), V: count(0) }).S.points).toBe(5);
+  it("follows each player's card points per match", () => {
+    expect(mood(1, 0, 20).mood).toBe("angel");
+    expect(mood(3, 0, 20).mood).toBe("happy");
+    expect(mood(5, 0, 20).mood).toBe("polite");
+    expect(mood(10, 0, 20).mood).toBe("neutral");
+    expect(mood(12, 0, 20).mood).toBe("displeased");
+    expect(mood(10, 2, 20).mood).toBe("annoyed");
+    // One yellow per match is angry. A red is 3 points: 14 + 6 = 20.
+    expect(mood(14, 2, 20)).toMatchObject({ mood: "angry", points: 20 });
+    expect(mood(24, 2, 20).mood).toBe("furious");
+  });
+
+  it("does not depend on the other player", () => {
+    const both = cardMoods({ S: count(20), V: count(20) }, 20);
+    expect([both.S.mood, both.V.mood]).toEqual(["angry", "angry"]);
   });
 });
