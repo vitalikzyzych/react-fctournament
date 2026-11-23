@@ -1,5 +1,9 @@
 /*
- * App styles on top of the Lara dark teal theme and PrimeFlex. Colours come
+ * App styles on top of the recoloured Lara dark theme (styles/theme.css,
+ * built by scripts/build-theme.ts: gold accent, deep navy surfaces) and
+ * PrimeFlex. One font family, Onest (proper Ukrainian letters), heavier
+ * for titles and scores. A condensed face (Bulgarian letter shapes) and a
+ * wide one (Unbounded, too wide for the user) were tried and dropped. Colours come
  * only from the theme's CSS variables (--red-500, --surface-card, ...), mixed
  * with color-mix() where a tint is needed, as in web-app.
  */
@@ -13,7 +17,10 @@
   --glass: color-mix(in srgb, var(--surface-card) 78%, transparent);
   --glass-strong: color-mix(in srgb, var(--surface-ground) 82%, transparent);
   --hairline: color-mix(in srgb, var(--surface-900) 6%, transparent);
-  --card-radius: 1rem;
+  --card-radius: 0.9rem;
+  --font-family: "Onest Variable", "Inter var", "Inter", system-ui, sans-serif;
+  --font-display: var(--font-family);
+  --primary-soft: color-mix(in srgb, var(--primary-color) 28%, transparent);
   --nav-height: 4rem;
   --sidebar-width: 15rem;
 }
@@ -25,13 +32,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  font-family:
-    "Inter var",
-    "Inter",
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    sans-serif;
+  font-family: var(--font-family);
   font-variant-numeric: tabular-nums;
   /* Two stadium lights: S red from the left, V blue from the right. */
   background:
@@ -66,10 +67,19 @@ code {
 /* Cards */
 .app-card {
   position: relative;
-  background: var(--glass);
+  /* A soft light from the top left, like a floodlit panel. */
+  background:
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--surface-900) 5%, transparent),
+      transparent 42%
+    ),
+    var(--glass);
   border: 1px solid var(--surface-border);
   border-radius: var(--card-radius);
-  box-shadow: inset 0 1px 0 var(--hairline);
+  box-shadow:
+    inset 0 1px 0 var(--hairline),
+    0 1rem 2rem -1.5rem var(--surface-0);
 }
 
 .app-card--link {
@@ -86,18 +96,36 @@ code {
 }
 
 .section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
   margin: 0;
-  font-size: 0.8rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
+  line-height: 1.2;
   text-transform: uppercase;
-  color: var(--text-color-secondary);
+  color: color-mix(in srgb, var(--text-color) 80%, transparent);
+}
+
+/* A small accent mark before the title. */
+.section-title::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.2rem;
+  height: 0.9em;
+  border-radius: 2px;
+  background: var(--primary-color);
 }
 
 .page-title {
   margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .stat-card__icon {
@@ -112,7 +140,8 @@ code {
 }
 
 .stat-card__value {
-  font-size: 1.85rem;
+  font-family: var(--font-display);
+  font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -162,9 +191,11 @@ code {
 }
 
 .app-brand__name {
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.01em;
+  line-height: 1.1;
 }
 
 .app-main {
@@ -269,7 +300,37 @@ code {
 }
 
 .p-button {
-  border-radius: 0.65rem;
+  border-radius: 0.6rem;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.1s;
+}
+
+/* Calm buttons: sentence case, no glow. Loud capitals read like betting. */
+.p-button .p-button-label {
+  font-weight: 600;
+}
+
+.p-button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.p-button.p-button-outlined {
+  border-color: var(--primary-soft);
+}
+
+.p-selectbutton .p-button {
+  border-radius: 0;
+}
+
+.p-selectbutton .p-button:first-of-type {
+  border-radius: 0.6rem 0 0 0.6rem;
+}
+
+.p-selectbutton .p-button:last-of-type {
+  border-radius: 0 0.6rem 0.6rem 0;
 }
 
 .p-datatable .p-datatable-thead > tr > th,
@@ -2632,4 +2693,12 @@ code {
 .rating-down {
   color: var(--red-300);
   font-weight: 600;
+}
+
+/* Big scores: proportional digits, or a "1" stands in a wide empty box. */
+.hero__score,
+.versus-total,
+.recap__score,
+.stat-card__value {
+  font-variant-numeric: normal;
 }

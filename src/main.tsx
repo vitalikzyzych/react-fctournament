@@ -4,9 +4,11 @@ import { BrowserRouter } from "react-router-dom";
 
 import { addLocale, locale, PrimeReactProvider } from "primereact/api";
 
+import "@fontsource-variable/onest";
+
 import App from "./App";
 
-import "primereact/resources/themes/lara-dark-teal/theme.css";
+import "./styles/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeflex/primeflex.css";
 import "./styles/main.css";
