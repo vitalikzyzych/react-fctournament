@@ -61,6 +61,10 @@ const StandingsTable = ({
         dataKey="club.id"
         size="small"
         className="standings-table"
+        // PrimeReact redraws a cell only when its row changes, but the form,
+        // next match, chance and place marks come from props: without this a
+        // club whose row stayed the same kept an old chance.
+        cellMemo={false}
         onRowClick={
           onClubClick
             ? (e) => {

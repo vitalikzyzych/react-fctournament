@@ -173,6 +173,7 @@ tournaments/{tournamentId}/matches/{matchId}
 
 - Completing a tournament goes through `ui/CodeConfirmDialog.tsx`: the confirm button unlocks only after typing a random 4-digit code. Mount it only while open (a new code each time). Reuse it for other risky actions.
 - **Testing in a browser:** the user often has `npm run dev` running on port 3100 against the REAL database. Run emulator test servers on another port (`--port 3101 --strictPort`) and block requests to `firestore.googleapis.com` in the test, so test data never reaches production.
+- PrimeReact `DataTable` caches body cells and redraws one only when its row data changes. A column whose `body` reads props from outside the row (the standings form, next match, chance and place marks) needs `cellMemo={false}` on the table, or a club whose row did not change keeps old values (seen 2026-11-23: a stale playoff chance after another club's result).
 - `MatchRow` keeps a local draft of the score. The parent gives it `key={matchId:score}`, so a remote change remounts the row with the new stored value. Enter saves, Escape reverts.
 - Saving does not wait for the server: Firestore updates the local snapshot at once and the promise settles later (much later when offline). Errors (for example a rules rejection) show a toast and the snapshot rolls back.
 - With no Firebase config, `App.tsx` renders `FirebaseSetupNotice` instead of the app.
