@@ -19,7 +19,9 @@ import {
   playoffQualifiers,
   type PlayoffRound,
   playoffRounds,
+  tieKey,
 } from "@/domain";
+import { useTieChances } from "@/hooks";
 import { FluentIcon } from "@/ui";
 
 interface IPlayoffTabProps {
@@ -45,6 +47,7 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
   const started = ties.some((tie) => tie.games.length > 0);
   const [drawRound, setDrawRound] = useState<PlayoffRound | null>(null);
   const discipline = useMemo(() => computeDiscipline(matches), [matches]);
+  const tieChances = useTieChances(tournament, matches);
 
   const clubsOf = (ids: string[]) =>
     ids.map((id) => clubsById.get(id)).filter((club) => club !== undefined);
@@ -197,6 +200,7 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
                       editable={editable}
                       taken={taken}
                       discipline={discipline}
+                      chance={tieChances.get(tieKey(tie))}
                     />
                   </div>
                 );

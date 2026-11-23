@@ -26,5 +26,6 @@ export { default as SectionCard } from "./SectionCard";
 export { default as StandingsTable } from "./StandingsTable";
 export { default as StatCard } from "./StatCard";
 export { STATUS_LABELS, default as StatusTag } from "./StatusTag";
+export { default as TieChance } from "./TieChance";
 export { default as TitlesCard } from "./TitlesCard";
 export { default as TournamentHero } from "./TournamentHero";

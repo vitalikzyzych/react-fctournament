@@ -12,6 +12,7 @@ export * from "./schedule";
 export * from "./schema";
 export * from "./standings";
 export * from "./stats";
+export * from "./tieChances";
 export * from "./timeline";
 export * from "./types";
 export * from "./validateFormat";

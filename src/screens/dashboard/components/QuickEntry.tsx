@@ -12,10 +12,12 @@ import {
   type IStoredMatch,
   type ITournament,
   latestResult,
+  playoffMatches,
+  tieKey,
   upcomingMatches,
 } from "@/domain";
-import { useMatchCards, useSaveResult } from "@/hooks";
-import { EmptyState, MatchCards, MatchRow, SectionCard } from "@/ui";
+import { useMatchCards, useSaveResult, useTieChances } from "@/hooks";
+import { EmptyState, MatchCards, MatchRow, SectionCard, TieChance } from "@/ui";
 import { formatScore } from "@/utils";
 
 interface IQuickEntryProps {
@@ -38,6 +40,7 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
   const saveResult = useSaveResult(tournament, matches);
   const { addCards, removeCard } = useMatchCards(tournament);
   const discipline = useMemo(() => computeDiscipline(matches), [matches]);
+  const tieChances = useTieChances(tournament, matches);
   // A pending extra game is not stored yet, so it cannot take cards.
   const isStored = (match: IMatch) => matches.some((m) => m.id === match.id);
   const clubsById = new Map<string, IClub>(
@@ -63,6 +66,20 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
       <div className="flex flex-column gap-3">
         {entries.map(({ label, match }) => {
           const earlier = earlierTieGames(match, matches);
+          const chance =
+            match.stage === "playoff"
+              ? tieChances.get(tieKey(match))
+              : undefined;
+          // The tie's own order: the home club of its first game comes first.
+          const first =
+            match.stage === "playoff"
+              ? playoffMatches(matches).find(
+                  (m) =>
+                    m.round === match.round &&
+                    m.tie === match.tie &&
+                    m.game === 1
+                )
+              : undefined;
           return (
             <div key={label} className="flex flex-column gap-2">
               <span className="text-500 text-xs font-semibold">{label}</span>
@@ -72,6 +89,13 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
                   home={match.home}
                   away={match.away}
                   clubsById={clubsById}
+                />
+              )}
+              {chance && first && (
+                <TieChance
+                  chance={chance}
+                  home={clubsById.get(first.home)}
+                  away={clubsById.get(first.away)}
                 />
               )}
               <MatchRow

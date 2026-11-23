@@ -13,6 +13,7 @@ import {
   type IPlayoffTie,
   isLeagueFormat,
   isStrictPairing,
+  type ITieChance,
   type ITournament,
   newTieGames,
   pendingReplay,
@@ -31,6 +32,7 @@ import {
   FluentIcon,
   MatchCards,
   MatchRow,
+  TieChance,
 } from "@/ui";
 import { formatScore } from "@/utils";
 
@@ -43,6 +45,8 @@ interface IPlayoffTieCardProps {
   taken: Set<string>;
   /** Cards and bans of the whole tournament. */
   discipline: IDiscipline;
+  /** Each club's chance to go through, while the tie is open. */
+  chance?: ITieChance;
 }
 
 interface IClubOption {
@@ -66,6 +70,7 @@ const PlayoffTieCard = ({
   editable,
   taken,
   discipline,
+  chance,
 }: IPlayoffTieCardProps) => {
   const { show } = useToast();
   const saveResult = useSaveResult(tournament, tie.games);
@@ -213,6 +218,14 @@ const PlayoffTieCard = ({
           )}
         </div>
       </div>
+
+      {chance && !editing && tie.home && tie.away && (
+        <TieChance
+          chance={chance}
+          home={clubsById.get(tie.home)}
+          away={clubsById.get(tie.away)}
+        />
+      )}
 
       {showPickers && (
         <div className="flex flex-column gap-2">

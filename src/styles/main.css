@@ -2193,3 +2193,60 @@ code {
     display: none;
   }
 }
+
+/* Playoff: each club's chance to go through a tie (TieChance). */
+.tie-chance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--surface-ground) 55%, transparent);
+  cursor: default;
+}
+
+.tie-chance__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Phones: both clubs on one line, the bar under them at full width. */
+@media screen and (max-width: 575px) {
+  .tie-chance__row {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+
+  .tie-chance__row > .tie-chance__side {
+    flex: 1 1 0;
+  }
+
+  .tie-chance__row > .tie-chance__bar {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+
+.tie-chance__side {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 1 auto;
+  font-size: 0.85rem;
+}
+
+.tie-chance__side--end {
+  justify-content: flex-end;
+}
+
+.tie-chance__value {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.tie-chance__bar {
+  flex: 1 1 4rem;
+  min-width: 3rem;
+}
+
