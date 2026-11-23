@@ -5,15 +5,19 @@ import { TabPanel, TabView } from "primereact/tabview";
 import ClubsHistory from "./components/ClubsHistory";
 import HeadToHead from "./components/HeadToHead";
 import PlayersHistory from "./components/PlayersHistory";
+import RatingsHistory from "./components/RatingsHistory";
+import RecordBook from "./components/RecordBook";
 
 import { PageHeader } from "@/components";
 import { playoffMatches } from "@/domain";
+import { useRatings } from "@/hooks";
 import { useTournamentData } from "@/providers";
 import { EmptyState, PlayoffToggle, SectionCard } from "@/ui";
 
 const History = () => {
   const { all } = useTournamentData();
   const [includePlayoff, setIncludePlayoff] = useState(true);
+  const ratings = useRatings();
   const hasPlayoff = all.some((t) => playoffMatches(t.matches).length > 0);
 
   return (
@@ -45,6 +49,12 @@ const History = () => {
             </TabPanel>
             <TabPanel header="Особисті зустрічі">
               <HeadToHead all={all} includePlayoff={includePlayoff} />
+            </TabPanel>
+            <TabPanel header="Рейтинг">
+              <RatingsHistory ratings={ratings} />
+            </TabPanel>
+            <TabPanel header="Рекорди">
+              <RecordBook all={all} includePlayoff={includePlayoff} />
             </TabPanel>
           </TabView>
         </>

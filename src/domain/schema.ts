@@ -41,6 +41,9 @@ const cards = z
   .max(MAX_MATCH_CARDS)
   .optional();
 
+// Optional: when the result was entered (ISO date and time).
+const playedAt = z.iso.datetime({ offset: true }).nullable().optional();
+
 const groupMatchSchema = z.object({
   id: z.string().regex(MATCH_ID_PATTERN),
   stage: z.literal("group"),
@@ -50,18 +53,20 @@ const groupMatchSchema = z.object({
   away: slug,
   result,
   cards,
+  playedAt,
 });
 
 const playoffMatchSchema = z.object({
   id: z.string().regex(MATCH_ID_PATTERN),
   stage: z.literal("playoff"),
   round: z.enum(PLAYOFF_ROUND_IDS),
-  tie: z.int().min(1).max(4),
+  tie: z.int().min(1).max(8),
   game: z.int().min(1).max(MAX_PLAYOFF_GAMES),
   home: slug,
   away: slug,
   result,
   cards,
+  playedAt,
 });
 
 export const tournamentFileSchema = z.object({

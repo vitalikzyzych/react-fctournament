@@ -21,8 +21,8 @@ import {
   playoffRounds,
   tieKey,
 } from "@/domain";
-import { useTieChances } from "@/hooks";
-import { FluentIcon } from "@/ui";
+import { useTieChances, useTitleRace } from "@/hooks";
+import { Bracket, FluentIcon, SectionCard, TitleRace } from "@/ui";
 
 interface IPlayoffTabProps {
   tournament: ITournament;
@@ -48,6 +48,7 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
   const [drawRound, setDrawRound] = useState<PlayoffRound | null>(null);
   const discipline = useMemo(() => computeDiscipline(matches), [matches]);
   const tieChances = useTieChances(tournament, matches);
+  const titleRace = useTitleRace(tournament, matches);
 
   const clubsOf = (ids: string[]) =>
     ids.map((id) => clubsById.get(id)).filter((club) => club !== undefined);
@@ -129,6 +130,23 @@ const PlayoffTab = ({ tournament, matches }: IPlayoffTabProps) => {
         matches={matches}
         editable={editable}
       />
+
+      {titleRace && (
+        <SectionCard title="Хто виграє турнір">
+          <TitleRace race={titleRace} />
+        </SectionCard>
+      )}
+      {started && (
+        <section>
+          <h2 className="section-title m-0 mb-2">Сітка</h2>
+          <Bracket
+            rounds={rounds}
+            ties={ties}
+            clubsById={clubsById}
+            chances={tieChances}
+          />
+        </section>
+      )}
 
       {rounds.map((round) => {
         const roundTies = ties.filter((tie) => tie.round === round.id);

@@ -2,21 +2,27 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "primereact/button";
+import { SelectButton } from "primereact/selectbutton";
 
 import FormStrip from "./components/FormStrip";
+import LastSession from "./components/LastSession";
 import MatchdayRecap from "./components/MatchdayRecap";
 import Milestones from "./components/Milestones";
 import QuickEntry from "./components/QuickEntry";
 import RecordsCard from "./components/RecordsCard";
+import SameStage from "./components/SameStage";
 
 import { PageHeader } from "@/components";
 import {
   computeAchievements,
   computeAllTimePlayers,
   computeDiscipline,
+  computeFeed,
   computeForm,
   computeMilestones,
   computeNextMatches,
+  computeSameStage,
+  computeSessions,
   computeTournamentStats,
   describeMatch,
   findChampionClub,
@@ -34,12 +40,18 @@ import {
   sortMatches,
   summarizeTournaments,
 } from "@/domain";
-import { usePlayoffChances, useWinsRace } from "@/hooks";
+import {
+  usePlayoffChances,
+  useRatings,
+  useTitleRace,
+  useWinsRace,
+} from "@/hooks";
 import { pickCurrentTournament, useTournamentData } from "@/providers";
 import {
   AchievementList,
   ClubMatchesDialog,
   EmptyState,
+  FeedList,
   FluentIcon,
   MatchCards,
   MatchRow,
@@ -47,10 +59,29 @@ import {
   SectionCard,
   StandingsTable,
   StatCard,
+  TitleRace,
   TitlesCard,
   TournamentHero,
+  WrapUp,
 } from "@/ui";
 import { formatAverage } from "@/utils";
+
+type View = "now" | "insights";
+
+const VIEWS: { label: string; value: View }[] = [
+  { label: "Турнір", value: "now" },
+  { label: "Інсайти", value: "insights" },
+];
+
+const VIEW_KEY = "dashboard-view";
+
+const storedView = (): View => {
+  try {
+    return localStorage.getItem(VIEW_KEY) === "insights" ? "insights" : "now";
+  } catch {
+    return "now";
+  }
+};
 
 const Dashboard = () => {
   const { all, matchesByTournament } = useTournamentData();
@@ -64,6 +95,33 @@ const Dashboard = () => {
     current?.matches ?? []
   );
   const winsRace = useWinsRace(current?.tournament, current?.matches ?? []);
+  const titleRace = useTitleRace(current?.tournament, current?.matches ?? []);
+  const ratings = useRatings();
+  const lastSession = useMemo(() => computeSessions(all).at(-1), [all]);
+  const feed = useMemo(
+    () =>
+      current
+        ? computeFeed(
+            current.tournament,
+            current.matches,
+            ratings.matches
+          ).reverse()
+        : [],
+    [current, ratings]
+  );
+  const sameStage = useMemo(
+    () => (current ? computeSameStage(all, current.tournament) : null),
+    [all, current]
+  );
+  const [view, setView] = useState<View>(storedView);
+  const changeView = (next: View) => {
+    setView(next);
+    try {
+      localStorage.setItem(VIEW_KEY, next);
+    } catch {
+      // Private mode: the choice just lasts until the page is closed.
+    }
+  };
 
   if (!current) {
     return (
@@ -101,6 +159,8 @@ const Dashboard = () => {
     : undefined;
   const recap = latestMatchdayRecap(tournament.clubs, matches);
   const achievements = computeAchievements(tournament, matches);
+  // A finished tournament (no active one) opens with its summary.
+  const wrapUp = tournament.status === "completed" && stats.playedMatches > 0;
   const achievementCount = (id: "S" | "V") =>
     achievements.filter((a) => a.player === id).length;
 
@@ -141,196 +201,258 @@ const Dashboard = () => {
         }
       />
 
-      <div className="grid">
-        {tournament.status === "active" && (
-          <div className="col-12">
-            <QuickEntry tournament={tournament} matches={stored} />
+      <div className="flex justify-content-end mb-3">
+        <SelectButton
+          value={view}
+          options={VIEWS}
+          allowEmpty={false}
+          onChange={(e) => changeView(e.value)}
+        />
+      </div>
+
+      {view === "now" ? (
+        <div className="grid">
+          {tournament.status === "active" && (
+            <div className="col-12">
+              <QuickEntry tournament={tournament} matches={stored} />
+            </div>
+          )}
+
+          {wrapUp && (
+            <div className="col-12">
+              <SectionCard title="Підсумки турніру">
+                <WrapUp
+                  tournament={tournament}
+                  matches={matches}
+                  ratings={ratings}
+                />
+              </SectionCard>
+            </div>
+          )}
+
+          <div className={titleRace ? "col-12 lg:col-6" : "col-12"}>
+            <SectionCard title="Стрічка подій" className="h-full">
+              <FeedList events={feed} clubsById={clubsById} />
+            </SectionCard>
           </div>
-        )}
+          {titleRace && (
+            <div className="col-12 lg:col-6">
+              <SectionCard title="Хто виграє турнір" className="h-full">
+                <TitleRace race={titleRace} />
+              </SectionCard>
+            </div>
+          )}
 
-        <div className="col-6 md:col-3">
-          <StatCard
-            icon="SportSoccer"
-            label="Залишилось матчів"
-            value={stats.totalMatches - stats.playedMatches}
-          />
-        </div>
-        <div className="col-6 md:col-3">
-          <StatCard icon="Trophy" label="Голів" value={stats.totalGoals} />
-        </div>
-        <div className="col-6 md:col-3">
-          <StatCard
-            icon="DataHistogram"
-            label="Голів за матч"
-            value={formatAverage(stats.avgGoals)}
-          />
-        </div>
-        <div className="col-6 md:col-3">
-          <StatCard icon="History" label="Нічиїх" value={stats.draws} />
-        </div>
-
-        <div className="col-12 lg:col-6">
-          <SectionCard title="Форма S і V" className="h-full">
-            <FormStrip clubs={tournament.clubs} matches={matches} />
-          </SectionCard>
-        </div>
-        <div className="col-12 lg:col-6">
-          <SectionCard title="Ювілеї" className="h-full">
-            <Milestones milestones={milestones} tournament={tournament} />
-          </SectionCard>
-        </div>
-
-        <div className="col-12">
-          <SectionCard
-            title="Хто виграв турніри"
-            action={
-              <Link to="/history" className="text-primary text-sm font-medium">
-                Усі чемпіони
-              </Link>
-            }
-          >
-            <TitlesCard summaries={summaries} showList={false} />
-          </SectionCard>
-        </div>
-
-        <div className="col-12 lg:col-6">
-          <SectionCard title="S проти V у цьому турнірі" className="h-full">
-            <PlayerVersusCard records={stats.players} />
-          </SectionCard>
-        </div>
-        <div className="col-12 lg:col-6">
-          <SectionCard
-            title="S проти V за всю історію"
-            className="h-full"
-            action={
-              <Link to="/history" className="text-primary text-sm font-medium">
-                Детальніше
-              </Link>
-            }
-          >
-            <PlayerVersusCard records={allTime} />
-          </SectionCard>
-        </div>
-
-        {recap && (
           <div className="col-12 lg:col-6">
             <SectionCard
-              title={`Підсумок туру ${recap.matchday}`}
-              className="h-full"
-            >
-              <MatchdayRecap
-                recap={recap}
-                tournament={tournament}
-                clubsById={clubsById}
-              />
-            </SectionCard>
-          </div>
-        )}
-        <div className={recap ? "col-12 lg:col-6" : "col-12"}>
-          <SectionCard title="Рекорди турніру" className="h-full">
-            <RecordsCard clubs={tournament.clubs} matches={matches} />
-          </SectionCard>
-        </div>
-
-        <div className="col-12 lg:col-6">
-          <SectionCard
-            title={
-              nextMatchday
-                ? `Наступні матчі · тур ${nextMatchday}`
-                : "Наступні матчі"
-            }
-          >
-            {upcoming.length ? (
-              <div className="flex flex-column gap-2">
-                {upcoming.map((match) => (
-                  <MatchRow
-                    key={match.id}
-                    match={match}
-                    clubsById={clubsById}
-                    editable={false}
-                    meta={
-                      match.stage === "group" && !league
-                        ? `Група ${match.group}`
-                        : describeMatch(match, league)
-                    }
-                    footer={
-                      <MatchCards
-                        match={match}
-                        clubsById={clubsById}
-                        discipline={discipline}
-                        editable={false}
-                      />
-                    }
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyState icon="CheckmarkCircle" title="Усі матчі зіграно" />
-            )}
-          </SectionCard>
-        </div>
-        <div className="col-12 lg:col-6">
-          <SectionCard title="Останні результати">
-            {recent.length ? (
-              <div className="flex flex-column gap-2">
-                {recent.map((match) => (
-                  <MatchRow
-                    key={match.id}
-                    match={match}
-                    clubsById={clubsById}
-                    editable={false}
-                    meta={describeMatch(match, league)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyState title="Ще немає результатів" />
-            )}
-          </SectionCard>
-        </div>
-
-        {stats.playedMatches > 0 && (
-          <div className="col-12">
-            <SectionCard
-              title="Досягнення турніру"
-              action={
-                <span className="flex align-items-center gap-2 text-sm font-semibold">
-                  S {achievementCount("S")} : {achievementCount("V")} V
-                </span>
+              title={
+                nextMatchday
+                  ? `Наступні матчі · тур ${nextMatchday}`
+                  : "Наступні матчі"
               }
             >
-              <AchievementList items={achievements} clubsById={clubsById} />
+              {upcoming.length ? (
+                <div className="flex flex-column gap-2">
+                  {upcoming.map((match) => (
+                    <MatchRow
+                      key={match.id}
+                      match={match}
+                      clubsById={clubsById}
+                      editable={false}
+                      meta={
+                        match.stage === "group" && !league
+                          ? `Група ${match.group}`
+                          : describeMatch(match, league)
+                      }
+                      footer={
+                        <MatchCards
+                          match={match}
+                          clubsById={clubsById}
+                          discipline={discipline}
+                          editable={false}
+                        />
+                      }
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState icon="CheckmarkCircle" title="Усі матчі зіграно" />
+              )}
             </SectionCard>
           </div>
-        )}
+          <div className="col-12 lg:col-6">
+            <SectionCard title="Останні результати">
+              {recent.length ? (
+                <div className="flex flex-column gap-2">
+                  {recent.map((match) => (
+                    <MatchRow
+                      key={match.id}
+                      match={match}
+                      clubsById={clubsById}
+                      editable={false}
+                      meta={describeMatch(match, league)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState title="Ще немає результатів" />
+              )}
+            </SectionCard>
+          </div>
 
-        {tournament.groups.map((group) => (
-          <div key={group.id} className={league ? "col-12" : "col-12 md:col-6"}>
-            <SectionCard title={group.name}>
-              <StandingsTable
-                rows={groupTable(tournament, matches, group.id)}
-                qualified={qualified}
-                knockout={knockout}
-                onClubClick={setSelectedClub}
-                form={computeForm(
-                  groupStage.filter((m) => m.group === group.id)
-                )}
-                next={
-                  tournament.status === "active"
-                    ? computeNextMatches(
-                        groupStage.filter((m) => m.group === group.id)
-                      )
-                    : undefined
-                }
-                chances={chances}
-                chanceTitle={
-                  league ? "Шанс вийти в 1/8 фіналу напряму" : undefined
-                }
-              />
+          {tournament.groups.map((group) => (
+            <div
+              key={group.id}
+              className={league ? "col-12" : "col-12 md:col-6"}
+            >
+              <SectionCard title={group.name}>
+                <StandingsTable
+                  rows={groupTable(tournament, matches, group.id)}
+                  qualified={qualified}
+                  knockout={knockout}
+                  onClubClick={setSelectedClub}
+                  form={computeForm(
+                    groupStage.filter((m) => m.group === group.id)
+                  )}
+                  next={
+                    tournament.status === "active"
+                      ? computeNextMatches(
+                          groupStage.filter((m) => m.group === group.id)
+                        )
+                      : undefined
+                  }
+                  chances={chances}
+                  chanceTitle={
+                    league ? "Шанс вийти в 1/8 фіналу напряму" : undefined
+                  }
+                />
+              </SectionCard>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid">
+          <div className="col-6 md:col-3">
+            <StatCard
+              icon="SportSoccer"
+              label="Залишилось матчів"
+              value={stats.totalMatches - stats.playedMatches}
+            />
+          </div>
+          <div className="col-6 md:col-3">
+            <StatCard icon="Trophy" label="Голів" value={stats.totalGoals} />
+          </div>
+          <div className="col-6 md:col-3">
+            <StatCard
+              icon="DataHistogram"
+              label="Голів за матч"
+              value={formatAverage(stats.avgGoals)}
+            />
+          </div>
+          <div className="col-6 md:col-3">
+            <StatCard icon="History" label="Нічиїх" value={stats.draws} />
+          </div>
+
+          <div className="col-12 lg:col-6">
+            <SectionCard title="Форма S і V" className="h-full">
+              <FormStrip clubs={tournament.clubs} matches={matches} />
             </SectionCard>
           </div>
-        ))}
-      </div>
+          <div className="col-12 lg:col-6">
+            <SectionCard title="Ювілеї" className="h-full">
+              <Milestones milestones={milestones} tournament={tournament} />
+            </SectionCard>
+          </div>
+
+          {lastSession && (
+            <div className={sameStage ? "col-12 lg:col-6" : "col-12"}>
+              <SectionCard title="Останній ігровий вечір" className="h-full">
+                <LastSession session={lastSession} />
+              </SectionCard>
+            </div>
+          )}
+          {sameStage && (
+            <div className={lastSession ? "col-12 lg:col-6" : "col-12"}>
+              <SectionCard title="На цьому ж етапі раніше" className="h-full">
+                <SameStage stage={sameStage} />
+              </SectionCard>
+            </div>
+          )}
+
+          <div className="col-12">
+            <SectionCard
+              title="Хто виграв турніри"
+              action={
+                <Link
+                  to="/history"
+                  className="text-primary text-sm font-medium"
+                >
+                  Усі чемпіони
+                </Link>
+              }
+            >
+              <TitlesCard summaries={summaries} showList={false} />
+            </SectionCard>
+          </div>
+
+          <div className="col-12 lg:col-6">
+            <SectionCard title="S проти V у цьому турнірі" className="h-full">
+              <PlayerVersusCard records={stats.players} />
+            </SectionCard>
+          </div>
+          <div className="col-12 lg:col-6">
+            <SectionCard
+              title="S проти V за всю історію"
+              className="h-full"
+              action={
+                <Link
+                  to="/history"
+                  className="text-primary text-sm font-medium"
+                >
+                  Детальніше
+                </Link>
+              }
+            >
+              <PlayerVersusCard records={allTime} />
+            </SectionCard>
+          </div>
+
+          {recap && (
+            <div className="col-12 lg:col-6">
+              <SectionCard
+                title={`Підсумок туру ${recap.matchday}`}
+                className="h-full"
+              >
+                <MatchdayRecap
+                  recap={recap}
+                  tournament={tournament}
+                  clubsById={clubsById}
+                />
+              </SectionCard>
+            </div>
+          )}
+          <div className={recap ? "col-12 lg:col-6" : "col-12"}>
+            <SectionCard title="Рекорди турніру" className="h-full">
+              <RecordsCard clubs={tournament.clubs} matches={matches} />
+            </SectionCard>
+          </div>
+
+          {stats.playedMatches > 0 && (
+            <div className="col-12">
+              <SectionCard
+                title="Досягнення турніру"
+                action={
+                  <span className="flex align-items-center gap-2 text-sm font-semibold">
+                    S {achievementCount("S")} : {achievementCount("V")} V
+                  </span>
+                }
+              >
+                <AchievementList items={achievements} clubsById={clubsById} />
+              </SectionCard>
+            </div>
+          )}
+        </div>
+      )}
       <ClubMatchesDialog
         tournament={tournament}
         matches={matches}

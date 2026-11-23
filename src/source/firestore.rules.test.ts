@@ -7,6 +7,7 @@ import {
   connectFirestoreEmulator,
   deleteDoc,
   doc,
+  getDoc,
   getFirestore,
   serverTimestamp,
   setDoc,
@@ -88,6 +89,35 @@ describe("firestore.rules", () => {
     await saveMatchResult("rules-new", firstMatch, { home: 0, away: 0 });
     await saveMatchResult("rules-new", firstMatch, { home: 3, away: 1 });
     await saveMatchResult("rules-new", firstMatch, null);
+  });
+
+  it("dates a result when it is entered and keeps the date on a correction", async () => {
+    const ref = matchRef("rules-new", firstMatch);
+    const before = newFile.matches[0];
+    await saveMatchResult(
+      "rules-new",
+      firstMatch,
+      { home: 1, away: 0 },
+      before
+    );
+    const first = (await getDoc(ref)).get("playedAt");
+    expect(first.toMillis()).toBeGreaterThan(0);
+
+    const dated = {
+      ...before,
+      result: { home: 1, away: 0 },
+      playedAt: "2026-01-02T20:00:00.000Z",
+    };
+    await saveMatchResult("rules-new", firstMatch, { home: 2, away: 0 }, dated);
+    const kept = (await getDoc(ref)).get("playedAt");
+    expect(kept.toDate().toISOString()).toBe(dated.playedAt);
+
+    await expect(
+      updateDoc(ref, { playedAt: "yesterday", updatedAt: serverTimestamp() })
+    ).rejects.toThrow();
+
+    await saveMatchResult("rules-new", firstMatch, null, dated);
+    expect((await getDoc(ref)).get("playedAt")).toBeNull();
   });
 
   it("adds and removes cards while active, without touching the score", async () => {

@@ -68,6 +68,11 @@ service cloud.firestore {
       return cards is list && cards.size() <= 30;
     }
 
+    // When the result was entered: missing, null or a time.
+    function isPlayedAt(value) {
+      return value == null || value is timestamp;
+    }
+
     function isTeams(data) {
       return isText(data.home, 60)
         && isText(data.away, 60)
@@ -76,9 +81,10 @@ service cloud.firestore {
 
     function isGroupMatch(data) {
       let fields = ['stage', 'group', 'matchday', 'home', 'away', 'result', 'updatedAt'];
-      return data.keys().hasOnly(fields.concat(['cards']))
+      return data.keys().hasOnly(fields.concat(['cards', 'playedAt']))
         && data.keys().hasAll(fields)
         && isCards(data.get('cards', []))
+        && isPlayedAt(data.get('playedAt', null))
         && data.stage == 'group'
         && isText(data.group, 4)
         && data.matchday is int && data.matchday >= 1 && data.matchday <= 50
@@ -92,9 +98,10 @@ service cloud.firestore {
     // The document id is fixed: round + tie + "-" + game, "QF1-2".
     function isPlayoffMatch(data, matchId) {
       let fields = ['stage', 'round', 'tie', 'game', 'home', 'away', 'result', 'updatedAt'];
-      return data.keys().hasOnly(fields.concat(['cards']))
+      return data.keys().hasOnly(fields.concat(['cards', 'playedAt']))
         && data.keys().hasAll(fields)
         && isCards(data.get('cards', []))
+        && isPlayedAt(data.get('playedAt', null))
         && data.stage == 'playoff'
         && data.tie is int && data.tie >= 1
         && ((data.round in ['KO', 'R16'] && data.tie <= 8)
@@ -146,18 +153,19 @@ service cloud.firestore {
           && existsAfter(tournamentPath(tournamentId))
           && (!exists(tournamentPath(tournamentId)) || isActive(tournamentId));
 
-        // Group match: only the score changes. Playoff game: the score and the
-        // teams (a wrongly picked club can be corrected). Cards change on
+        // Group match: only the score (with its date) changes. Playoff game:
+        // the score and the teams (a wrongly picked club can be corrected). Cards change on
         // their own and leave updatedAt alone.
         allow update: if isActive(tournamentId)
           && ((changedOnly(['cards'])
                && isCards(request.resource.data.cards))
               || (request.resource.data.updatedAt == request.time
                   && ((resource.data.stage == 'group'
-                       && changedOnly(['result', 'updatedAt'])
+                       && changedOnly(['result', 'playedAt', 'updatedAt'])
+                       && isPlayedAt(request.resource.data.get('playedAt', null))
                        && isResult(request.resource.data.result))
                       || (resource.data.stage == 'playoff'
-                          && changedOnly(['home', 'away', 'result', 'updatedAt'])
+                          && changedOnly(['home', 'away', 'result', 'playedAt', 'updatedAt'])
                           && isPlayoffMatch(request.resource.data, matchId)))));
 
         // Group matches only together with the whole tournament in one batch.

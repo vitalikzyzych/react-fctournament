@@ -10,10 +10,12 @@ import ClubHistoryDialog from "./ClubHistoryDialog";
 
 import {
   computeClubHistories,
+  computeMedals,
   type IClubHistory,
   type IRecord,
   type ITournamentWithMatches,
 } from "@/domain";
+import { useRatings } from "@/hooks";
 import { ClubLabel, SectionCard } from "@/ui";
 import { formatAverage, formatPercent, formatSigned } from "@/utils";
 
@@ -44,6 +46,11 @@ interface IAverage {
 
 interface IClubRow extends IClubHistory {
   average: IAverage;
+  /** Elo rating over every tournament, whatever the playoff switch says. */
+  rating: number;
+  gold: number;
+  silver: number;
+  bronze: number;
 }
 
 const averageOf = (record: IRecord): IAverage => {
@@ -69,14 +76,23 @@ const ClubsHistory = ({
   all: ITournamentWithMatches[];
   includePlayoff: boolean;
 }) => {
-  const histories = useMemo<IClubRow[]>(
-    () =>
-      computeClubHistories(all, includePlayoff).map((history) => ({
+  const ratings = useRatings();
+  const histories = useMemo<IClubRow[]>(() => {
+    const medals = new Map(
+      computeMedals(all).clubs.map((row) => [row.clubId, row])
+    );
+    return computeClubHistories(all, includePlayoff).map((history) => {
+      const medal = medals.get(history.clubId);
+      return {
         ...history,
         average: averageOf(history.total),
-      })),
-    [all, includePlayoff]
-  );
+        rating: Math.round(ratings.byClub.get(history.clubId)?.rating ?? 0),
+        gold: medal?.gold ?? 0,
+        silver: medal?.silver ?? 0,
+        bronze: medal?.bronze ?? 0,
+      };
+    });
+  }, [all, includePlayoff, ratings]);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<IClubHistory | null>(null);
   const [view, setView] = useState<View>("total");
@@ -266,9 +282,40 @@ const ClubsHistory = ({
           className="text-center"
         />
         <Column
-          field="titles"
-          header={<span title="Титули: виграні фінали">Тит.</span>}
+          field="rating"
+          header={<span title="Рейтинг клубу за всі турніри">Рейт.</span>}
           sortable
+          body={(h: IClubRow) => h.rating || "–"}
+          className="text-center"
+        />
+        <Column
+          field="gold"
+          header={
+            <span title="Медалі завершених турнірів: чемпіон, фіналіст, півфіналіст">
+              Медалі
+            </span>
+          }
+          sortable
+          body={(h: IClubRow) =>
+            h.gold + h.silver + h.bronze ? (
+              <span className="inline-flex align-items-center gap-2 white-space-nowrap">
+                {(["gold", "silver", "bronze"] as const).map(
+                  (medal) =>
+                    h[medal] > 0 && (
+                      <span
+                        key={medal}
+                        className="inline-flex align-items-center gap-1"
+                      >
+                        <span className={`medal medal--${medal}`} />
+                        {h[medal]}
+                      </span>
+                    )
+                )}
+              </span>
+            ) : (
+              <span className="text-500">–</span>
+            )
+          }
           className="text-center"
         />
         <Column

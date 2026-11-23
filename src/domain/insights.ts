@@ -9,7 +9,7 @@ import {
   type ICardCount,
   type PlayerRecords,
 } from "./stats";
-import { simulateResults } from "./timeline";
+import { clubStrengths, simulateByStrength } from "./tieChances";
 import {
   type IClub,
   type IMatch,
@@ -463,9 +463,10 @@ export interface IWinsRace {
 }
 
 /**
- * Shares of simulated rests of the group stage (random scores, clubs of equal
- * strength) in which S or V ends with more match wins, counting every result
- * already played (the playoff too). Null when no group match is left.
+ * Shares of simulated rests of the group stage (scores drawn from the clubs'
+ * strengths, see clubStrengths) in which S or V ends with more match wins,
+ * counting every result already played (the playoff too). Null when no group
+ * match is left.
  */
 export const computeWinsRace = (
   tournament: ITournament,
@@ -474,11 +475,12 @@ export const computeWinsRace = (
   runs = 1000
 ): IWinsRace | null => {
   if (!groupMatches(matches).some((m) => m.result === null)) return null;
+  const strengths = clubStrengths(matches);
   const tally = { S: 0, V: 0, level: 0 };
   for (let i = 0; i < runs; i += 1) {
     const { S, V } = computePlayerRecords(
       tournament.clubs,
-      simulateResults(matches, random)
+      simulateByStrength(matches, strengths, random)
     );
     if (S.won > V.won) tally.S += 1;
     else if (V.won > S.won) tally.V += 1;

@@ -5,6 +5,7 @@ import {
   collectionGroup,
   doc,
   type DocumentData,
+  type FieldValue,
   onSnapshot,
   orderBy,
   query,
@@ -62,6 +63,10 @@ const toMatch = (id: string, data: DocumentData): IStoredMatch => {
     away: data.away,
     result: data.result ?? null,
     cards: data.cards ?? [],
+    playedAt:
+      data.playedAt instanceof Timestamp
+        ? data.playedAt.toDate().toISOString()
+        : null,
     // Pending local writes have no server time yet: treat them as "just now".
     updatedAtMs:
       data.updatedAt instanceof Timestamp
@@ -79,9 +84,72 @@ const toMatch = (id: string, data: DocumentData): IStoredMatch => {
     : { ...common, stage: "group", group: data.group, matchday: data.matchday };
 };
 
+/**
+ * Results entered before `playedAt` existed have no date of their own. The
+ * time of the last change stands in for it, unless several matches of the
+ * tournament share it: those were written in one batch (an import), not
+ * entered by hand.
+ */
+const BATCH_SIZE = 3;
+
+const withFallbackDates = (matches: IStoredMatch[]): IStoredMatch[] => {
+  const sameTime = new Map<number, number>();
+  matches.forEach(({ updatedAtMs }) => {
+    if (updatedAtMs !== null) {
+      sameTime.set(updatedAtMs, (sameTime.get(updatedAtMs) ?? 0) + 1);
+    }
+  });
+  return matches.map((match) =>
+    match.result &&
+    !match.playedAt &&
+    match.updatedAtMs !== null &&
+    (sameTime.get(match.updatedAtMs) ?? 0) < BATCH_SIZE
+      ? { ...match, playedAt: new Date(match.updatedAtMs).toISOString() }
+      : match
+  );
+};
+
 /** Cards are stored only when there are some (imported files). */
 const cardsData = (match: IMatch) =>
   match.cards?.length ? { cards: match.cards } : {};
+
+/** The date of a result from a file; nothing for a match without one. */
+const playedAtData = (match: IMatch) =>
+  match.result && match.playedAt
+    ? { playedAt: Timestamp.fromDate(new Date(match.playedAt)) }
+    : {};
+
+/**
+ * `playedAt` of a result write. A first result gets the server time, a
+ * corrected one keeps its date, a cleared one loses it.
+ */
+const playedAtOf = (
+  result: IScore | null,
+  before: IMatch | undefined
+): FieldValue | Timestamp | null => {
+  if (!result) return null;
+  return before?.result && before.playedAt
+    ? Timestamp.fromDate(new Date(before.playedAt))
+    : serverTimestamp();
+};
+
+/**
+ * Runs a result write with `playedAt`; when the deployed rules are older
+ * than this field and refuse it, the same write runs again without the
+ * date, so entering results keeps working until the rules are deployed.
+ */
+const withDateFallback = (
+  write: (dated: boolean) => Promise<void>
+): Promise<void> =>
+  write(true).catch((error: unknown) => {
+    const denied =
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      error.code === "permission-denied";
+    if (!denied) throw error;
+    return write(false);
+  });
 
 /** Document fields of a match (the id is the document id). */
 const matchData = (match: IMatch) =>
@@ -94,6 +162,7 @@ const matchData = (match: IMatch) =>
         away: match.away,
         result: match.result,
         ...cardsData(match),
+        ...playedAtData(match),
         updatedAt: serverTimestamp(),
       }
     : {
@@ -105,6 +174,7 @@ const matchData = (match: IMatch) =>
         away: match.away,
         result: match.result,
         ...cardsData(match),
+        ...playedAtData(match),
         updatedAt: serverTimestamp(),
       };
 
@@ -135,6 +205,9 @@ export const subscribeAllMatches = (
         list.push(toMatch(d.id, d.data()));
         byTournament.set(tournamentId, list);
       });
+      byTournament.forEach((list, id) =>
+        byTournament.set(id, withFallbackDates(list))
+      );
       onData(byTournament);
     },
     onError
@@ -182,16 +255,21 @@ export const importTournament = async (
 /**
  * Saves or clears (`null`) a result. The local snapshot updates at once; the
  * promise settles when the server confirms, which can be much later offline.
+ * `before` is the match as stored, for the date of the result (playedAtOf).
  */
 export const saveMatchResult = (
   tournamentId: string,
   matchId: string,
-  result: IScore | null
+  result: IScore | null,
+  before?: IMatch
 ): Promise<void> =>
-  updateDoc(doc(getDb(), TOURNAMENTS, tournamentId, MATCHES, matchId), {
-    result,
-    updatedAt: serverTimestamp(),
-  });
+  withDateFallback((dated) =>
+    updateDoc(doc(getDb(), TOURNAMENTS, tournamentId, MATCHES, matchId), {
+      result,
+      ...(dated ? { playedAt: playedAtOf(result, before) } : {}),
+      updatedAt: serverTimestamp(),
+    })
+  );
 
 /**
  * Creates playoff games in one batch: the legs of a new tie (two in QF and SF,
@@ -199,20 +277,22 @@ export const saveMatchResult = (
  * are fixed ("QF1-2"), so two devices creating the same game end up with one
  * document.
  */
-export const createPlayoffGames = async (
+export const createPlayoffGames = (
   tournamentId: string,
   games: IPlayoffMatch[]
-): Promise<void> => {
-  const db = getDb();
-  const batch = writeBatch(db);
-  games.forEach((game) =>
-    batch.set(
-      doc(db, TOURNAMENTS, tournamentId, MATCHES, game.id),
-      matchData(game)
-    )
-  );
-  await batch.commit();
-};
+): Promise<void> =>
+  withDateFallback(async (dated) => {
+    const db = getDb();
+    const batch = writeBatch(db);
+    games.forEach((game) =>
+      batch.set(doc(db, TOURNAMENTS, tournamentId, MATCHES, game.id), {
+        ...matchData({ ...game, playedAt: null }),
+        // An extra game is created together with its result.
+        ...(dated && game.result ? { playedAt: serverTimestamp() } : {}),
+      })
+    );
+    await batch.commit();
+  });
 
 /**
  * Changes the clubs of a tie. `first` hosts game 1 and the other odd games,
@@ -295,23 +375,26 @@ export const removeMatchCard = (
  * Saves a playoff result and removes replays that no longer apply (an earlier
  * draw was corrected to a win, or cleared), in one batch.
  */
-export const savePlayoffResult = async (
+export const savePlayoffResult = (
   tournamentId: string,
   matchId: string,
   result: IScore | null,
-  removeIds: string[]
-): Promise<void> => {
-  const db = getDb();
-  const batch = writeBatch(db);
-  batch.update(doc(db, TOURNAMENTS, tournamentId, MATCHES, matchId), {
-    result,
-    updatedAt: serverTimestamp(),
+  removeIds: string[],
+  before?: IMatch
+): Promise<void> =>
+  withDateFallback(async (dated) => {
+    const db = getDb();
+    const batch = writeBatch(db);
+    batch.update(doc(db, TOURNAMENTS, tournamentId, MATCHES, matchId), {
+      result,
+      ...(dated ? { playedAt: playedAtOf(result, before) } : {}),
+      updatedAt: serverTimestamp(),
+    });
+    removeIds.forEach((id) =>
+      batch.delete(doc(db, TOURNAMENTS, tournamentId, MATCHES, id))
+    );
+    await batch.commit();
   });
-  removeIds.forEach((id) =>
-    batch.delete(doc(db, TOURNAMENTS, tournamentId, MATCHES, id))
-  );
-  await batch.commit();
-};
 
 /** Removes playoff games (a whole tie). The rules refuse group matches. */
 export const deletePlayoffMatches = async (

@@ -6,6 +6,7 @@ import { DataTable } from "primereact/datatable";
 import GoalsPerMatch from "./GoalsPerMatch";
 import PotsCard from "./PotsCard";
 import RaceCard from "./RaceCard";
+import RatingsCard from "./RatingsCard";
 import ScoreGrid from "./ScoreGrid";
 
 import {
@@ -23,6 +24,7 @@ import {
   playoffMatches,
   statMatches,
 } from "@/domain";
+import { useRatings } from "@/hooks";
 import {
   ClubLabel,
   PlayerBadge,
@@ -30,6 +32,7 @@ import {
   PlayoffToggle,
   SectionCard,
   StatCard,
+  WrapUp,
 } from "@/ui";
 import { formatAverage, formatScore, formatSigned, plural } from "@/utils";
 
@@ -130,6 +133,7 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
   const stats = computeTournamentStats(tournament.clubs, counted);
   const clubsById = new Map(tournament.clubs.map((club) => [club.id, club]));
   const league = isLeagueFormat(tournament.format);
+  const ratings = useRatings();
 
   const matchLine = (match: IPlayedMatch) => {
     const home = clubsById.get(match.home);
@@ -176,6 +180,17 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
             checked={includePlayoff}
             onChange={setIncludePlayoff}
           />
+        </div>
+      )}
+      {tournament.status === "completed" && stats.playedMatches > 0 && (
+        <div className="col-12">
+          <SectionCard title="Підсумки турніру">
+            <WrapUp
+              tournament={tournament}
+              matches={matches}
+              ratings={ratings}
+            />
+          </SectionCard>
         </div>
       )}
       <div className="col-6 md:col-3">
@@ -254,6 +269,11 @@ const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
           </SectionCard>
         </div>
       )}
+      <div className="col-12">
+        <SectionCard title="Рейтинг клубів у цьому турнірі">
+          <RatingsCard tournament={tournament} ratings={ratings} />
+        </SectionCard>
+      </div>
       <div className="col-12 md:col-6">
         <SectionCard title="Найбільше голів у матчі" className="h-full">
           {matchList(stats.highestScoring)}

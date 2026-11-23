@@ -30,3 +30,38 @@ export const formatSigned = (n: number): string =>
 
 export const formatAverage = (n: number): string =>
   n.toFixed(2).replace(".", ",");
+
+const sameDay = (a: Date, b: Date) =>
+  a.getFullYear() === b.getFullYear() &&
+  a.getMonth() === b.getMonth() &&
+  a.getDate() === b.getDate();
+
+/** "21:40" for today, otherwise "12.03 21:40". */
+export const formatMatchTime = (ms: number): string => {
+  const date = new Date(ms);
+  const time = date.toLocaleTimeString("uk-UA", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  if (sameDay(date, new Date())) return time;
+  const day = date.toLocaleDateString("uk-UA", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+  return `${day} ${time}`;
+};
+
+/** "12 березня 2026": the day of a session. */
+export const formatDay = (ms: number): string =>
+  new Date(ms).toLocaleDateString("uk-UA", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+/** "2 год 15 хв" or "45 хв". */
+export const formatDuration = (ms: number): string => {
+  const minutes = Math.round(ms / 60000);
+  const hours = Math.floor(minutes / 60);
+  return hours ? `${hours} год ${minutes % 60} хв` : `${minutes} хв`;
+};

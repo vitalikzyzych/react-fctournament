@@ -2,8 +2,10 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 
 import AchievementTotals from "./AchievementTotals";
+import CategoriesCard from "./CategoriesCard";
 import MilestonesHistory from "./MilestonesHistory";
 import PlayersProgressChart from "./PlayersProgressChart";
+import SessionsCard from "./SessionsCard";
 
 import {
   computeAllTimePlayers,
@@ -176,6 +178,17 @@ const PlayersHistory = ({
       <div className="col-12 lg:col-6">
         <SectionCard title="Ювілеї" className="h-full">
           <MilestonesHistory all={all} />
+        </SectionCard>
+      </div>
+
+      <div className="col-12">
+        <SectionCard title="S проти V за категоріями">
+          <CategoriesCard all={all} includePlayoff={includePlayoff} />
+        </SectionCard>
+      </div>
+      <div className="col-12">
+        <SectionCard title="Ігрові вечори">
+          <SessionsCard all={all} />
         </SectionCard>
       </div>
 

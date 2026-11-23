@@ -1,0 +1,254 @@
+import { isLeagueFormat } from "./formats";
+import { matchWinner, other, ownersOf } from "./insights";
+import { groupTable } from "./league";
+import { computePlayoff, groupMatches, roundName } from "./playoff";
+import type { IRatedMatch } from "./ratings";
+import { playedChronologically } from "./sessions";
+import type { IPlayedMatch } from "./standings";
+import type { IMatch, ITournament, PlayerId } from "./types";
+
+export type FeedKind =
+  | "leader"
+  | "lead"
+  | "record"
+  | "streak"
+  | "through"
+  | "champion"
+  | "stageDone"
+  | "upset";
+
+export interface IFeedEvent {
+  /** Stable within a tournament: match id and kind. */
+  id: string;
+  kind: FeedKind;
+  /** The match that caused the event. */
+  match: IPlayedMatch;
+  /** The club or the player the event is about, for the crest or badge. */
+  club?: string;
+  player?: PlayerId;
+  title: string;
+  detail?: string;
+}
+
+/** Results needed before a "tournament record" means anything. */
+const RECORD_MIN_MATCHES = 8;
+/** S against V matches needed before a change of the lead is news. */
+const LEAD_MIN_MATCHES = 4;
+/** Wins in a row worth an event, for a club and for a player. */
+const CLUB_RUNS = [3, 5, 7, 10];
+const PLAYER_RUNS = [4, 6, 8, 10, 15, 20];
+
+const score = (match: IPlayedMatch) =>
+  `${match.result.home}:${match.result.away}`;
+
+/**
+ * What happened in a tournament, told match by match in the order the
+ * results came in: a new leader of a group, the lead in wins changing hands,
+ * tournament records, winning runs, sensations (from the club ratings, when
+ * given), decided playoff ties and the champion. Oldest first.
+ */
+export const computeFeed = (
+  tournament: ITournament,
+  matches: IMatch[],
+  rated: IRatedMatch[] = []
+): IFeedEvent[] => {
+  const league = isLeagueFormat(tournament.format);
+  const owners = ownersOf(tournament.clubs);
+  const names = new Map(tournament.clubs.map((club) => [club.id, club.name]));
+  const nameOf = (id: string) => names.get(id) ?? id;
+  const ratedById = new Map(
+    rated
+      .filter((r) => r.tournament.id === tournament.id)
+      .map((r) => [r.match.id, r])
+  );
+  const groupTotals = new Map<string, number>();
+  groupMatches(matches).forEach((match) =>
+    groupTotals.set(match.group, (groupTotals.get(match.group) ?? 0) + 1)
+  );
+  const groupSizes = new Map<string, number>();
+  tournament.clubs.forEach((club) =>
+    groupSizes.set(club.group, (groupSizes.get(club.group) ?? 0) + 1)
+  );
+
+  const events: IFeedEvent[] = [];
+  const sofar: IPlayedMatch[] = [];
+  const leaders = new Map<string, string>();
+  const groupPlayed = new Map<string, number>();
+  const wins = { S: 0, V: 0 };
+  let duels = 0;
+  let leading: PlayerId | null = null;
+  let playerRun: { player: PlayerId | null; count: number } = {
+    player: null,
+    count: 0,
+  };
+  const clubRuns = new Map<string, number>();
+  let maxMargin = 0;
+  let maxGoals = 0;
+  const decided = new Set<string>();
+  const seen = new Set<string>();
+
+  playedChronologically(matches).forEach((match) => {
+    sofar.push(match);
+    seen.add(match.id);
+    const add = (
+      kind: FeedKind,
+      event: Omit<IFeedEvent, "id" | "kind" | "match">
+    ) => events.push({ id: `${match.id}:${kind}`, kind, match, ...event });
+    const { home, away } = match.result;
+    const winnerClub =
+      home > away ? match.home : away > home ? match.away : null;
+    const loserClub = winnerClub === match.home ? match.away : match.home;
+
+    // Sensation: a win against a much higher rated club.
+    const rating = ratedById.get(match.id);
+    if (rating && winnerClub) {
+      const chance =
+        winnerClub === match.home
+          ? rating.expectedHome
+          : 1 - rating.expectedHome;
+      if (chance <= 0.35) {
+        add("upset", {
+          club: winnerClub,
+          title: `Сенсація: ${nameOf(winnerClub)} обіграв ${nameOf(loserClub)}`,
+          detail: `${score(match)}, шанс на перемогу був ${Math.round(chance * 100)}%`,
+        });
+      }
+    }
+
+    // Tournament records.
+    const margin = Math.abs(home - away);
+    const goals = home + away;
+    if (sofar.length > RECORD_MIN_MATCHES) {
+      if (margin > maxMargin && winnerClub) {
+        add("record", {
+          club: winnerClub,
+          title: "Найбільша перемога турніру",
+          detail: `${nameOf(match.home)} ${score(match)} ${nameOf(match.away)}`,
+        });
+      }
+      if (goals > maxGoals) {
+        add("record", {
+          title: `Найрезультативніший матч турніру: ${goals} голів`,
+          detail: `${nameOf(match.home)} ${score(match)} ${nameOf(match.away)}`,
+        });
+      }
+    }
+    maxMargin = Math.max(maxMargin, margin);
+    maxGoals = Math.max(maxGoals, goals);
+
+    // Winning runs of clubs.
+    [match.home, match.away].forEach((clubId) => {
+      const run = clubId === winnerClub ? (clubRuns.get(clubId) ?? 0) + 1 : 0;
+      clubRuns.set(clubId, run);
+      if (CLUB_RUNS.includes(run)) {
+        add("streak", {
+          club: clubId,
+          title: `${nameOf(clubId)}: ${run} ${run < 5 ? "перемоги" : "перемог"} поспіль`,
+        });
+      }
+    });
+
+    // S against V: the lead in wins and winning runs of a player.
+    const homeOwner = owners.get(match.home);
+    const awayOwner = owners.get(match.away);
+    if (homeOwner && awayOwner && homeOwner !== awayOwner) {
+      const winner = matchWinner(match, owners);
+      if (winner) wins[winner] += 1;
+      duels += 1;
+      // News only when the lead changes hands, not on every level score.
+      const ahead: PlayerId | null =
+        wins.S === wins.V ? null : wins.S > wins.V ? "S" : "V";
+      if (ahead && ahead !== leading) {
+        if (leading && duels >= LEAD_MIN_MATCHES) {
+          add("lead", {
+            player: ahead,
+            title: `${ahead} перехопив лідерство за перемогами: ${wins.S}:${wins.V}`,
+          });
+        }
+        leading = ahead;
+      }
+      playerRun =
+        winner && winner === playerRun.player
+          ? { player: winner, count: playerRun.count + 1 }
+          : { player: winner, count: winner ? 1 : 0 };
+      if (winner && PLAYER_RUNS.includes(playerRun.count)) {
+        add("streak", {
+          player: winner,
+          title: `${winner} виграв ${playerRun.count} ${playerRun.count < 5 ? "матчі" : "матчів"} поспіль`,
+          detail: `${other(winner)} без перемог від початку серії`,
+        });
+      }
+    }
+
+    if (match.stage === "group") {
+      const played = (groupPlayed.get(match.group) ?? 0) + 1;
+      groupPlayed.set(match.group, played);
+      const table = groupTable(tournament, sofar, match.group);
+      const leader = table[0]?.club.id;
+      const previous = leaders.get(match.group);
+      // The first round of matches only sorts the clubs out.
+      const settled = played > (groupSizes.get(match.group) ?? 0) / 2;
+      if (leader && previous && leader !== previous && settled) {
+        add("leader", {
+          club: leader,
+          title: league
+            ? `${nameOf(leader)} очолив таблицю`
+            : `${nameOf(leader)} очолив групу ${match.group}`,
+          detail: `Попереду був ${nameOf(previous)}`,
+        });
+      }
+      if (leader) leaders.set(match.group, leader);
+      if (played === groupTotals.get(match.group)) {
+        add("stageDone", {
+          club: leader,
+          title: league
+            ? `Лігу завершено: переможець ${leader ? nameOf(leader) : ""}`
+            : `Групу ${match.group} завершено`,
+          detail: league
+            ? undefined
+            : `Перші місця: ${table
+                .slice(0, 2)
+                .map((row) => row.club.name)
+                .join(", ")}`,
+        });
+      }
+      return;
+    }
+
+    // A playoff game that decides its tie. The tie's games not reached yet
+    // count as unplayed, so a first leg alone decides nothing.
+    const games = matches
+      .filter(
+        (m) =>
+          m.stage === "playoff" &&
+          m.round === match.round &&
+          m.tie === match.tie
+      )
+      .map((m) => (seen.has(m.id) ? m : { ...m, result: null }));
+    const tie = computePlayoff(games).find(
+      (t) => t.round === match.round && t.tie === match.tie
+    );
+    const key = `${match.round}${match.tie}`;
+    if (!tie?.winner || decided.has(key)) return;
+    decided.add(key);
+    const loser = tie.winner === tie.home ? tie.away : tie.home;
+    const total =
+      tie.winner === tie.home
+        ? `${tie.aggregate.home}:${tie.aggregate.away}`
+        : `${tie.aggregate.away}:${tie.aggregate.home}`;
+    if (match.round === "F") {
+      add("champion", {
+        club: tie.winner,
+        title: `${nameOf(tie.winner)} виграв турнір`,
+        detail: `Фінал: ${total} проти ${loser ? nameOf(loser) : ""}`,
+      });
+      return;
+    }
+    add("through", {
+      club: tie.winner,
+      title: `${nameOf(tie.winner)} пройшов далі`,
+      detail: `${roundName(match.round)}: ${total} за сумою проти ${loser ? nameOf(loser) : ""}`,
+    });
+  });
+  return events;
+};

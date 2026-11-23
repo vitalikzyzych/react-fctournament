@@ -78,6 +78,11 @@ export interface IGroupMatch {
   result: IScore | null;
   /** Cards of this match; missing or empty when there are none. */
   cards?: ICard[];
+  /**
+   * When the result was entered first (ISO date and time). Missing or null
+   * for matches without a result and for results imported without a date.
+   */
+  playedAt?: string | null;
 }
 
 /**
@@ -96,6 +101,8 @@ export interface IPlayoffMatch {
   away: string;
   result: IScore | null;
   cards?: ICard[];
+  /** See IGroupMatch. */
+  playedAt?: string | null;
 }
 
 export type IMatch = IGroupMatch | IPlayoffMatch;

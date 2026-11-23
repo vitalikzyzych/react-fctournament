@@ -108,6 +108,8 @@ Ownership belongs to the tournament, so the same club may be `S` in one tourname
 
 A missing `result` field is read as `null`.
 
+A match with a result may also carry `playedAt`: the date and time the result was entered, as an ISO string with a time zone (`"2026-11-23T19:40:00.000Z"`). The app sets it when a result is entered and writes it into exported files. It is optional: leave it out for results without a known date. The same field is accepted on playoff games.
+
 ### Cards
 
 Any match, group or playoff, may have an optional `cards` list. Leave it out for new tournaments: cards are entered in the app while the tournament is played. Exported files contain them.

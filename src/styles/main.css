@@ -2250,3 +2250,386 @@ code {
   min-width: 3rem;
 }
 
+
+/* ---------------------------------------------------------------------------
+   Title race: who wins the tournament */
+
+.title-race__share {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  min-width: 2.75rem;
+  text-align: center;
+}
+
+.title-race__row {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(2rem, 1fr) 3rem;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.title-race__track {
+  height: 0.5rem;
+  border-radius: 1rem;
+  background: var(--surface-100);
+  overflow: hidden;
+}
+
+.title-race__fill {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 1rem;
+}
+
+.title-race__fill--S {
+  background: linear-gradient(90deg, var(--red-600), var(--red-400));
+}
+
+.title-race__fill--V {
+  background: linear-gradient(90deg, var(--blue-600), var(--blue-400));
+}
+
+@media screen and (max-width: 575px) {
+  .title-race__row {
+    grid-template-columns: minmax(0, 1fr) 4rem 3rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Bracket: a column per playoff round */
+
+.bracket {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.bracket__round {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 0 15rem;
+  min-width: 15rem;
+}
+
+.bracket__title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-color-secondary);
+}
+
+.bracket__ties {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.bracket__tie {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--surface-card) 70%, transparent);
+  overflow: hidden;
+}
+
+.bracket__club {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  min-height: 2.2rem;
+}
+
+.bracket__club + .bracket__club {
+  border-top: 1px solid var(--surface-border);
+}
+
+.bracket__club--empty {
+  color: var(--text-color-secondary);
+  font-size: 0.8rem;
+}
+
+.bracket__club--winner {
+  font-weight: 700;
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+}
+
+.bracket__club--loser {
+  opacity: 0.55;
+}
+
+.bracket__game {
+  width: 1.1rem;
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.bracket__total {
+  width: 1.5rem;
+  text-align: center;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.bracket__chance {
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Story feed */
+
+.feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.feed__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+}
+
+.feed__item + .feed__item {
+  border-top: 1px solid var(--surface-border);
+}
+
+.feed__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--surface-100);
+  color: var(--primary-color);
+}
+
+.feed__icon--S {
+  background: color-mix(in srgb, var(--red-500) 20%, transparent);
+  color: var(--red-300);
+}
+
+.feed__icon--V {
+  background: color-mix(in srgb, var(--blue-500) 20%, transparent);
+  color: var(--blue-300);
+}
+
+.feed__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   Stakes of the next match */
+
+.stakes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--surface-ground) 55%, transparent);
+  cursor: default;
+}
+
+.stakes__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(3, 4.5rem);
+  align-items: center;
+  gap: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.stakes__head {
+  font-size: 0.7rem;
+  color: var(--text-color-secondary);
+  text-align: right;
+}
+
+.stakes__value {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stakes__value--win {
+  color: var(--green-400);
+}
+
+.stakes__value--loss {
+  color: var(--red-300);
+}
+
+@media screen and (max-width: 419px) {
+  .stakes__grid {
+    grid-template-columns: minmax(0, 1fr) repeat(3, 3.4rem);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Pre-match dialog */
+
+.preview__clubs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.preview__club {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.preview__table {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Tournament wrap-up */
+
+.wrap-up__awards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.75rem;
+}
+
+/* A match needs the room of two tiles for both club names. */
+@media screen and (min-width: 768px) {
+  .wrap-up__award--match {
+    grid-column: span 2;
+  }
+}
+
+.wrap-up__award {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.6rem;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   History: record book, medals, categories, ratings */
+
+.record-book {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.record-book__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.medal {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+}
+
+.medal--gold {
+  background: var(--yellow-400);
+}
+
+.medal--silver {
+  background: var(--surface-400);
+}
+
+.medal--bronze {
+  background: var(--orange-600);
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: minmax(6rem, 12rem) auto minmax(3rem, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.categories__head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  color: var(--text-color-secondary);
+}
+
+.categories__label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.categories__value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.categories__value--end {
+  justify-content: flex-end;
+}
+
+@media screen and (max-width: 575px) {
+  .categories {
+    grid-template-columns: minmax(4.5rem, 1fr) auto minmax(2rem, 1fr) auto;
+    font-size: 0.8rem;
+  }
+
+  .categories__value {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .categories__value--end {
+    align-items: flex-end;
+    flex-direction: column-reverse;
+  }
+}
+
+.rating-up {
+  color: var(--green-400);
+  font-weight: 600;
+}
+
+.rating-down {
+  color: var(--red-300);
+  font-weight: 600;
+}

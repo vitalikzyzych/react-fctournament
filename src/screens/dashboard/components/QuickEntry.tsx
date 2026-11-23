@@ -1,4 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+
+import { Button } from "primereact/button";
 
 import EarlierGames from "./EarlierGames";
 
@@ -16,8 +18,23 @@ import {
   tieKey,
   upcomingMatches,
 } from "@/domain";
-import { useMatchCards, useSaveResult, useTieChances } from "@/hooks";
-import { EmptyState, MatchCards, MatchRow, SectionCard, TieChance } from "@/ui";
+import {
+  useMatchCards,
+  useRatings,
+  useSaveResult,
+  useStakes,
+  useTieChances,
+} from "@/hooks";
+import { useTournamentData } from "@/providers";
+import {
+  EmptyState,
+  MatchCards,
+  MatchPreviewDialog,
+  MatchRow,
+  SectionCard,
+  StakesLine,
+  TieChance,
+} from "@/ui";
 import { formatScore } from "@/utils";
 
 interface IQuickEntryProps {
@@ -48,6 +65,13 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
   );
   const latest = latestResult(matches);
   const upcoming = upcomingMatches(matches);
+  const league = isLeagueFormat(tournament.format);
+  // What the next match means, while it is a group match.
+  const next = upcoming[0];
+  const stakes = useStakes(tournament, matches, next);
+  const { all } = useTournamentData();
+  const ratings = useRatings();
+  const [preview, setPreview] = useState<IMatch | null>(null);
 
   const entries: IEntry[] = latest
     ? [
@@ -82,7 +106,18 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
               : undefined;
           return (
             <div key={label} className="flex flex-column gap-2">
-              <span className="text-500 text-xs font-semibold">{label}</span>
+              <div className="flex align-items-center justify-content-between gap-2">
+                <span className="text-500 text-xs font-semibold">{label}</span>
+                {match.result === null && (
+                  <Button
+                    label="Перед матчем"
+                    size="small"
+                    text
+                    className="py-0"
+                    onClick={() => setPreview(match)}
+                  />
+                )}
+              </div>
               {earlier && (
                 <EarlierGames
                   earlier={earlier}
@@ -98,13 +133,23 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
                   away={clubsById.get(first.away)}
                 />
               )}
+              {stakes && match.id === next?.id && (
+                <StakesLine
+                  stakes={stakes}
+                  home={clubsById.get(match.home)}
+                  away={clubsById.get(match.away)}
+                  goal={
+                    league ? "вийти в 1/8 фіналу напряму" : "вийти в плей-офф"
+                  }
+                />
+              )}
               <MatchRow
                 // Remount on any stored change so the draft starts from it.
                 key={`${match.id}:${match.home}:${match.away}:${formatScore(match.result)}`}
                 match={match}
                 clubsById={clubsById}
                 editable
-                meta={describeMatch(match, isLeagueFormat(tournament.format))}
+                meta={describeMatch(match, league)}
                 showcase
                 onSave={(result) => saveResult(match, result)}
                 footer={
@@ -133,6 +178,14 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
           </EmptyState>
         )}
       </div>
+      <MatchPreviewDialog
+        tournament={tournament}
+        matches={matches}
+        match={preview}
+        all={all}
+        ratings={ratings}
+        onHide={() => setPreview(null)}
+      />
     </SectionCard>
   );
 };

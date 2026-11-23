@@ -42,7 +42,7 @@ export const useSaveResult = (tournament: ITournament, matches: IMatch[]) => {
   return (match: IMatch, result: IScore | null) => {
     if (match.stage === "group") {
       notify(match, result);
-      saveMatchResult(tournament.id, match.id, result).catch(fail);
+      saveMatchResult(tournament.id, match.id, result, match).catch(fail);
       return;
     }
 
@@ -63,7 +63,8 @@ export const useSaveResult = (tournament: ITournament, matches: IMatch[]) => {
         tournament.id,
         match.id,
         result,
-        stale.map((game) => game.id)
+        stale.map((game) => game.id),
+        match
       ).catch(fail);
     };
     if (!stale.length) {
