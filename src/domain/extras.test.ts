@@ -266,9 +266,31 @@ describe("story feed", () => {
   it("ends with the champion and reports every decided tie", () => {
     expect(feed[feed.length - 1].kind).toBe("champion");
     expect(feed.filter((e) => e.kind === "through")).toHaveLength(6);
-    expect(feed.filter((e) => e.kind === "stageDone")).toHaveLength(
-      completed.tournament.groups.length
+    expect(feed.some((e) => e.kind.includes("leader"))).toBe(false);
+  });
+
+  it("reports a player's run of matches without a loss", () => {
+    const active = partly(fresh, 12);
+    // S clubs are at home in none or all of these; make S never lose.
+    const owners = new Map(active.tournament.clubs.map((c) => [c.id, c.owner]));
+    const matches = active.matches.map((m, i) =>
+      i < 12
+        ? {
+            ...m,
+            result:
+              owners.get(m.home) === "S"
+                ? { home: i % 2 ? 2 : 1, away: 1 }
+                : { home: 1, away: i % 2 ? 2 : 1 },
+          }
+        : m
     );
+    const runs = computeFeed(active.tournament, matches).filter(
+      (e) => e.kind === "unbeaten"
+    );
+    expect(runs.map((e) => e.title)).toEqual([
+      "S не програє 5 матчів поспіль",
+      "S не програє 10 матчів поспіль",
+    ]);
   });
 
   it("gives every event its own id", () => {

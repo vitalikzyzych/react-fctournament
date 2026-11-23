@@ -1,21 +1,17 @@
-import { isLeagueFormat } from "./formats";
 import { matchWinner, other, ownersOf } from "./insights";
-import { groupTable } from "./league";
-import { computePlayoff, groupMatches, roundName } from "./playoff";
+import { computePlayoff, roundName } from "./playoff";
 import type { IRatedMatch } from "./ratings";
 import { playedChronologically } from "./sessions";
 import type { IPlayedMatch } from "./standings";
-import type { IMatch, ITournament, PlayerId } from "./types";
+import {
+  type IMatch,
+  type ITournament,
+  PLAYER_IDS,
+  type PlayerId,
+} from "./types";
 
 export type FeedKind =
-  | "leader"
-  | "lead"
-  | "record"
-  | "streak"
-  | "through"
-  | "champion"
-  | "stageDone"
-  | "upset";
+  "lead" | "record" | "streak" | "unbeaten" | "through" | "champion" | "upset";
 
 export interface IFeedEvent {
   /** Stable within a tournament: match id and kind. */
@@ -37,22 +33,24 @@ const LEAD_MIN_MATCHES = 4;
 /** Wins in a row worth an event, for a club and for a player. */
 const CLUB_RUNS = [3, 5, 7, 10];
 const PLAYER_RUNS = [4, 6, 8, 10, 15, 20];
+/** Matches in a row without a loss worth an event, for a player. */
+const UNBEATEN_RUNS = [5, 10, 15, 20, 25, 30, 40, 50];
 
 const score = (match: IPlayedMatch) =>
   `${match.result.home}:${match.result.away}`;
 
 /**
  * What happened in a tournament, told match by match in the order the
- * results came in: a new leader of a group, the lead in wins changing hands,
- * tournament records, winning runs, sensations (from the club ratings, when
- * given), decided playoff ties and the champion. Oldest first.
+ * results came in: the lead in wins changing hands, winning and unbeaten
+ * runs, tournament records, sensations (from the club ratings, when given),
+ * decided playoff ties and the champion. Group leaders and finished groups
+ * are left out at the user's request (2026-11-23). Oldest first.
  */
 export const computeFeed = (
   tournament: ITournament,
   matches: IMatch[],
   rated: IRatedMatch[] = []
 ): IFeedEvent[] => {
-  const league = isLeagueFormat(tournament.format);
   const owners = ownersOf(tournament.clubs);
   const names = new Map(tournament.clubs.map((club) => [club.id, club.name]));
   const nameOf = (id: string) => names.get(id) ?? id;
@@ -61,22 +59,12 @@ export const computeFeed = (
       .filter((r) => r.tournament.id === tournament.id)
       .map((r) => [r.match.id, r])
   );
-  const groupTotals = new Map<string, number>();
-  groupMatches(matches).forEach((match) =>
-    groupTotals.set(match.group, (groupTotals.get(match.group) ?? 0) + 1)
-  );
-  const groupSizes = new Map<string, number>();
-  tournament.clubs.forEach((club) =>
-    groupSizes.set(club.group, (groupSizes.get(club.group) ?? 0) + 1)
-  );
-
   const events: IFeedEvent[] = [];
   const sofar: IPlayedMatch[] = [];
-  const leaders = new Map<string, string>();
-  const groupPlayed = new Map<string, number>();
   const wins = { S: 0, V: 0 };
   let duels = 0;
   let leading: PlayerId | null = null;
+  const unbeaten = { S: 0, V: 0 };
   let playerRun: { player: PlayerId | null; count: number } = {
     player: null,
     count: 0,
@@ -171,6 +159,18 @@ export const computeFeed = (
         winner && winner === playerRun.player
           ? { player: winner, count: playerRun.count + 1 }
           : { player: winner, count: winner ? 1 : 0 };
+      PLAYER_IDS.forEach((player) => {
+        unbeaten[player] = winner === other(player) ? 0 : unbeaten[player] + 1;
+        const run = unbeaten[player];
+        // A run of wins only is told by the event below.
+        const allWins = playerRun.player === player && playerRun.count === run;
+        if (UNBEATEN_RUNS.includes(run) && !allWins) {
+          add("unbeaten", {
+            player,
+            title: `${player} не програє ${run} матчів поспіль`,
+          });
+        }
+      });
       if (winner && PLAYER_RUNS.includes(playerRun.count)) {
         add("streak", {
           player: winner,
@@ -180,40 +180,7 @@ export const computeFeed = (
       }
     }
 
-    if (match.stage === "group") {
-      const played = (groupPlayed.get(match.group) ?? 0) + 1;
-      groupPlayed.set(match.group, played);
-      const table = groupTable(tournament, sofar, match.group);
-      const leader = table[0]?.club.id;
-      const previous = leaders.get(match.group);
-      // The first round of matches only sorts the clubs out.
-      const settled = played > (groupSizes.get(match.group) ?? 0) / 2;
-      if (leader && previous && leader !== previous && settled) {
-        add("leader", {
-          club: leader,
-          title: league
-            ? `${nameOf(leader)} очолив таблицю`
-            : `${nameOf(leader)} очолив групу ${match.group}`,
-          detail: `Попереду був ${nameOf(previous)}`,
-        });
-      }
-      if (leader) leaders.set(match.group, leader);
-      if (played === groupTotals.get(match.group)) {
-        add("stageDone", {
-          club: leader,
-          title: league
-            ? `Лігу завершено: переможець ${leader ? nameOf(leader) : ""}`
-            : `Групу ${match.group} завершено`,
-          detail: league
-            ? undefined
-            : `Перші місця: ${table
-                .slice(0, 2)
-                .map((row) => row.club.name)
-                .join(", ")}`,
-        });
-      }
-      return;
-    }
+    if (match.stage !== "playoff") return;
 
     // A playoff game that decides its tie. The tie's games not reached yet
     // count as unplayed, so a first leg alone decides nothing.

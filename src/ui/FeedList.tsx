@@ -21,13 +21,12 @@ interface IFeedListProps {
 }
 
 const ICONS: Record<FeedKind, IconName> = {
-  leader: "DataLine",
   lead: "ArrowSwap",
   record: "Ribbon",
   streak: "DataHistogram",
+  unbeaten: "DataLine",
   through: "ChevronRight",
   champion: "Trophy",
-  stageDone: "CheckmarkCircle",
   upset: "Warning",
 };
 

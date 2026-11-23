@@ -230,6 +230,12 @@ const Dashboard = () => {
             </div>
           )}
 
+          <div className="col-12">
+            <SectionCard title="Форма S і V">
+              <FormStrip clubs={tournament.clubs} matches={matches} />
+            </SectionCard>
+          </div>
+
           <div className={titleRace ? "col-12 lg:col-6" : "col-12"}>
             <SectionCard title="Стрічка подій" className="h-full">
               <FeedList events={feed} clubsById={clubsById} />
@@ -353,12 +359,7 @@ const Dashboard = () => {
             <StatCard icon="History" label="Нічиїх" value={stats.draws} />
           </div>
 
-          <div className="col-12 lg:col-6">
-            <SectionCard title="Форма S і V" className="h-full">
-              <FormStrip clubs={tournament.clubs} matches={matches} />
-            </SectionCard>
-          </div>
-          <div className="col-12 lg:col-6">
+          <div className="col-12">
             <SectionCard title="Ювілеї" className="h-full">
               <Milestones milestones={milestones} tournament={tournament} />
             </SectionCard>
