@@ -24,6 +24,8 @@ export interface IFeedEvent {
   player?: PlayerId;
   title: string;
   detail?: string;
+  /** Runs: the first match of the run, which ends with `match`. */
+  since?: IPlayedMatch;
 }
 
 /** Results needed before a "tournament record" means anything. */
@@ -70,6 +72,10 @@ export const computeFeed = (
     count: 0,
   };
   const clubRuns = new Map<string, number>();
+  // The first match of each run going on, to tell when it began.
+  const clubRunStart = new Map<string, IPlayedMatch>();
+  let playerRunStart: IPlayedMatch | undefined;
+  const unbeatenStart: Partial<Record<PlayerId, IPlayedMatch>> = {};
   let maxMargin = 0;
   let maxGoals = 0;
   const decided = new Set<string>();
@@ -128,9 +134,11 @@ export const computeFeed = (
     [match.home, match.away].forEach((clubId) => {
       const run = clubId === winnerClub ? (clubRuns.get(clubId) ?? 0) + 1 : 0;
       clubRuns.set(clubId, run);
+      if (run === 1) clubRunStart.set(clubId, match);
       if (CLUB_RUNS.includes(run)) {
         add("streak", {
           club: clubId,
+          since: clubRunStart.get(clubId),
           title: `${nameOf(clubId)}: ${run} ${run < 5 ? "перемоги" : "перемог"} поспіль`,
         });
       }
@@ -159,14 +167,17 @@ export const computeFeed = (
         winner && winner === playerRun.player
           ? { player: winner, count: playerRun.count + 1 }
           : { player: winner, count: winner ? 1 : 0 };
+      if (playerRun.count === 1) playerRunStart = match;
       PLAYER_IDS.forEach((player) => {
         unbeaten[player] = winner === other(player) ? 0 : unbeaten[player] + 1;
         const run = unbeaten[player];
+        if (run === 1) unbeatenStart[player] = match;
         // A run of wins only is told by the event below.
         const allWins = playerRun.player === player && playerRun.count === run;
         if (UNBEATEN_RUNS.includes(run) && !allWins) {
           add("unbeaten", {
             player,
+            since: unbeatenStart[player],
             title: `${player} не програє ${run} матчів поспіль`,
           });
         }
@@ -174,6 +185,7 @@ export const computeFeed = (
       if (winner && PLAYER_RUNS.includes(playerRun.count)) {
         add("streak", {
           player: winner,
+          since: playerRunStart,
           title: `${winner} виграв ${playerRun.count} ${playerRun.count < 5 ? "матчі" : "матчів"} поспіль`,
           detail: `${other(winner)} без перемог від початку серії`,
         });

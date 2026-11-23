@@ -65,3 +65,19 @@ export const formatDuration = (ms: number): string => {
   const hours = Math.floor(minutes / 60);
   return hours ? `${hours} год ${minutes % 60} хв` : `${minutes} хв`;
 };
+
+/**
+ * A period: "13.11 21:30 – 22:45" within one day (the date once),
+ * "12.11 23:10 – 13.11 00:40" across days.
+ */
+export const formatTimeRange = (startMs: number, endMs: number): string => {
+  const start = new Date(startMs);
+  const end = new Date(endMs);
+  const time = (date: Date) =>
+    date.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
+  const day = (date: Date) =>
+    date.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit" });
+  return sameDay(start, end)
+    ? `${day(start)} ${time(start)} – ${time(end)}`
+    : `${day(start)} ${time(start)} – ${day(end)} ${time(end)}`;
+};

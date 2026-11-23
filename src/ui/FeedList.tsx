@@ -11,7 +11,7 @@ import {
   type IFeedEvent,
   playedAtMs,
 } from "@/domain";
-import { findCatalogClub, formatMatchTime } from "@/utils";
+import { findCatalogClub, formatMatchTime, formatTimeRange } from "@/utils";
 
 interface IFeedListProps {
   /** Newest first. */
@@ -49,6 +49,8 @@ const FeedList = ({ events, clubsById, limit = 6 }: IFeedListProps) => {
           const club = event.club ? clubsById.get(event.club) : undefined;
           const owner = event.player ?? club?.owner;
           const at = playedAtMs(event.match);
+          // A run shows its whole period, from its first match to this one.
+          const from = event.since ? playedAtMs(event.since) : null;
           return (
             <li key={`${event.id}:${event.title}`} className="feed__item">
               <span
@@ -72,7 +74,9 @@ const FeedList = ({ events, clubsById, limit = 6 }: IFeedListProps) => {
               </div>
               {at !== null && (
                 <span className="text-xs text-500 white-space-nowrap">
-                  {formatMatchTime(at)}
+                  {from !== null && from !== at
+                    ? formatTimeRange(from, at)
+                    : formatMatchTime(at)}
                 </span>
               )}
             </li>

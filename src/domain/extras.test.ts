@@ -287,6 +287,11 @@ describe("story feed", () => {
     const runs = computeFeed(active.tournament, matches).filter(
       (e) => e.kind === "unbeaten"
     );
+    // Each run knows the match it began with.
+    expect(runs.map((e) => e.since?.id)).toEqual([
+      matches[0].id,
+      matches[0].id,
+    ]);
     expect(runs.map((e) => e.title)).toEqual([
       "S не програє 5 матчів поспіль",
       "S не програє 10 матчів поспіль",
