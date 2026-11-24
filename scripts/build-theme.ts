@@ -1,9 +1,9 @@
 /**
- * Builds src/styles/theme.css: PrimeReact's Lara dark teal theme with the
- * app's own colours. The theme writes its colours as literals in hundreds
- * of rules, so recolouring it once here is simpler than overriding each
- * component. Run `npm run theme` after changing a colour below or updating
- * primereact.
+ * Builds src/styles/theme.css: PrimeReact's Lara dark teal theme with its
+ * accent and surface colours turned into CSS variables. The theme writes
+ * its colours as literals in hundreds of rules, so rewriting it once here
+ * is simpler than overriding each component. Run `npm run theme` after
+ * updating primereact. The colours themselves live in src/styles/main.css.
  */
 import { readFileSync, writeFileSync } from "node:fs";
 
@@ -11,27 +11,23 @@ const SOURCE = "node_modules/primereact/resources/themes/lara-dark-teal";
 const TARGET = "src/styles/theme.css";
 
 /**
- * Accent: a warm trophy gold, kept apart from S red and V blue. Tried and
- * turned down by the user on 2026-11-23: neon lime on black (read like a
- * betting site) and mint (too close to the old teal).
+ * Theme literal, then the CSS variable that takes its place. The variables
+ * are set per app theme in src/styles/main.css ("App themes"), so a theme
+ * is switched at run time by an attribute on <html>.
  */
-const ACCENT = { base: "#f0c14b", hover: "#f5d177", light: "#fae2a8" };
-const ACCENT_RGB = "240, 193, 75";
-
-/** Theme literal, then the app's colour. */
 const COLOURS: [string, string][] = [
   // Accent, from teal.
-  ["#2dd4bf", ACCENT.base],
-  ["#5eead4", ACCENT.hover],
-  ["#99f6e4", ACCENT.light],
-  ["#14b8a6", ACCENT.base],
-  ["rgba(45, 212, 191,", `rgba(${ACCENT_RGB},`],
-  // Surfaces, from blue-grey to a deep navy night sky.
-  ["#111827", "#0d1322"],
-  ["#1f2937", "#161d30"],
-  ["#374151", "#273049"],
-  ["#424b57", "#2e3852"],
-  ["#1c2532", "#1a2236"],
+  ["#2dd4bf", "var(--accent)"],
+  ["#5eead4", "var(--accent-hover)"],
+  ["#99f6e4", "var(--accent-light)"],
+  ["#14b8a6", "var(--accent)"],
+  ["rgba(45, 212, 191,", "rgba(var(--accent-rgb),"],
+  // Surfaces, from blue-grey.
+  ["#111827", "var(--ground)"],
+  ["#1f2937", "var(--card)"],
+  ["#374151", "var(--raised)"],
+  ["#424b57", "var(--line)"],
+  ["#1c2532", "var(--card-alt)"],
 ];
 
 let css = readFileSync(`${SOURCE}/theme.css`, "utf8");

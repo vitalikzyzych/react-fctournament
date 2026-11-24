@@ -7,6 +7,7 @@ import {
   type ITournament,
   seededRandom,
 } from "@/domain";
+import { useSettings } from "@/providers";
 
 /**
  * Chance of each club to go through every open playoff tie, by tieKey, while
@@ -16,11 +17,13 @@ import {
 export const useTieChances = (
   tournament: ITournament | undefined,
   matches: IMatch[]
-): Map<string, ITieChance> =>
-  useMemo(
+): Map<string, ITieChance> => {
+  const { showChances } = useSettings().settings;
+  return useMemo(
     () =>
-      tournament?.status === "active"
+      showChances && tournament?.status === "active"
         ? computeTieChances(matches, seededRandom(3))
         : new Map(),
-    [tournament, matches]
+    [tournament, matches, showChances]
   );
+};

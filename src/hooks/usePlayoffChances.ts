@@ -6,6 +6,7 @@ import {
   type ITournament,
   seededRandom,
 } from "@/domain";
+import { useSettings } from "@/providers";
 
 /**
  * Playoff chance per club id while a tournament is active and its group
@@ -15,13 +16,15 @@ import {
 export const usePlayoffChances = (
   tournament: ITournament | undefined,
   matches: IMatch[]
-): Map<string, number> | null =>
-  useMemo(() => {
-    if (tournament?.status !== "active") return null;
+): Map<string, number> | null => {
+  const { showChances } = useSettings().settings;
+  return useMemo(() => {
+    if (!showChances || tournament?.status !== "active") return null;
     const started = matches.some(
       (match) => match.stage === "group" && match.result !== null
     );
     return started
       ? computePlayoffChances(tournament, matches, seededRandom(1))
       : null;
-  }, [tournament, matches]);
+  }, [tournament, matches, showChances]);
+};

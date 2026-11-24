@@ -25,7 +25,7 @@ import {
   useStakes,
   useTieChances,
 } from "@/hooks";
-import { useTournamentData } from "@/providers";
+import { useSettings, useTournamentData } from "@/providers";
 import {
   EmptyState,
   MatchCards,
@@ -71,6 +71,7 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
   const stakes = useStakes(tournament, matches, next);
   const { all } = useTournamentData();
   const ratings = useRatings();
+  const { settings } = useSettings();
   const [preview, setPreview] = useState<IMatch | null>(null);
 
   const entries: IEntry[] = latest
@@ -184,6 +185,7 @@ const QuickEntry = ({ tournament, matches }: IQuickEntryProps) => {
         match={preview}
         all={all}
         ratings={ratings}
+        forecast={settings.showChances}
         onHide={() => setPreview(null)}
       />
     </SectionCard>

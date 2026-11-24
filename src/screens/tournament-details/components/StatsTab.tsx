@@ -25,6 +25,7 @@ import {
   statMatches,
 } from "@/domain";
 import { useRatings } from "@/hooks";
+import { useSettings } from "@/providers";
 import {
   ClubLabel,
   PlayerBadge,
@@ -127,7 +128,8 @@ const CardLeaders = ({ items }: { items: ICardLeader[] }) =>
   );
 
 const StatsTab = ({ tournament, matches }: IStatsTabProps) => {
-  const [includePlayoff, setIncludePlayoff] = useState(true);
+  const { settings } = useSettings();
+  const [includePlayoff, setIncludePlayoff] = useState(settings.includePlayoff);
   const hasPlayoff = playoffMatches(matches).length > 0;
   const counted = statMatches(matches, includePlayoff);
   const stats = computeTournamentStats(tournament.clubs, counted);

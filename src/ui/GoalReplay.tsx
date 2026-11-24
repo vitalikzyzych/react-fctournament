@@ -1,6 +1,7 @@
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
 
 import { seededRandom } from "@/domain";
+import { useSettings } from "@/providers";
 
 /** Dots drawn per side at most, so a long league stays readable. */
 export const MAX_GOAL_DOTS = 300;
@@ -68,9 +69,10 @@ const LIVE_SHOTS = 2;
  * one with more goals shoots every BEAT_MS, the other at a longer interval in
  * proportion (13 against 10 goals: every 1 s against every 1.3 s), so the
  * fewer the goals, the bigger the gap. Nothing moves when the system asks for
- * reduced motion.
+ * reduced motion or the animation is switched off in the settings.
  */
 const GoalReplay = ({ goals }: IGoalReplayProps) => {
+  const { goalAnimation } = useSettings().settings;
   const shots = useMemo(
     () => ({ s: shotStyles("s", goals.S), v: shotStyles("v", goals.V) }),
     [goals.S, goals.V]
@@ -79,7 +81,7 @@ const GoalReplay = ({ goals }: IGoalReplayProps) => {
   const [fired, setFired] = useState({ s: 0, v: 0 });
 
   useEffect(() => {
-    if ((!goals.S && !goals.V) || prefersStill()) return;
+    if ((!goals.S && !goals.V) || !goalAnimation || prefersStill()) return;
     const most = Math.max(goals.S, goals.V);
     const timers: number[] = [];
     (
@@ -102,8 +104,9 @@ const GoalReplay = ({ goals }: IGoalReplayProps) => {
         window.clearTimeout(id);
         window.clearInterval(id);
       });
-  }, [goals.S, goals.V]);
+  }, [goals.S, goals.V, goalAnimation]);
 
+  if (!goalAnimation) return null;
   return (
     <>
       {(["s", "v"] as const).flatMap((side) => {

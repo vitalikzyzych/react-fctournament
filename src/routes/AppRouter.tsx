@@ -10,6 +10,7 @@ const Tournaments = lazy(() => import("@/screens/tournaments"));
 const TournamentDetails = lazy(() => import("@/screens/tournament-details"));
 const History = lazy(() => import("@/screens/history"));
 const ImportExport = lazy(() => import("@/screens/import-export"));
+const Settings = lazy(() => import("@/screens/settings"));
 
 const ScreenFallback = () => (
   <div className="flex justify-content-center py-8">
@@ -29,6 +30,7 @@ const AppRouter = () => (
         <Route path="tournaments/:id" element={<TournamentDetails />} />
         <Route path="history" element={<History />} />
         <Route path="import" element={<ImportExport />} />
+        <Route path="settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

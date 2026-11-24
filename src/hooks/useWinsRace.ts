@@ -7,6 +7,7 @@ import {
   type IWinsRace,
   seededRandom,
 } from "@/domain";
+import { useSettings } from "@/providers";
 
 /**
  * Chance of S or V ending the group stage with more match wins, while a
@@ -16,11 +17,13 @@ import {
 export const useWinsRace = (
   tournament: ITournament | undefined,
   matches: IMatch[]
-): IWinsRace | null =>
-  useMemo(
+): IWinsRace | null => {
+  const { showChances } = useSettings().settings;
+  return useMemo(
     () =>
-      tournament?.status === "active"
+      showChances && tournament?.status === "active"
         ? computeWinsRace(tournament, matches, seededRandom(2))
         : null,
-    [tournament, matches]
+    [tournament, matches, showChances]
   );
+};

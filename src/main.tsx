@@ -13,6 +13,11 @@ import "primereact/resources/primereact.min.css";
 import "primeflex/primeflex.css";
 import "./styles/main.css";
 
+import { applySettings, loadSettings } from "@/utils";
+
+// Before the first render, so a chosen theme never flashes the default.
+applySettings(loadSettings());
+
 addLocale("uk", {
   accept: "Так",
   reject: "Ні",

@@ -11,12 +11,13 @@ import RecordBook from "./components/RecordBook";
 import { PageHeader } from "@/components";
 import { playoffMatches } from "@/domain";
 import { useRatings } from "@/hooks";
-import { useTournamentData } from "@/providers";
+import { useSettings, useTournamentData } from "@/providers";
 import { EmptyState, PlayoffToggle, SectionCard } from "@/ui";
 
 const History = () => {
   const { all } = useTournamentData();
-  const [includePlayoff, setIncludePlayoff] = useState(true);
+  const { settings } = useSettings();
+  const [includePlayoff, setIncludePlayoff] = useState(settings.includePlayoff);
   const ratings = useRatings();
   const hasPlayoff = all.some((t) => playoffMatches(t.matches).length > 0);
 

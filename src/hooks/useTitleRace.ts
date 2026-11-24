@@ -7,6 +7,7 @@ import {
   type ITournament,
   seededRandom,
 } from "@/domain";
+import { useSettings } from "@/providers";
 
 /**
  * Each club's chance to win the tournament while it is active and has no
@@ -16,11 +17,13 @@ import {
 export const useTitleRace = (
   tournament: ITournament | undefined,
   matches: IMatch[]
-): ITitleRace | null =>
-  useMemo(
+): ITitleRace | null => {
+  const { showChances } = useSettings().settings;
+  return useMemo(
     () =>
-      tournament?.status === "active"
+      showChances && tournament?.status === "active"
         ? computeTitleRace(tournament, matches, seededRandom(4))
         : null,
-    [tournament, matches]
+    [tournament, matches, showChances]
   );
+};

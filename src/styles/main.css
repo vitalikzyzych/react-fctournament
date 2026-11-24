@@ -1,12 +1,101 @@
 /*
  * App styles on top of the recoloured Lara dark theme (styles/theme.css,
- * built by scripts/build-theme.ts: gold accent, deep navy surfaces) and
+ * built by scripts/build-theme.ts; its colours are the theme variables below) and
  * PrimeFlex. One font family, Onest (proper Ukrainian letters), heavier
  * for titles and scores. A condensed face (Bulgarian letter shapes) and a
  * wide one (Unbounded, too wide for the user) were tried and dropped. Colours come
  * only from the theme's CSS variables (--red-500, --surface-card, ...), mixed
  * with color-mix() where a tint is needed, as in web-app.
  */
+/*
+ * App themes: the accent and the surfaces that styles/theme.css reads. The
+ * default is gold; the others are picked on the settings page, which sets
+ * data-theme on <html> (utils/settings.ts). The selectors match any element,
+ * so a preview tile with data-theme shows its own colours. To add a theme,
+ * add a block here and an entry to THEMES in utils/settings.ts.
+ */
+:root,
+[data-theme="gold"] {
+  --accent: #f0c14b;
+  --accent-hover: #f5d177;
+  --accent-light: #fae2a8;
+  --accent-rgb: 240, 193, 75;
+  --ground: #0d1322;
+  --card: #161d30;
+  --raised: #273049;
+  --line: #2e3852;
+  --card-alt: #1a2236;
+}
+
+[data-theme="teal"] {
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-light: #99f6e4;
+  --accent-rgb: 45, 212, 191;
+  --ground: #111827;
+  --card: #1f2937;
+  --raised: #374151;
+  --line: #424b57;
+  --card-alt: #1c2532;
+}
+
+[data-theme="lime"] {
+  --accent: #c8f53c;
+  --accent-hover: #d9fa6e;
+  --accent-light: #e8fca6;
+  --accent-rgb: 200, 245, 60;
+  --ground: #090b10;
+  --card: #12151c;
+  --raised: #232833;
+  --line: #2a303c;
+  --card-alt: #161a22;
+}
+
+[data-theme="ice"] {
+  --accent: #e3eaf5;
+  --accent-hover: #f1f5fb;
+  --accent-light: #ffffff;
+  --accent-rgb: 227, 234, 245;
+  --ground: #0b0f17;
+  --card: #151a24;
+  --raised: #262d3a;
+  --line: #2d3544;
+  --card-alt: #181e29;
+}
+
+[data-theme="violet"] {
+  --accent: #a78bfa;
+  --accent-hover: #c4b5fd;
+  --accent-light: #ddd6fe;
+  --accent-rgb: 167, 139, 250;
+  --ground: #100f1f;
+  --card: #1a1930;
+  --raised: #2b2a48;
+  --line: #333252;
+  --card-alt: #1d1c34;
+}
+
+/* "Потужно": the bright green of the Servant of the People party. */
+[data-theme="potuzhno"] {
+  --accent: #2fc45a;
+  --accent-hover: #55d67a;
+  --accent-light: #8fe6a8;
+  --accent-rgb: 47, 196, 90;
+  --ground: #0a120d;
+  --card: #121c15;
+  --raised: #223026;
+  --line: #29392e;
+  --card-alt: #152119;
+}
+
+html[data-text="small"] {
+  font-size: 14px;
+}
+
+html[data-text="large"] {
+  font-size: 16.5px;
+}
+
 :root {
   --player-s: var(--red-500);
   --player-v: var(--blue-500);
@@ -2701,4 +2790,99 @@ code {
 .recap__score,
 .stat-card__value {
   font-variant-numeric: normal;
+}
+
+/* ---------------------------------------------------------------------------
+   Settings page */
+
+.theme-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+/* The tile carries data-theme, so these variables are that theme's own. */
+.theme-tile.p-button {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border: 2px solid var(--surface-border);
+  border-radius: 0.8rem;
+  background: transparent;
+  color: var(--text-color);
+}
+
+.theme-tile.p-button:hover {
+  border-color: var(--accent);
+  background: transparent;
+}
+
+.theme-tile--active.p-button {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
+}
+
+.theme-tile__preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  background: var(--ground);
+}
+
+.theme-tile__card {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: var(--card);
+}
+
+.theme-tile__dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+}
+
+.theme-tile__dot--S {
+  background: var(--player-s);
+}
+
+.theme-tile__dot--V {
+  background: var(--player-v);
+}
+
+.theme-tile__line {
+  flex: 1;
+  height: 0.3rem;
+  border-radius: 1rem;
+  background: var(--raised);
+}
+
+.theme-tile__accent {
+  height: 0.9rem;
+  border-radius: 0.3rem;
+  background: var(--accent);
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+}
+
+.setting-row + .setting-row {
+  border-top: 1px solid var(--surface-border);
+}
+
+/* The switch keeps its size next to a long description. */
+.setting-row > .p-inputswitch {
+  flex: 0 0 auto;
 }

@@ -7,6 +7,7 @@ import {
   type ITournament,
   seededRandom,
 } from "@/domain";
+import { useSettings } from "@/providers";
 
 /**
  * What an open group match of an active tournament means for both clubs
@@ -16,11 +17,13 @@ export const useStakes = (
   tournament: ITournament,
   matches: IMatch[],
   match: IMatch | undefined
-): { home: IStakes; away: IStakes } | null =>
-  useMemo(
+): { home: IStakes; away: IStakes } | null => {
+  const { showChances } = useSettings().settings;
+  return useMemo(
     () =>
-      match && tournament.status === "active"
+      showChances && match && tournament.status === "active"
         ? computeStakes(tournament, matches, match, seededRandom(6))
         : null,
-    [tournament, matches, match]
+    [tournament, matches, match, showChances]
   );
+};

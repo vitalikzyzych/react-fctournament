@@ -27,4 +27,10 @@ export const NAV_ITEMS: INavItem[] = [
     shortLabel: "Імпорт",
     icon: "ArrowImport",
   },
+  {
+    to: "/settings",
+    label: "Налаштування",
+    shortLabel: "Опції",
+    icon: "Settings",
+  },
 ];

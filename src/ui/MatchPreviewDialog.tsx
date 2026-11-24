@@ -42,6 +42,8 @@ interface IMatchPreviewDialogProps {
   match: IMatch | null;
   all: ITournamentWithMatches[];
   ratings: IRatings;
+  /** False hides the forecast (chances switched off in the settings). */
+  forecast?: boolean;
   onHide: () => void;
 }
 
@@ -58,6 +60,7 @@ const MatchPreviewDialog = ({
   match,
   all,
   ratings,
+  forecast = true,
   onHide,
 }: IMatchPreviewDialogProps) => {
   const league = isLeagueFormat(tournament.format);
@@ -99,35 +102,37 @@ const MatchPreviewDialog = ({
     };
   }, [match, matches, all, ratings, tournament, clubsById]);
 
-  const rows = data
-    ? [
-        {
-          label: "Рейтинг",
-          home: data.home.rating,
-          away: data.away.rating,
-        },
-        {
-          label: league ? "Місце в лізі" : "Місце в групі",
-          home: data.home.position ?? "–",
-          away: data.away.position ?? "–",
-        },
-        {
-          label: "В-Н-П у турнірі",
-          home: `${data.home.record.won}-${data.home.record.drawn}-${data.home.record.lost}`,
-          away: `${data.away.record.won}-${data.away.record.drawn}-${data.away.record.lost}`,
-        },
-        {
-          label: "Голи у турнірі",
-          home: `${data.home.record.goalsFor}:${data.home.record.goalsAgainst}`,
-          away: `${data.away.record.goalsFor}:${data.away.record.goalsAgainst}`,
-        },
-        {
-          label: "Очікувані голи",
-          home: formatAverage(data.prediction.goals.home),
-          away: formatAverage(data.prediction.goals.away),
-        },
-      ]
-    : [];
+  const rows = (
+    data
+      ? [
+          {
+            label: "Рейтинг",
+            home: data.home.rating,
+            away: data.away.rating,
+          },
+          {
+            label: league ? "Місце в лізі" : "Місце в групі",
+            home: data.home.position ?? "–",
+            away: data.away.position ?? "–",
+          },
+          {
+            label: "В-Н-П у турнірі",
+            home: `${data.home.record.won}-${data.home.record.drawn}-${data.home.record.lost}`,
+            away: `${data.away.record.won}-${data.away.record.drawn}-${data.away.record.lost}`,
+          },
+          {
+            label: "Голи у турнірі",
+            home: `${data.home.record.goalsFor}:${data.home.record.goalsAgainst}`,
+            away: `${data.away.record.goalsFor}:${data.away.record.goalsAgainst}`,
+          },
+          {
+            label: "Очікувані голи",
+            home: formatAverage(data.prediction.goals.home),
+            away: formatAverage(data.prediction.goals.away),
+          },
+        ]
+      : []
+  ).filter((row) => forecast || row.label !== "Очікувані голи");
 
   return (
     <Dialog
@@ -175,45 +180,49 @@ const MatchPreviewDialog = ({
             ))}
           </div>
 
-          <div
-            className="flex flex-column gap-2 mb-4"
-            title="Прогноз за голами обох клубів у цьому турнірі: забиті й пропущені за матч, з поправкою на середній рівень турніру."
-          >
-            <div className="flex justify-content-between text-sm font-semibold">
-              <span>{formatPercent(data.prediction.home)}</span>
-              <span className="text-500">
-                нічия {formatPercent(data.prediction.draw)}
+          {forecast && (
+            <div
+              className="flex flex-column gap-2 mb-4"
+              title="Прогноз за голами обох клубів у цьому турнірі: забиті й пропущені за матч, з поправкою на середній рівень турніру."
+            >
+              <div className="flex justify-content-between text-sm font-semibold">
+                <span>{formatPercent(data.prediction.home)}</span>
+                <span className="text-500">
+                  нічия {formatPercent(data.prediction.draw)}
+                </span>
+                <span>{formatPercent(data.prediction.away)}</span>
+              </div>
+              <span className="versus-bar versus-bar--thick">
+                <span
+                  className={
+                    data.home.club?.owner === "V"
+                      ? "versus-bar__v"
+                      : "versus-bar__s"
+                  }
+                  // Computed widths: the three outcome chances.
+                  style={{ width: `${data.prediction.home * 100}%` }}
+                />
+                <span
+                  className="versus-bar__draw"
+                  style={{ width: `${data.prediction.draw * 100}%` }}
+                />
+                <span
+                  className={
+                    data.away.club?.owner === "S"
+                      ? "versus-bar__s"
+                      : "versus-bar__v"
+                  }
+                  style={{ width: `${data.prediction.away * 100}%` }}
+                />
               </span>
-              <span>{formatPercent(data.prediction.away)}</span>
+              <div className="text-sm text-600 text-center">
+                Найімовірніший рахунок{" "}
+                <b className="text-color">
+                  {formatScore(data.prediction.score)}
+                </b>
+              </div>
             </div>
-            <span className="versus-bar versus-bar--thick">
-              <span
-                className={
-                  data.home.club?.owner === "V"
-                    ? "versus-bar__v"
-                    : "versus-bar__s"
-                }
-                // Computed widths: the three outcome chances.
-                style={{ width: `${data.prediction.home * 100}%` }}
-              />
-              <span
-                className="versus-bar__draw"
-                style={{ width: `${data.prediction.draw * 100}%` }}
-              />
-              <span
-                className={
-                  data.away.club?.owner === "S"
-                    ? "versus-bar__s"
-                    : "versus-bar__v"
-                }
-                style={{ width: `${data.prediction.away * 100}%` }}
-              />
-            </span>
-            <div className="text-sm text-600 text-center">
-              Найімовірніший рахунок{" "}
-              <b className="text-color">{formatScore(data.prediction.score)}</b>
-            </div>
-          </div>
+          )}
 
           <div className="preview__table mb-4">
             {rows.map((row) => [
